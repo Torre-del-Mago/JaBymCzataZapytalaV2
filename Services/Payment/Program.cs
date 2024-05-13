@@ -1,3 +1,6 @@
+using MassTransit;
+using Payment.Consumer;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -15,6 +18,25 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+builder.Services.AddMassTransit(cfg =>
+{
+    // adding consumers
+    cfg.AddConsumer<CheckPaymentConsumer>();
+
+    // telling masstransit to use rabbitmq
+    cfg.UsingRabbitMq((context, rabbitCfg) =>
+    {
+        // rabbitmq config
+        rabbitCfg.Host("rabbitmq", "/", h =>
+        {
+            h.Username("guest");
+            h.Password("guest");
+        });
+        // automatic endpoint configuration (and I think the reason why naming convention is important
+        rabbitCfg.ConfigureEndpoints(context);
+    });
+});
 
 app.UseHttpsRedirection();
 

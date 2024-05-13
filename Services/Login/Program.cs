@@ -1,3 +1,6 @@
+using Login.Consumer;
+using MassTransit;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -33,6 +36,25 @@ app.MapGet("/weatherforecast", () =>
 })
 .WithName("GetWeatherForecast")
 .WithOpenApi();
+
+builder.Services.AddMassTransit(cfg =>
+{
+    // adding consumers
+    cfg.AddConsumer<LoginConsumer>();
+
+    // telling masstransit to use rabbitmq
+    cfg.UsingRabbitMq((context, rabbitCfg) =>
+    {
+        // rabbitmq config
+        rabbitCfg.Host("rabbitmq", "/", h =>
+        {
+            h.Username("guest");
+            h.Password("guest");
+        });
+        // automatic endpoint configuration (and I think the reason why naming convention is important
+        rabbitCfg.ConfigureEndpoints(context);
+    });
+});
 
 app.Run();
 
