@@ -1,0 +1,2 @@
+// zapłacono (ofertaID)
+// niezapłaconoWCzasie (ofertaId)
