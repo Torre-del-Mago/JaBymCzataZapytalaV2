@@ -12,9 +12,7 @@
 
         public DateTime EndDate { get; set; }
 
-        public String BeginDate { get; set; }
-
-        public String EndDate { get; set; }
+        public List<String> TypesOfMeals { get; set; }
 
         // TODO lista pokoi
 
