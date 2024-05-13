@@ -1,0 +1,6 @@
+@TransportCommand_HostAddress = http://localhost:5149
+
+GET {{TransportCommand_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
