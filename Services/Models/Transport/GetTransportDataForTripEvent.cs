@@ -1,0 +1,1 @@
+// weź dane dla wycieczki (transport Kryteria)

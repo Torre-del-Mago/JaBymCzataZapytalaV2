@@ -1,0 +1,2 @@
+// ZarezerwowanoPokoje(ofertaID)
+// BrakDostępnościPokoi(ofertaId)

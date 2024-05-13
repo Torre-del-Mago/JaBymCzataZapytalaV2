@@ -1,0 +1,1 @@
+// przyjmijDaneoHotelach(Hotele_Data)

@@ -1,0 +1,1 @@
+// zapłać (oferta id, kwota)

@@ -1,0 +1,1 @@
+// weźDaneDlaWycieczki(kryteria hoteli)

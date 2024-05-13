@@ -1,0 +1,1 @@
+// weź dane dla wycieczek (Kryteria transportów)

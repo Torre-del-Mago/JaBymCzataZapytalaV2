@@ -1,0 +1,1 @@
+// przyjmij dane dla wycieczki (TransportDTO)
