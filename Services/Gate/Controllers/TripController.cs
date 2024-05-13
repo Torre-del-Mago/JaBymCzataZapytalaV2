@@ -35,5 +35,9 @@ namespace Gate.Controllers
             var response = await _tripRequestClient.GetResponse<TripListInfoReplyEvent>(request);
             return response.Message.TripInfo;
         }
+
+        /*
+         !!!!! TODO: Calculate price endpoint
+         */
     }
 }
