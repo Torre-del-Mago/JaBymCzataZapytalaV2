@@ -1,5 +1,6 @@
 ﻿using MassTransit;
 using Microsoft.AspNetCore.Mvc;
+using Models.Trip;
 
 namespace Gate.Controllers
 {
@@ -7,32 +8,34 @@ namespace Gate.Controllers
     [Route("api/trip/")]
     public class TripController
     {
-        private IRequestClient<TripInfoEvent> _tripRequestClient { get; set; }
-        private IRequestClient<TripListInfoEvent> _tripListRequestClient { get; set; }
-        public TripController(IRequestClient<TripInfoEvent> tripRequestClient,
-            IRequestClient<TripListInfoEvent> _tripListRequestClient) { 
+        private IRequestClient<GenerateTripEvent> _tripRequestClient { get; set; }
+        private IRequestClient<GenerateTripsEvent> _tripListRequestClient { get; set; }
+        public TripController(IRequestClient<GenerateTripEvent> tripRequestClient,
+            IRequestClient<GenerateTripsEvent> tripListRequestClient) { 
+            _tripRequestClient = tripRequestClient;
+            _tripListRequestClient = tripListRequestClient;
         
         }
 
         [HttpGet("trip-info")]
-        public IEnumerable getTripInfo()
+        public async IEnumerable getTripInfo()
         {
-            var request = new TripInfoEvent()
+            var request = new GenerateTripEvent()
             {
 
             };
-            var response = await _tripRequestClient.GetResponse<TripInfoReplyEvent>(request);
+            var response = await _tripRequestClient.GetResponse<GenerateTripEventReply>(request);
             return response.Message.TripInfo;
         }
 
         [HttpGet("trip-list-info")]
-        public IEnumerable getTripListInfo()
+        public async IEnumerable getTripListInfo()
         {
-            var request = new TripListInfoEvent()
+            var request = new GenerateTripsEvent()
             {
 
             };
-            var response = await _tripRequestClient.GetResponse<TripListInfoReplyEvent>(request);
+            var response = await _tripRequestClient.GetResponse<GenerateTripsEventReply>(request);
             return response.Message.TripInfo;
         }
 
