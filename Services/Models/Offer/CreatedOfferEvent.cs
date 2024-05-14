@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-// Stworzono Ofertę(ofertaid)
+﻿// Stworzono Ofertę(ofertaid)
 namespace Models.Offer
 {
-    internal class CreatedOfferEvent
+    public class CreatedOfferEvent : EventModel
     {
+        public int OfferId { get; set; }
     }
 }

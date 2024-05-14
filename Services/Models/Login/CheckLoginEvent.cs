@@ -1,6 +1,7 @@
 ﻿namespace Models.Login
 {
-    public class CheckLoginEvent
+    public class CheckLoginEvent : EventModel
     {
+        public string Login {  get; set; }
     }
 }

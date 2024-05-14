@@ -3,8 +3,17 @@
 
 namespace Models.Payment
 {
-    public class PayEventReply
+    public class PayEventReply : EventModel
     {
+        public int OfferId { get; set; }
+
+        public enum State
+        {
+            PAID,
+            REJECTED
+        };
+
+        public State Answer { get; set; }
 
     }
 }

@@ -2,8 +2,10 @@
 
 namespace Models.Payment
 {
-    public class PayEvent
+    public class PayEvent : EventModel
     {
+        public int OfferId { get; set; }
 
+        public int Amount { get; set; }
     }
 }

@@ -5,6 +5,6 @@ namespace Models.Trip
 {
     public class GenerateTripEventReply : EventModel
     {
-        public CriteriaForTrip Criteria { get; set; }
+        public TripDTO TripDTO { get; set; }
     }
 }

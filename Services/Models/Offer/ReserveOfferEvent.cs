@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-// Rezerwuj (OfertaDTO)
+﻿// Rezerwuj (OfertaDTO)
+using Models.Offer.DTO;
+
 namespace Models.Offer
 {
-    public class ReserveOfferEvent
+    public class ReserveOfferEvent : EventModel
     {
+        public int Registration { get; set; }
+
+        public OfferDTO Offer { get; set; }
     }
 }

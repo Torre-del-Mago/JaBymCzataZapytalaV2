@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-// Wyświetl listę Wycieczek(Lista Wycieczek)
+﻿// Wyświetl listę Wycieczek(Lista Wycieczek)
+using Models.Trip.DTO;
+
 namespace Models.Trip
 {
-    public class GenerateTripsEventReply
+    public class GenerateTripsEventReply : EventModel
     {
+        public TripsDTO Trips { get; set; }
     }
 }

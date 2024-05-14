@@ -1,16 +1,13 @@
-﻿namespace Models.Trip.DTO
+﻿namespace Models.Hotel.DTO
 {
-    public class CriteriaForTrip
+    public class HotelReservationDTO
     {
         public int HotelId { get; set; }
-
-        public int NrOfPeople { get; set; }
-
-        public string Country { get; set; }
 
         public DateTime BeginDate { get; set; }
 
         public DateTime EndDate { get; set; }
 
+        public List<RoomDTO> Rooms { get; set; }
     }
 }

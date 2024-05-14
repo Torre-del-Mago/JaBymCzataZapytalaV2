@@ -10,13 +10,13 @@ namespace Gate.Controllers
     {
         private IRequestClient<CheckLoginEvent> _requestClient { get; set; }
 
-        public LoggingController(IRequestClient<CheckLoginEvent> requestClient>)
+        public LoggingController(IRequestClient<CheckLoginEvent> requestClient)
         {
             _requestClient = requestClient;
         }
 
         [HttpGet("check")]
-        public async IEnumerable checkLogin(String login)
+        public async IEnumerable<> checkLogin(String login)
         {
             var request = new CheckLoginEvent()
             {
