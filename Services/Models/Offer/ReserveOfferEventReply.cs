@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 //  rezerwacja się nie powiodła (zgłoszenie id, powód)
 namespace Models.Offer
 {
-    internal class ReserveOfferEventReply
+    public class ReserveOfferEventReply
     {
     }
 }

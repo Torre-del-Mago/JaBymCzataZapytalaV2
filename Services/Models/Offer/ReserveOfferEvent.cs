@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 // Rezerwuj (OfertaDTO)
 namespace Models.Offer
 {
-    internal class ReserveOfferEvent
+    public class ReserveOfferEvent
     {
     }
 }

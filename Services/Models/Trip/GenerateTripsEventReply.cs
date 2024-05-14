@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 // Wyświetl listę Wycieczek(Lista Wycieczek)
 namespace Models.Trip
 {
-    internal class GenerateTripsEventReply
+    public class GenerateTripsEventReply
     {
     }
 }
