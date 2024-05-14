@@ -41,19 +41,6 @@ namespace Gate.Controllers
             return response.Message.TripInfo;
         }
 
-        [HttpGet("calculate-price")]
-        public async float getTripPrice()
-        {
-            var request = new CalculatePriceEvent()
-            {
-
-            };
-            var response = await _tripRequestClient.GetResponse<CalculatePriceEventReply>(request);
-            return response.Message.TripInfo;
-        }
-
-
-
         /*
          !!!!! TODO: Calculate price endpoint
          */
