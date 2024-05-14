@@ -1,13 +1,17 @@
 ﻿using MassTransit;
+using Models.Transport;
 
 namespace TransportQuery.Consumer
 {
-    public class TransportQueryConsumer : IConsumer<TransportQueryEvent>
+    public class TransportQueryConsumer : IConsumer<GetTransportDataForTripEvent>
     {
-        public Task Consume(ConsumeContext<TransportQueryEvent> context)
+        public async Task Consume(ConsumeContext<GetTransportDataForTripEvent> context)
         {
-            /**/
-            await context.Publish(new TransportQueryResponseEvent() { });
+            /*
+             Do something
+             */
+
+            await context.Publish(new GetTransportDataForTripEventReply() { });
         }
     }
 }

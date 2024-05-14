@@ -1,31 +1,34 @@
 ﻿using MassTransit;
 using MassTransit.Clients;
+using Models.Hotel;
+using Models.Transport;
+using Models.Trip;
 
 namespace Trip.Consumer
 {
-    public class TripInfoConsumer : IConsumer<TripInfoEvent>
+    public class TripInfoConsumer : IConsumer<GenerateTripEvent>
     {
-        private RequestClient<HotelQueryEvent> _hotelClient { get; set; } 
-        private RequestClient<TransportQueryEvent> _transportClient { get; set; } 
-        public TripInfoConsumer(IRequestClient<HotelQueryEvent> hotelClient,
-            IRequestClient<TransportQueryEvent> transportClient
+        private IRequestClient<GetHotelDataForTripEvent> _hotelClient { get; set; } 
+        private IRequestClient<GetTransportDataForTripEvent> _transportClient { get; set; } 
+        public TripInfoConsumer(IRequestClient<GetHotelDataForTripEvent> hotelClient,
+            IRequestClient<GetTransportDataForTripEvent> transportClient
             ) { 
             _hotelClient = hotelClient;
             _transportClient = transportClient;
         }
 
-        public async Task Consume(ConsumeContext<TripInfoEvent> context)
+        public async Task Consume(ConsumeContext<GenerateTripEvent> context)
         {
 
-            var hotelRequest = new HotelQueryEvent() { };
-            var hotelResponse = _hotelClient.GetResponse<HotelQueryReplyEvent>(hotelRequest);
-            var transportRequest = new TransportQueryEvent() { };
-            var transportResponse = _hotelClient.GetResponse<TransportQueryReplyEvent>(transportRequest);
+            var hotelRequest = new GetHotelDataForTripEvent() { };
+            var transportRequest = new GetTransportDataForTripEvent() { };
+            var hotelResponse = await _hotelClient.GetResponse<GetHotelDataForTripEventReply>(hotelRequest);
+            var transportResponse = await _hotelClient.GetResponse<GetTransportDataForTripEventReply>(transportRequest);
 
             /*
              Do something
              */
-            await context.Publish(new TripInfoReplyEvent() { });
+            await context.Publish(new GenerateTripEventReply() { });
         }
     }
 }
