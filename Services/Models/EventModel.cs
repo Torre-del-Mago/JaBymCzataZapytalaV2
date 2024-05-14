@@ -23,3 +23,4 @@ namespace Models
 }
 
 // https://github.com/dotnet-architecture/eShopOnContainers/blob/main/src/BuildingBlocks/EventBus/EventBus/Events/IntegrationEvent.cs
+// https://github.com/DistributedTravels/Models/blob/main/EventModel.cs
