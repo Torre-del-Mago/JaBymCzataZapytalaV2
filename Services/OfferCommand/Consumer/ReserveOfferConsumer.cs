@@ -1,16 +1,17 @@
 ﻿using MassTransit;
+using Models.Offer;
 
 namespace OfferCommand.Consumer
 {
-    public class ReserveOfferConsumer : IConsumer<ReserveEvent>
+    public class ReserveOfferConsumer : IConsumer<ReserveOfferEvent>
     {
-        public async Task Consume(ConsumeContext<ReserveEvent> context)
+        public async Task Consume(ConsumeContext<ReserveOfferEvent> context)
         {
             /*
              Do something
              */
 
-            await context.Publish(new ReserveReplyEvent() { })
+            await context.Publish(new ReserveOfferEventReply() { });
         }
     }
 }
