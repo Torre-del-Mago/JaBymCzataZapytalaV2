@@ -1,5 +1,6 @@
 ﻿using MassTransit;
 using Microsoft.AspNetCore.Mvc;
+using Models.Payment;
 
 namespace Gate.Controllers
 {
@@ -7,19 +8,21 @@ namespace Gate.Controllers
     [Route("api/payment/")]
     public class PaymentController
     {
-        private IRequestClient<CheckPaymentEvent> _requestClient { get; set; }
-        public PaymentController(IRequestClient<CheckPaymentEvent> requestClient) { }
+        private IRequestClient<PayEvent> _requestClient { get; set; }
+        public PaymentController(IRequestClient<PayEvent> requestClient) { 
+        _requestClient = requestClient;
+        }
 
         [HttpGet("check")]
         public async IEnumberable CheckPayment(Info info)
         {
-            var paymentEvent = new CheckPaymentEvent()
+            var paymentEvent = new PayEvent()
             {
                 /*
                  Tu idzie inicjalizacja
                  */
             };
-            var response = await _requestClient.GetResponse<CheckPaymentReplyEvent>(paymentEvent);
+            var response = await _requestClient.GetResponse<PayEventReply>(paymentEvent);
             return response.Message.Status;
         }
     }

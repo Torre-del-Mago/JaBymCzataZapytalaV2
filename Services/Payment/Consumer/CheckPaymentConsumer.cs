@@ -1,4 +1,5 @@
 ﻿using MassTransit;
+using Models.Payment;
 
 namespace Payment.Consumer
 {
@@ -9,7 +10,8 @@ namespace Payment.Consumer
             /*
              Do something
              */
-            await context.Publish(new CheckPaymentReplyEvent() { });
+
+            await context.Publish(new CheckPaymentEventReply() { });
         }
     }
 }

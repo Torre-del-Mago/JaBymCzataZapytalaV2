@@ -22,6 +22,7 @@ if (app.Environment.IsDevelopment())
 builder.Services.AddMassTransit(cfg =>
 {
     // adding consumers
+    cfg.AddConsumer<PayConsumer>();
     cfg.AddConsumer<CheckPaymentConsumer>();
 
     // telling masstransit to use rabbitmq

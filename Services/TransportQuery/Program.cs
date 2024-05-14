@@ -16,6 +16,7 @@ builder.Services.AddMassTransit(cfg =>
 {
     // adding consumers
     cfg.AddConsumer<TransportQueryConsumer>();
+    cfg.AddConsumer<TransportListQueryConsumer>();
 
     // telling masstransit to use rabbitmq
     cfg.UsingRabbitMq((context, rabbitCfg) =>

@@ -1,5 +1,6 @@
 ﻿using MassTransit;
 using Microsoft.AspNetCore.Mvc;
+using Models.Login;
 
 namespace Gate.Controllers
 {
@@ -15,13 +16,12 @@ namespace Gate.Controllers
         }
 
         [HttpGet("check")]
-        public IEnumerable checkLogin(String login)
+        public async IEnumerable checkLogin(String login)
         {
             var request = new CheckLoginEvent()
             {
-                Login = login
             };
-            var response = await _requestClient.GetResponse<CheckLoginReplyEvent>(request);
+            var response = await _requestClient.GetResponse<CheckLoginEventReply>(request);
             return response.Message.Status;
         }
     }
