@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace HotelQuery.Database.Tables;
+namespace HotelCommand.Database.Tables;
 
 public class ReservedRoom
 {
