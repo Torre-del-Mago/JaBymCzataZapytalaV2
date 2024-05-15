@@ -20,7 +20,7 @@ namespace TransportQuery.Repository.TransportRepository
 
         public List<ConnectionModel> getConnectionComingFrom(string destinationCity)
         {
-            var connectionCollection = _database.GetCollection<FlightConnection>("flight_connection").AsQueryable();
+            var connectionCollection = _database.GetCollection<FlightConnection>("flight_connections").AsQueryable();
 
             var result = connectionCollection.Where(c => c.ArrivalLocation == destinationCity).Select(c => new ConnectionModel() { LocationName = c.ArrivalLocation, Id = c.Id }).ToList();
             return result;
@@ -28,7 +28,7 @@ namespace TransportQuery.Repository.TransportRepository
 
         public List<ConnectionModel> getConnectionGoingTo(string destinationCity)
         {
-            var connectionCollection = _database.GetCollection<FlightConnection>("flight_connection").AsQueryable();
+            var connectionCollection = _database.GetCollection<FlightConnection>("flight_connections").AsQueryable();
 
             var result = connectionCollection.Where(c => c.DepartureLocation == destinationCity).Select(c => new ConnectionModel() { LocationName = c.DepartureLocation, Id = c.Id }).ToList();
             return result;
@@ -36,20 +36,23 @@ namespace TransportQuery.Repository.TransportRepository
 
         public List<TransportModel> getTransportsForConnection(string destinationId)
         {
-            var transportCollection = _database.GetCollection<Database.Entity.Transport>("transport").AsQueryable();
+            var transportCollection = _database.GetCollection<Database.Entity.Transport>("transports").AsQueryable();
+
             var result = transportCollection.Where(t => destinationId == t.ConnectionId).Select(t => new TransportModel() { Id= t.Id, NumberOfSeats = t.NumberOfSeats, Price = t.PricePerSeat }).ToList();
             return result;
         }
 
         public List<Transport> getTransportsByIds(string departureId, string returnId)
         {
-            var transportCollection = _database.GetCollection<Database.Entity.Transport>("transport").AsQueryable();
+            var transportCollection = _database.GetCollection<Database.Entity.Transport>("transports").AsQueryable();
+
             return transportCollection.Where(t => t.Id == departureId || t.Id == returnId).ToList();
         }
 
         public int getNumberOfTakenSeatsForTransport(string transportId)
         {
-            var ticketCollection = _database.GetCollection<ReservedTicket>("reserved_ticket").AsQueryable();
+            var ticketCollection = _database.GetCollection<ReservedTicket>("reserved_tickets").AsQueryable();
+
             int numberOfSeatsTaken = ticketCollection.Where(t => t.TransportId == transportId).Sum(t => t.NumberOfReservedSeats);
             return numberOfSeatsTaken;
         }

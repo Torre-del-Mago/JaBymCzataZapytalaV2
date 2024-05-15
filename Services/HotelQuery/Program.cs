@@ -1,10 +1,13 @@
 using HotelQuery.Consumer;
+using HotelQuery.Repository;
 using MassTransit;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// MongoDB context
+builder.Services.AddScoped<IHotelRepository, HotelRepository>();
 
+// Add services to the container.
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

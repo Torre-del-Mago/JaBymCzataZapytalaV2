@@ -12,10 +12,10 @@ public class Reservation
     public Guid HotelId { get; set; }
     
     [BsonElement("from")]
-    public DateOnly  From  { get; set; }
+    public DateTime  From  { get; set; }
     
     [BsonElement("to")]
-    public DateOnly  To { get; set; }
+    public DateTime  To { get; set; }
 
     [BsonElement("rooms")] 
     public List<ReservedRoom> Rooms { get; set; }
