@@ -1,6 +1,7 @@
 ﻿using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using Models.Trip;
+using Models.Trip.DTO;
 
 namespace Gate.Controllers
 {
@@ -10,35 +11,32 @@ namespace Gate.Controllers
     {
         private IRequestClient<GenerateTripEvent> _tripRequestClient { get; set; }
         private IRequestClient<GenerateTripsEvent> _tripListRequestClient { get; set; }
-        private IRequestClient<CalculatePriceEvent> _calculatePriceClient { get; set; }
         public TripController(IRequestClient<GenerateTripEvent> tripRequestClient,
-            IRequestClient<GenerateTripsEvent> tripListRequestClient,
-            IRequestClient<CalculatePriceEvent> calculatePriceClient) { 
+            IRequestClient<GenerateTripsEvent> tripListRequestClient) { 
             _tripRequestClient = tripRequestClient;
             _tripListRequestClient = tripListRequestClient;
-            _calculatePriceClient = calculatePriceClient;
         }
 
         [HttpGet("trip-info")]
-        public async IEnumerable getTripInfo()
+        public async Task<TripDTO> getTripInfo()
         {
             var request = new GenerateTripEvent()
             {
 
             };
             var response = await _tripRequestClient.GetResponse<GenerateTripEventReply>(request);
-            return response.Message.TripInfo;
+            return response.Message.TripDTO; // possible
         }
 
         [HttpGet("trip-list-info")]
-        public async IEnumerable getTripListInfo()
+        public async Task<TripsDTO> getTripListInfo()
         {
             var request = new GenerateTripsEvent()
             {
 
             };
             var response = await _tripRequestClient.GetResponse<GenerateTripsEventReply>(request);
-            return response.Message.TripInfo;
+            return response.Message.Trips;
         }
 
         /*

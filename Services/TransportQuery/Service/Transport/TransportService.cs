@@ -1,5 +1,5 @@
 ﻿using Models.Transport.DTO;
-using TransportQuery.DTO;
+using TransportQuery.Model;
 using TransportQuery.Repository.TransportRepository;
 
 namespace TransportQuery.Service.Transport
@@ -40,9 +40,9 @@ namespace TransportQuery.Service.Transport
             var departureConnections = _repository.getConnectionGoingTo(criteria.DestinationCity);
             var returnConnections = _repository.getConnectionComingFrom(criteria.DestinationCity);
 
-            Dictionary<string, DepartureAndReturnIdDTO> idsForConnection = new Dictionary<string, DepartureAndReturnIdDTO>();
+            Dictionary<string, DepartureAndReturnIdModel> idsForConnection = new Dictionary<string, DepartureAndReturnIdModel>();
 
-            foreach (ConnectionDTO connection in departureConnections)
+            foreach (ConnectionModel connection in departureConnections)
             {
                 var transports = _repository.getTransportsForConnection(connection.Id);
                 foreach(var transport in transports)
@@ -58,7 +58,7 @@ namespace TransportQuery.Service.Transport
                 }
             }
 
-            foreach (ConnectionDTO connection in returnConnections)
+            foreach (ConnectionModel connection in returnConnections)
             {
                 var transports = _repository.getTransportsForConnection(connection.Id);
                 foreach (var transport in transports)
@@ -76,7 +76,7 @@ namespace TransportQuery.Service.Transport
 
             List<FlightDTO> flights = new List<FlightDTO>();
 
-            foreach(KeyValuePair<string, DepartureAndReturnIdDTO> pair in idsForConnection)
+            foreach(KeyValuePair<string, DepartureAndReturnIdModel> pair in idsForConnection)
             {
                 if(pair.Value.ReturnId != null && pair.Value.DepartureId != null)
                 {

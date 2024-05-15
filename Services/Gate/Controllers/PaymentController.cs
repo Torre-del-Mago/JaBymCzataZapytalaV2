@@ -14,7 +14,7 @@ namespace Gate.Controllers
         }
 
         [HttpGet("check")]
-        public async IEnumberable CheckPayment(Info info)
+        public async Task<bool> CheckPayment()
         {
             var paymentEvent = new PayEvent()
             {
@@ -23,7 +23,7 @@ namespace Gate.Controllers
                  */
             };
             var response = await _requestClient.GetResponse<PayEventReply>(paymentEvent);
-            return response.Message.Status;
+            return response.Message.Answer == PayEventReply.State.PAID; // To change
         }
     }
 }

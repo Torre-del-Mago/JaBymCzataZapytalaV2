@@ -1,6 +1,6 @@
-﻿namespace TransportQuery.DTO
+﻿namespace TransportQuery.Model
 {
-    public class ConnectionDTO
+    public class ConnectionModel
     {
         public string Id { get; set; }
         public string LocationName { get; set; }
