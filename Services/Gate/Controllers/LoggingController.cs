@@ -15,7 +15,7 @@ namespace Gate.Controllers
             _requestClient = requestClient;
         }
 
-        [HttpGet("check")]
+        /*[HttpGet("check")]
         public async IEnumerable<> checkLogin(String login)
         {
             var request = new CheckLoginEvent()
@@ -23,6 +23,6 @@ namespace Gate.Controllers
             };
             var response = await _requestClient.GetResponse<CheckLoginEventReply>(request);
             return response.Message.Status;
-        }
+        }*/
     }
 }
