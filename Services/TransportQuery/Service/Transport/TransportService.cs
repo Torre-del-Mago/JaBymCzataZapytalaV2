@@ -14,6 +14,18 @@ namespace TransportQuery.Service.Transport
         private bool checkIfFlightsHaveEnoughSeats(CriteriaForTransport criteria)
         {
             throw new NotImplementedException();
+
+            /*
+             var transports = _repository.GetTransportsByIds(criteria.ChosenFlight.DepartureId, criteria.ChosenFlight.ReturnId);
+             foreach(var transport in transports) {
+                int takenSeats = _repository.getNumberOfTakenSeatsForTransport(transport.Id);
+                int totalSeats = transport.NumberOfSeats;
+                if(criteria.ChosenFlight.NumberOfSeats > (totalSeats - takenSeats)) {
+                  return false;
+            }
+            }
+            return true;
+             */
         }
 
         public Models.Transport.DTO.TransportDTO getTransportForCriteria(CriteriaForTransport criteria)
