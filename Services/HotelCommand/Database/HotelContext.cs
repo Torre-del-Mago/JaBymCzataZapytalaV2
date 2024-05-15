@@ -1,4 +1,4 @@
-﻿namespace HotelQuery.Database;
+﻿namespace HotelCommand.Database;
 
 public class HotelContext 
 {

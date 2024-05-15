@@ -1,15 +1,17 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace HotelCommand.Database.Tables;
+namespace OfferQuery.Database.Entity;
 
-public class ReservedRoom
+public class OfferRoom
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int Id { get; set; }
+    public string Id { get; set; }
     
-    public Guid ReservationId { get; set; }
-    public Guid HotelRoomTypesId { get; set; }
+    public string OfferId { get; set; }
+    
+    public string RoomType { get; set; }
+    
     public int NumberOfRooms { get; set; }
 }
