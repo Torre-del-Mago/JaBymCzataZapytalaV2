@@ -14,10 +14,10 @@ namespace Gate.Controllers
         }
 
         [HttpGet("reserve")]
-        public async bool Reserve() {
+        public async Task<bool> Reserve() {
             var request = new ReserveOfferEvent() { };
             var response = await _requestClient.GetResponse<ReserveOfferEventReply>(request);
-            return response.Message.HasReserved;
+            return response.Message.Answer == ReserveOfferEventReply.State.RESERVED; // To change
         }
     }
 }

@@ -1,6 +1,6 @@
-﻿namespace TransportQuery.DTO
+﻿namespace TransportQuery.Model
 {
-    public class TransportDTO
+    public class TransportModel
     {
         public string Id { get; set; }
         public int NumberOfSeats {  get; set; }

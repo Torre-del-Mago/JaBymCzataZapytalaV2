@@ -1,6 +1,6 @@
-﻿namespace TransportQuery.DTO
+﻿namespace TransportQuery.Model
 {
-    public class DepartureAndReturnIdDTO
+    public class DepartureAndReturnIdModel
     {
         public string DepartureId { get; set; }
         public string ReturnId { get; set; }   

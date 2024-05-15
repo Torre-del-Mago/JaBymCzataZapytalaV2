@@ -1,7 +1,7 @@
 ﻿using MassTransit.Futures.Contracts;
 using MongoDB.Driver;
 using TransportQuery.Database.Entity;
-using TransportQuery.DTO;
+using TransportQuery.Model;
 
 namespace TransportQuery.Repository.TransportRepository
 {
@@ -18,26 +18,26 @@ namespace TransportQuery.Repository.TransportRepository
             _database = _client.GetDatabase("transport_query");
         }
 
-        public List<ConnectionDTO> getConnectionComingFrom(string destinationCity)
+        public List<ConnectionModel> getConnectionComingFrom(string destinationCity)
         {
             var connectionCollection = _database.GetCollection<FlightConnection>("flight_connection").AsQueryable();
 
-            var result = connectionCollection.Where(c => c.ArrivalLocation == destinationCity).Select(c => new ConnectionDTO() { LocationName = c.ArrivalLocation, Id = c.Id }).ToList();
+            var result = connectionCollection.Where(c => c.ArrivalLocation == destinationCity).Select(c => new ConnectionModel() { LocationName = c.ArrivalLocation, Id = c.Id }).ToList();
             return result;
         }
 
-        public List<ConnectionDTO> getConnectionGoingTo(string destinationCity)
+        public List<ConnectionModel> getConnectionGoingTo(string destinationCity)
         {
             var connectionCollection = _database.GetCollection<FlightConnection>("flight_connection").AsQueryable();
 
-            var result = connectionCollection.Where(c => c.DepartureLocation == destinationCity).Select(c => new ConnectionDTO() { LocationName = c.DepartureLocation, Id = c.Id }).ToList();
+            var result = connectionCollection.Where(c => c.DepartureLocation == destinationCity).Select(c => new ConnectionModel() { LocationName = c.DepartureLocation, Id = c.Id }).ToList();
             return result;
         }
 
-        public List<TransportDTO> getTransportsForConnection(string destinationId)
+        public List<TransportModel> getTransportsForConnection(string destinationId)
         {
             var transportCollection = _database.GetCollection<Database.Entity.Transport>("transport").AsQueryable();
-            var result = transportCollection.Where(t => destinationId == t.ConnectionId).Select(t => new TransportDTO() { Id= t.Id, NumberOfSeats = t.NumberOfSeats, Price = t.PricePerSeat }).ToList();
+            var result = transportCollection.Where(t => destinationId == t.ConnectionId).Select(t => new TransportModel() { Id= t.Id, NumberOfSeats = t.NumberOfSeats, Price = t.PricePerSeat }).ToList();
             return result;
         }
 
