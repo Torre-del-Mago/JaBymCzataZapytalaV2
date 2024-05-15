@@ -1,5 +1,4 @@
 ﻿using MassTransit;
-using Models.Hotel;
 using Models.Transport;
 
 namespace TransportQuery.Consumer
@@ -8,9 +7,9 @@ namespace TransportQuery.Consumer
     {
         public async Task Consume(ConsumeContext<GetTransportDataForTripsEvent> context)
         {
-            
 
-            await context.Publish(new GetTransportDataForTripsEventReply() { })
+
+            await context.Publish(new GetTransportDataForTripsEventReply() { });
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace Models.Trip.DTO
 {
-    internal class CriteriaForTrips
+    public class CriteriaForTrips
     {
     }
 }

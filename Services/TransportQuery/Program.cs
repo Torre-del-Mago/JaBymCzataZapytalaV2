@@ -17,7 +17,7 @@ builder.Services.AddSwaggerGen();
 var app = builder.Build();
 
 builder.Services.AddMassTransit(cfg =>
-
+{
     // adding consumers
     cfg.AddConsumer<TransportQueryConsumer>();
     cfg.AddConsumer<TransportListQueryConsumer>();
