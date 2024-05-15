@@ -1,6 +1,6 @@
 ﻿using Models.Transport.DTO;
 using TransportQuery.DTO;
-using TransportQuery.Repository.Transport;
+using TransportQuery.Repository.TransportRepository;
 
 namespace TransportQuery.Service.Transport
 {
@@ -44,7 +44,7 @@ namespace TransportQuery.Service.Transport
 
             foreach (ConnectionDTO connection in departureConnections)
             {
-                var transports = _repository.getTransportsForConnections(connection.Id);
+                var transports = _repository.getTransportsForConnection(connection.Id);
                 foreach(var transport in transports)
                 {
                     int numberOfSeatsTotal = transport.NumberOfSeats;
@@ -60,7 +60,7 @@ namespace TransportQuery.Service.Transport
 
             foreach (ConnectionDTO connection in returnConnections)
             {
-                var transports = _repository.getTransportsForConnections(connection.Id);
+                var transports = _repository.getTransportsForConnection(connection.Id);
                 foreach (var transport in transports)
                 {
                     int numberOfSeatsTotal = transport.NumberOfSeats;
