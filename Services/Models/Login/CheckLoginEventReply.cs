@@ -8,6 +8,6 @@
             UNLOGGED
         };
 
-        public string Login { get; set; }
+        public State LoggedIn { get; set; }
     }
 }

@@ -1,16 +1,27 @@
-﻿using MassTransit;
+﻿using Login.Service.LoginService;
+using MassTransit;
 using Models.Login;
 
 namespace Login.Consumer
 {
     public class LoginConsumer : IConsumer<CheckLoginEvent>
     {
+
+        private ILoginService _service { get; set; }
+
+        public LoginConsumer(ILoginService loginService)
+        {
+            _service = loginService;
+        }
+
         public async Task Consume(ConsumeContext<CheckLoginEvent> context)
         {
-            /*
-             Do something
-             */
-            await context.Publish(new CheckLoginEventReply() { });
+
+            var userLoggedIn = _service.isUsernameCorrect(context.Message.Login);
+
+            await context.Publish(new CheckLoginEventReply() { LoggedIn = userLoggedIn ? 
+                CheckLoginEventReply.State.LOGGED : 
+                CheckLoginEventReply.State.UNLOGGED });
         }
     }
 }
