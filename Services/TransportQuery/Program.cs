@@ -1,7 +1,11 @@
 using MassTransit;
 using TransportQuery.Consumer;
+using TransportQuery.Repository.TransportRepository;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// MongoDB context
+builder.Services.AddScoped<ITransportRepository, TransportRepository>();
 
 // Add services to the container.
 
