@@ -19,5 +19,5 @@ public class Transport
     public DateTime DepartureDate { get; set; }
 
     [BsonElement("pricePerSeat")]
-    public decimal PricePerSeat { get; set; }
+    public float PricePerSeat { get; set; }
 }
