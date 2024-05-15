@@ -1,22 +1,11 @@
 using HotelQuery.Consumer;
-using HotelQuery.Database;
-using HotelQuery.Database.Entity;
 using HotelQuery.Repository;
 using MassTransit;
-using MongoDB.Driver;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // MongoDB context
-builder.Services.AddSingleton(sp =>
-{
-    var connectionString = "mongodb://localhost:27017";
-    var databaseName = "Hotel";
-    var client = new MongoClient(connectionString);
-    var database = client.GetDatabase(databaseName);
-    return new HotelContext(database);
-});
-
+builder.Services.AddScoped<IHotelRepository, HotelRepository>();
 
 // Add services to the container.
 builder.Services.AddControllers();
