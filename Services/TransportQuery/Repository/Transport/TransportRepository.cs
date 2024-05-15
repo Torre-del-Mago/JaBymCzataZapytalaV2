@@ -37,6 +37,7 @@ namespace TransportQuery.Repository.TransportRepository
         public List<TransportModel> getTransportsForConnection(string destinationId)
         {
             var transportCollection = _database.GetCollection<Database.Entity.Transport>("transports").AsQueryable();
+
             var result = transportCollection.Where(t => destinationId == t.ConnectionId).Select(t => new TransportModel() { Id= t.Id, NumberOfSeats = t.NumberOfSeats, Price = t.PricePerSeat }).ToList();
             return result;
         }
@@ -44,12 +45,14 @@ namespace TransportQuery.Repository.TransportRepository
         public List<Transport> getTransportsByIds(string departureId, string returnId)
         {
             var transportCollection = _database.GetCollection<Database.Entity.Transport>("transports").AsQueryable();
+
             return transportCollection.Where(t => t.Id == departureId || t.Id == returnId).ToList();
         }
 
         public int getNumberOfTakenSeatsForTransport(string transportId)
         {
             var ticketCollection = _database.GetCollection<ReservedTicket>("reserved_tickets").AsQueryable();
+
             int numberOfSeatsTaken = ticketCollection.Where(t => t.TransportId == transportId).Sum(t => t.NumberOfReservedSeats);
             return numberOfSeatsTaken;
         }
