@@ -8,10 +8,13 @@ public class OfferRoom
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public string Id { get; set; }
-    
+
+    [Required]
     public string OfferId { get; set; }
-    
+
+    [Required]
     public string RoomType { get; set; }
-    
+
+    [Required]
     public int NumberOfRooms { get; set; }
 }
