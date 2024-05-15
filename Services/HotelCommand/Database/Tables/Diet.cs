@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace HotelQuery.Database.Tables;
+namespace HotelCommand.Database.Tables;
 
 public class Diet
 {
@@ -10,4 +10,6 @@ public class Diet
     public int Id { get; set; }
     
     public string Name { get; set; }
+
+    public List<HotelDiet> HotelDiets { get; set; }
 }

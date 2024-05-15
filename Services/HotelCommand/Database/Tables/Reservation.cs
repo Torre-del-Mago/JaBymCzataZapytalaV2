@@ -1,17 +1,25 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace HotelQuery.Database.Tables;
+namespace HotelCommand.Database.Tables;
 
 public class Reservation
 {
     [Key]
-    public Guid HotelId { get; set; }
-    
-    public DateOnly  From  { get; set; }
-    
-    public DateOnly  To { get; set; }
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public int Id { get; set; }
+
+    [Required]
+    public DateTime  From  { get; set; }
+
+    [Required]
+    public DateTime  To { get; set; }
     
     public List<ReservedRoom> Rooms { get; set; }
-    
+
+    [Required]
+    public int HotelId { get; set; }
+
+    public Hotel Hotel { get; set; }
+
 }
