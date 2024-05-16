@@ -12,14 +12,16 @@ namespace Gate.Controllers
     public class PaymentController : ControllerBase
     {
         private IRequestClient<PayEvent> _requestClient { get; set; }
-        public PaymentController(IRequestClient<PayEvent> requestClient) { 
-        _requestClient = requestClient;
+        public PaymentController(IRequestClient<PayEvent> requestClient)
+        {
+            _requestClient = requestClient;
         }
 
         [HttpPost("check")]
         public async Task<IActionResult> CheckPayment([FromBody] PayRequest request)
         {
-            try {
+            try
+            {
                 var clientResponse = await _requestClient.GetResponse<PayEventReply>(
                 new PayEvent()
                 {
@@ -42,5 +44,6 @@ namespace Gate.Controllers
             {
                 return NotFound();
             }
+        }
     }
 }
