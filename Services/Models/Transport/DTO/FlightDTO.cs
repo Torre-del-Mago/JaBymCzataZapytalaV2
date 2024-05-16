@@ -5,9 +5,9 @@ namespace Models.Transport.DTO
     public class FlightDTO
     {
 
-        public string DepartureTransportId { get; set; }
+        public int DepartureTransportId { get; set; }
 
-        public string ReturnTransportId { get; set; }
+        public int ReturnTransportId { get; set; }
 
         // it's a sum of depature price and return price
         public float PricePerSeat { get; set; }
