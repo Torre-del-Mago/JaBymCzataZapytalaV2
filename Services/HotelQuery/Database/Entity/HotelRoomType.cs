@@ -3,18 +3,18 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace HotelQuery.Database.Entity;
 
-public class HotelRoom
+public class HotelRoomType
 {
     [BsonId]
     [BsonRepresentation(BsonType.ObjectId)]
     public int Id { get; set; }
     
+    [BsonElement("count")]
+    public int Count { get; set; }
+    
+    [BsonElement("pricePerNight")]
+    public int PricePerNight { get; set; }
+    
     [BsonElement("hotelId")]
-    public Guid HotelId { get; set; }
-    
-    [BsonElement("numberOfPeople")]
-    public int NumberOfPeople { get; set; }
-    
-    [BsonElement("city")]
-    public string City { get; set; }
+    public int RoomTypeId { get; set; }
 }

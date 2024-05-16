@@ -24,6 +24,6 @@ public class Hotel
     [BsonElement("diets")]
     public List<Diet> Diets { get; set; }
     
-    [BsonElement("roomTypes")]
-    public List<RoomType> RoomTypes { get; set; }
+    [BsonElement("rooms")]
+    public List<HotelRoomType> Rooms { get; set; }
 }
