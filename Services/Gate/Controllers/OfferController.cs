@@ -17,7 +17,7 @@ namespace Gate.Controllers
         }
 
         [HttpPost("reserve")]
-        public async Task<IActionResult> Reserve([FromBody] ReserveOfferRequest request)
+        public async Task<IActionResult> Reserve([FromQuery] ReserveOfferRequest request)
         {
             try
             {
