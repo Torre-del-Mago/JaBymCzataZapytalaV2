@@ -10,10 +10,10 @@ public class ReservedRoom
     public int Id { get; set; }
     
     [BsonElement("reservationId")]
-    public Guid ReservationId { get; set; }
+    public int ReservationId { get; set; }
     
     [BsonElement("hotelRoomTypesId")]
-    public Guid HotelRoomTypesId { get; set; }
+    public int HotelRoomTypesId { get; set; }
     
     [BsonElement("numberOfRooms")]
     public int NumberOfRooms { get; set; }

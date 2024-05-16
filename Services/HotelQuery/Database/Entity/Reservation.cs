@@ -9,7 +9,7 @@ public class Reservation
     public int Id { get; set; }
     
     [BsonElement("hotelId")]
-    public Guid HotelId { get; set; }
+    public int HotelId { get; set; }
     
     [BsonElement("from")]
     public DateTime  From  { get; set; }
