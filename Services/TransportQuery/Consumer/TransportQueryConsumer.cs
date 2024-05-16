@@ -7,7 +7,8 @@ namespace TransportQuery.Consumer
     public class TransportQueryConsumer : IConsumer<GetTransportDataForTripEvent>
     {
         private ITransportService _service {  get; set; }
-        public TransportQueryConsumer(ITransportService transportService) {
+        public TransportQueryConsumer(ITransportService transportService) 
+        {
             _service = transportService;
         }
 
