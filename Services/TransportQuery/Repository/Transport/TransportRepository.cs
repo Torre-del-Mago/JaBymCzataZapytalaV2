@@ -36,14 +36,14 @@ namespace TransportQuery.Repository.TransportRepository
 
         public List<TransportModel> getTransportsForConnection(string destinationId)
         {
-            var transportCollection = _database.GetCollection<Database.Entity.Transport>("transports").AsQueryable();
+            var transportCollection = _database.GetCollection<Transport>("transports").AsQueryable();
             var result = transportCollection.Where(t => destinationId == t.ConnectionId).Select(t => new TransportModel() { Id= t.Id, NumberOfSeats = t.NumberOfSeats, Price = t.PricePerSeat }).ToList();
             return result;
         }
 
         public List<Transport> getTransportsByIds(string departureId, string returnId)
         {
-            var transportCollection = _database.GetCollection<Database.Entity.Transport>("transports").AsQueryable();
+            var transportCollection = _database.GetCollection<Transport>("transports").AsQueryable();
             return transportCollection.Where(t => t.Id == departureId || t.Id == returnId).ToList();
         }
 
