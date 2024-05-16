@@ -17,7 +17,7 @@ namespace TransportQuery.Consumer
             /*
              Do something
              */
-            var result = _service.getTransportForCriteria(context.Message.Criteria);
+            var result = _service.GetTransportForCriteria(context.Message.Criteria);
             await context.Publish(new GetTransportDataForTripEventReply() {Transport = result });
         }
     }
