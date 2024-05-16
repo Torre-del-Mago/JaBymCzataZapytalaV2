@@ -1,0 +1,71 @@
+version: '3.4'
+name: "ja_bym_czata_zapytala"
+services:
+  gate:
+    image: ${DOCKER_REGISTRY-}gate
+    build:
+      context: .
+      dockerfile: Gate/Dockerfile
+
+  hotelcommand:
+    image: ${DOCKER_REGISTRY-}hotelcommand
+    build:
+      context: .
+      dockerfile: HotelCommand/Dockerfile
+
+
+  hotelquery:
+    image: ${DOCKER_REGISTRY-}hotelquery
+    build:
+      context: .
+      dockerfile: HotelQuery/Dockerfile
+
+
+  login:
+    image: ${DOCKER_REGISTRY-}login
+    build:
+      context: .
+      dockerfile: Login/Dockerfile
+
+
+  offercommand:
+    image: ${DOCKER_REGISTRY-}offercommand
+    build:
+      context: .
+      dockerfile: OfferCommand/Dockerfile
+
+
+  offerquery:
+    image: ${DOCKER_REGISTRY-}offerquery
+    build:
+      context: .
+      dockerfile: OfferQuery/Dockerfile
+
+
+  payment:
+    image: ${DOCKER_REGISTRY-}payment
+    build:
+      context: .
+      dockerfile: Payment/Dockerfile
+
+
+  transportcommand:
+    image: ${DOCKER_REGISTRY-}transportcommand
+    build:
+      context: .
+      dockerfile: TransportCommand/Dockerfile
+
+
+  transportquery:
+    image: ${DOCKER_REGISTRY-}transportquery
+    build:
+      context: .
+      dockerfile: TransportQuery/Dockerfile
+
+
+  trip:
+    image: ${DOCKER_REGISTRY-}trip
+    build:
+      context: .
+      dockerfile: Trip/Dockerfile
+

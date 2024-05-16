@@ -1,0 +1,20 @@
+{
+  "profiles": {
+    "Docker Compose": {
+      "commandName": "DockerCompose",
+      "commandVersion": "1.0",
+      "serviceActions": {
+        "gate": "StartDebugging",
+        "hotelcommand": "StartDebugging",
+        "hotelquery": "StartDebugging",
+        "login": "StartDebugging",
+        "offercommand": "StartDebugging",
+        "offerquery": "StartDebugging",
+        "payment": "StartDebugging",
+        "transportcommand": "StartDebugging",
+        "transportquery": "StartDebugging",
+        "trip": "StartDebugging"
+      }
+    }
+  }
+}
