@@ -50,6 +50,7 @@ namespace TransportQuery.Repository.TransportRepository
         public int getNumberOfTakenSeatsForTransport(string transportId)
         {
             var ticketCollection = _database.GetCollection<ReservedTicket>("reserved_tickets").AsQueryable();
+
             int numberOfSeatsTaken = ticketCollection.Where(t => t.TransportId == transportId).Sum(t => t.NumberOfReservedSeats);
             return numberOfSeatsTaken;
         }

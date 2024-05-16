@@ -1,4 +1,5 @@
-﻿using MassTransit;
+using MassTransit;
+using Models.Hotel;
 using Models.Transport;
 
 namespace TransportQuery.Consumer
