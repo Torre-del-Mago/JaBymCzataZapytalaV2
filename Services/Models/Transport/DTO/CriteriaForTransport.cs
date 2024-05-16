@@ -10,7 +10,7 @@
 
         public string Country { get; set; }
 
-        public string DestinationCity { get; set; }
+        public string Departure { get; set; }
 
     }
 }
