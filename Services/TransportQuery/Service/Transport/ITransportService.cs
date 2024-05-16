@@ -4,6 +4,7 @@ namespace TransportQuery.Service.Transport
 {
     public interface ITransportService
     {
-        public TransportDTO getTransportForCriteria(CriteriaForTransport criteria);
+        public TransportsDTO GetTransportsForCriteria(CriteriaForTransports criteria);
+        public TransportDTO GetTransportForCriteria(CriteriaForTransport criteria);
     }
 }
