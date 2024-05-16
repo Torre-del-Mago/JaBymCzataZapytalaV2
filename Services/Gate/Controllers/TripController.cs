@@ -24,7 +24,7 @@ namespace Gate.Controllers
         }
 
         [HttpGet("trip-info")]
-        public async Task<IActionResult> getTripInfo([FromBody] GenerateTripRequest request)
+        public async Task<IActionResult> getTripInfo([FromQuery] GenerateTripRequest request)
         {
             try
             {
@@ -41,7 +41,7 @@ namespace Gate.Controllers
         }
 
         [HttpGet("trip-list-info")]
-        public async Task<IActionResult> getTripListInfo([FromBody] GenerateTripsReqeust request)
+        public async Task<IActionResult> getTripListInfo([FromQuery] GenerateTripsReqeust request)
         {
             try
             {
