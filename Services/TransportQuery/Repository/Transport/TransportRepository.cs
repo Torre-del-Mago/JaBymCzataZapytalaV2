@@ -18,7 +18,7 @@ namespace TransportQuery.Repository.TransportRepository
             _database = _client.GetDatabase("transport_query");
         }
 
-        public List<ConnectionModel> getConnectionComingFrom(string destinationCity)
+        public List<ConnectionModel> getConnectionFrom(string destinationCity)
         {
             var connectionCollection = _database.GetCollection<FlightConnection>("flight_connections").AsQueryable();
 
@@ -26,7 +26,7 @@ namespace TransportQuery.Repository.TransportRepository
             return result;
         }
 
-        public List<ConnectionModel> getConnectionGoingTo(string destinationCity)
+        public List<ConnectionModel> getConnectionTo(string destinationCity)
         {
             var connectionCollection = _database.GetCollection<FlightConnection>("flight_connections").AsQueryable();
 
@@ -34,25 +34,39 @@ namespace TransportQuery.Repository.TransportRepository
             return result;
         }
 
-        public List<TransportModel> getTransportsForConnection(string destinationId)
+        public List<TransportModel> getTransportsForConnection(int destinationId)
         {
             var transportCollection = _database.GetCollection<Transport>("transports").AsQueryable();
             var result = transportCollection.Where(t => destinationId == t.ConnectionId).Select(t => new TransportModel() { Id= t.Id, NumberOfSeats = t.NumberOfSeats, Price = t.PricePerSeat }).ToList();
             return result;
         }
 
-        public List<Transport> getTransportsByIds(string departureId, string returnId)
+        public List<Transport> getTransportsByIds(int departureId, int returnId)
         {
             var transportCollection = _database.GetCollection<Transport>("transports").AsQueryable();
             return transportCollection.Where(t => t.Id == departureId || t.Id == returnId).ToList();
         }
 
-        public int getNumberOfTakenSeatsForTransport(string transportId)
+        public int getNumberOfTakenSeatsForTransport(int transportId)
         {
             var ticketCollection = _database.GetCollection<ReservedTicket>("reserved_tickets").AsQueryable();
 
             int numberOfSeatsTaken = ticketCollection.Where(t => t.TransportId == transportId).Sum(t => t.NumberOfReservedSeats);
             return numberOfSeatsTaken;
+        }
+
+        public List<Transport> GetTransports()
+        {
+            var transportCollection = _database.GetCollection<Transport>("transports").AsQueryable();
+            var result = transportCollection.ToList();
+            return result;
+        }
+
+        public Transport GetTransport(int transportId)
+        {
+            var transportCollection = _database.GetCollection<Transport>("transports");
+            var hotelRoomType = transportCollection.Find(rr => rr.Id == transportId).FirstOrDefault();
+            return hotelRoomType;
         }
     }
 }

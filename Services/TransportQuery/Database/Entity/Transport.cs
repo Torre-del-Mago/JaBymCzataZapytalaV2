@@ -7,10 +7,10 @@ public class Transport
 {
     [BsonId]
     [BsonRepresentation(BsonType.ObjectId)]
-    public string Id { get; set; }
+    public int Id { get; set; }
     
     [BsonElement("connectionId")]
-    public string ConnectionId { get; set; }
+    public int ConnectionId { get; set; }
 
     [BsonElement("numberOfSeats")]
     public int NumberOfSeats { get; set; }

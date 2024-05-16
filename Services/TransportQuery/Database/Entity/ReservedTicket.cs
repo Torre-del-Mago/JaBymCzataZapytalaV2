@@ -7,10 +7,10 @@ public class ReservedTicket
 {
     [BsonId]
     [BsonRepresentation(BsonType.ObjectId)]
-    public string Id { get; set; }
+    public int Id { get; set; }
     
     [BsonElement("transportId")]
-    public string TransportId { get; set; }
+    public int TransportId { get; set; }
     
     [BsonElement("numberOfReservedSeats")]
     public int NumberOfReservedSeats { get; set; }
