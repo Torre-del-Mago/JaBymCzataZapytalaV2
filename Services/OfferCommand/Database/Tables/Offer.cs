@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using OfferCommand.Database.Tables;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OfferQuery.Database.Entity;
@@ -34,4 +35,8 @@ public class Offer
     public string UserLogin { get; set; }
     
     public string OfferStatus { get; set; }
+
+    public List<OfferRoom> Rooms { get; set; }
+
+    public List<OfferEvent> Events { get; set; }
 }

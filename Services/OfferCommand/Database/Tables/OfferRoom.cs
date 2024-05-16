@@ -17,4 +17,6 @@ public class OfferRoom
 
     [Required]
     public int NumberOfRooms { get; set; }
+
+    public Offer Offer { get; set; }
 }
