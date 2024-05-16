@@ -2,7 +2,7 @@
 
 namespace Models.Gate.Trip.Response
 {
-    public class GenerateTripsResponse : EventModel
+    public class GenerateTripsResponse
     {
         public TripsDTO Trips { get; set; }
     }

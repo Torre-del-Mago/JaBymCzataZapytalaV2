@@ -9,5 +9,7 @@
         public int NumberOfPeople { get; set; }
 
         public string Country { get; set; }
+        
+        public string Departure { get; set; }
     }
 }

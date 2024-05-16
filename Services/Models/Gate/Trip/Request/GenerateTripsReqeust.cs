@@ -3,7 +3,7 @@ using Models.Trip.DTO;
 
 namespace Models.Gate.Trip.Request
 {
-    public class GenerateTripsReqeust : EventModel
+    public class GenerateTripsReqeust
     {
         public CriteriaForTrips Criteria { get; set; }
     }
