@@ -1,29 +1,49 @@
 ﻿using MassTransit;
 using Microsoft.AspNetCore.Mvc;
+using Models.Gate.Payment.Request;
+using Models.Gate.Payment.Response;
+using Models.Login;
 using Models.Payment;
 
 namespace Gate.Controllers
 {
     [ApiController]
     [Route("api/payment/")]
-    public class PaymentController
+    public class PaymentController : ControllerBase
     {
         private IRequestClient<PayEvent> _requestClient { get; set; }
-        public PaymentController(IRequestClient<PayEvent> requestClient) { 
-        _requestClient = requestClient;
+        public PaymentController(IRequestClient<PayEvent> requestClient)
+        {
+            _requestClient = requestClient;
         }
 
-        [HttpGet("check")]
-        public async Task<bool> CheckPayment()
+        [HttpPost("check")]
+        public async Task<IActionResult> CheckPayment([FromBody] PayRequest request)
         {
-            var paymentEvent = new PayEvent()
+            try
             {
-                /*
-                 Tu idzie inicjalizacja
-                 */
-            };
-            var response = await _requestClient.GetResponse<PayEventReply>(paymentEvent);
-            return response.Message.Answer == PayEventReply.State.PAID; // To change
+                var clientResponse = await _requestClient.GetResponse<PayEventReply>(
+                new PayEvent()
+                {
+                    OfferId = request.OfferId,
+                    Amount = request.Amount,
+                });
+                var response = new PayResponse();
+                response.OfferId = clientResponse.Message.OfferId;
+                if (clientResponse.Message.Answer == PayEventReply.State.PAID)
+                {
+                    response.Answer = PayResponse.State.PAID;
+                }
+                if (clientResponse.Message.Answer == PayEventReply.State.REJECTED)
+                {
+                    response.Answer = PayResponse.State.REJECTED;
+                }
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return NotFound();
+            }
         }
     }
 }
