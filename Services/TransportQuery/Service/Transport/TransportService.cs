@@ -6,103 +6,179 @@ namespace TransportQuery.Service.Transport
 {
     public class TransportService : ITransportService
     {
-        private ITransportRepository _repository { get; set; }
-        public TransportService(ITransportRepository transportRepository) {
-            _repository = transportRepository;
+        private readonly ITransportRepository _transportRepository;
+        public TransportService(ITransportRepository repository) {
+            _transportRepository = repository;
+        }
+        
+        public TransportDTO GetTransportForCriteria(CriteriaForTransport criteria)
+        {
+            var transportConnections = GenerateTransportConnections(criteria);
+
+            List<FlightDTO> flights = transportConnections
+                .Where(pair => pair.Value.ArrivalId != null && pair.Value.DepartureId != null)
+                .Select(pair => new FlightDTO
+                {
+                    Departure = pair.Key,
+                    DepartureTransportId = pair.Value.DepartureId,
+                    ReturnTransportId = pair.Value.ArrivalId,
+                    PricePerSeat = pair.Value.Price
+                })
+                .ToList();
+
+            var transportDto = new TransportDTO
+            {
+                Destination = criteria.Departure,
+                ChosenFlight = flights.ElementAt(0),
+                PossibleFlights = flights
+            };
+            return transportDto;
         }
 
-        private bool checkIfFlightsHaveEnoughSeats(CriteriaForTransport criteria)
+        public TransportsDTO GetTransportsForCriteria(CriteriaForTransports criteria)
         {
-            throw new NotImplementedException();
+            var transportConnections = GenerateTransportsConnections(criteria);
 
-            /*
-             var transports = _repository.GetTransportsByIds(criteria.ChosenFlight.DepartureId, criteria.ChosenFlight.ReturnId);
-             foreach(var transport in transports) {
-                int takenSeats = _repository.getNumberOfTakenSeatsForTransport(transport.Id);
-                int totalSeats = transport.NumberOfSeats;
-                if(criteria.ChosenFlight.NumberOfSeats > (totalSeats - takenSeats)) {
-                  return false;
-            }
-            }
-            return true;
-             */
-        }
-
-        public Models.Transport.DTO.TransportDTO getTransportForCriteria(CriteriaForTransport criteria)
-        {
-            var enoughSeats = checkIfFlightsHaveEnoughSeats(criteria);
-            if(!enoughSeats)
-            {
-                // Jak oznaczyć że dla wybranego transportu nie ma miejsc
-                return new Models.Transport.DTO.TransportDTO();
-            }
-
-            var departureConnections = _repository.getConnectionGoingTo(criteria.DestinationCity);
-            var returnConnections = _repository.getConnectionComingFrom(criteria.DestinationCity);
-
-            Dictionary<string, DepartureAndReturnIdModel> idsForConnection = new Dictionary<string, DepartureAndReturnIdModel>();
-
-            foreach (ConnectionModel connection in departureConnections)
-            {
-                var transports = _repository.getTransportsForConnection(connection.Id);
-                foreach(var transport in transports)
+            var transports = transportConnections
+                .Where(pair => pair.Value.ArrivalId != null && pair.Value.DepartureId != null)
+                .Select(pair => new TransportDTO
                 {
-                    int numberOfSeatsTotal = transport.NumberOfSeats;
-                    int numberOfSeatsTaken = _repository.getNumberOfTakenSeatsForTransport(transport.Id);
-                    if(criteria.NumberOfPeople <= (numberOfSeatsTotal - numberOfSeatsTaken))
-                    {
-                        idsForConnection[connection.LocationName].DepartureId = transport.Id;
-                        idsForConnection[connection.LocationName].Price += transport.Price;
-                        break;
-                    }
-                }
-            }
-
-            foreach (ConnectionModel connection in returnConnections)
-            {
-                var transports = _repository.getTransportsForConnection(connection.Id);
-                foreach (var transport in transports)
-                {
-                    int numberOfSeatsTotal = transport.NumberOfSeats;
-                    int numberOfSeatsTaken = _repository.getNumberOfTakenSeatsForTransport(transport.Id);
-                    if (criteria.NumberOfPeople <= (numberOfSeatsTotal - numberOfSeatsTaken))
-                    {
-                        idsForConnection[connection.LocationName].ReturnId = transport.Id;
-                        idsForConnection[connection.LocationName].Price += transport.Price;
-                        break;
-                    }
-                }
-            }
-
-            List<FlightDTO> flights = new List<FlightDTO>();
-
-            foreach(KeyValuePair<string, DepartureAndReturnIdModel> pair in idsForConnection)
-            {
-                if(pair.Value.ReturnId != null && pair.Value.DepartureId != null)
-                {
-                    flights.Add(new FlightDTO()
+                    Destination = pair.Key,
+                    ChosenFlight = new FlightDTO
                     {
                         Departure = pair.Key,
                         DepartureTransportId = pair.Value.DepartureId,
-                        ReturnTransportId = pair.Value.ReturnId,
+                        ReturnTransportId = pair.Value.ArrivalId,
                         PricePerSeat = pair.Value.Price
-                    });
+                    },
+                    PossibleFlights = new List<FlightDTO>
+                    {
+                        new FlightDTO
+                        {
+                            Departure = pair.Key,
+                            DepartureTransportId = pair.Value.DepartureId,
+                            ReturnTransportId = pair.Value.ArrivalId,
+                            PricePerSeat = pair.Value.Price
+                        }
+                    }
+                })
+                .ToList();
+
+            return new TransportsDTO { Transports = transports };
+        }
+
+        private Dictionary<string, DepartureAndArrivalModel> GenerateTransportConnections(CriteriaForTransport criteria)
+        {
+            Dictionary<string, DepartureAndArrivalModel> transportConnections = new Dictionary<string, DepartureAndArrivalModel>();
+
+            var destinationFlights = _transportRepository.GetDepartureFlightConnections(criteria.Departure)
+                .Where(f => f.ArrivalCountry == criteria.Country && f.ArrivalLocation == criteria.Destination);
+            foreach (var destinationFlight in destinationFlights)
+            {
+                var transportsDF = _transportRepository.GetTransportsById(destinationFlight.Id);
+
+                foreach (var transportDF in transportsDF)
+                {
+                    int seatsTotal = transportDF.NumberOfSeats;
+                    int seatsTaken = _transportRepository.GetNumberOfTakenSeatsForTransport(transportDF.Id);
+
+                    if ((criteria.NumberOfPeople <= (seatsTotal - seatsTaken)) && (criteria.BeginDate >= transportDF.DepartureDate))
+                    {
+                        if (!transportConnections.ContainsKey(destinationFlight.DepartureLocation))
+                        {
+                            transportConnections[destinationFlight.DepartureLocation] = new DepartureAndArrivalModel();
+                        }
+
+                        transportConnections[destinationFlight.DepartureLocation].DepartureId = transportDF.Id;
+                        transportConnections[destinationFlight.DepartureLocation].Price += transportDF.PricePerSeat; 
+                        break;
+                    }
                 }
             }
 
-            var result = new Models.Transport.DTO.TransportDTO();
-            result.PossibleFlights = flights;
-            result.ChosenFlight = flights.ElementAt(0);
-            result.Destination = criteria.DestinationCity;
+            var returnFlights = _transportRepository.GetArrivalFlightConnections(criteria.Departure)
+                .Where(f => f.ArrivalCountry == criteria.Country && f.ArrivalLocation == criteria.Destination);
+            foreach (var returnFlight in returnFlights)
+            {
+                var transportsRF = _transportRepository.GetTransportsById(returnFlight.Id);
 
-            return result;
+                foreach (var transportRF in transportsRF)
+                {
+                    int seatsTotal = transportRF.NumberOfSeats;
+                    int seatsTaken = _transportRepository.GetNumberOfTakenSeatsForTransport(transportRF.Id);
 
-            /*
-             Fetch going to destination
-             Fetch coming from destination
-             See which ones have available number of seats
-             Get first with enough seats
-             */
+                    if ((criteria.NumberOfPeople <= (seatsTotal - seatsTaken)) && (criteria.EndDate <= transportRF.DepartureDate))
+                    {
+                        if (!transportConnections.ContainsKey(returnFlight.ArrivalLocation))
+                        {
+                            transportConnections[returnFlight.ArrivalLocation] = new DepartureAndArrivalModel();
+                        }
+
+                        transportConnections[returnFlight.ArrivalLocation].ArrivalId = transportRF.Id;
+                        transportConnections[returnFlight.ArrivalLocation].Price += transportRF.PricePerSeat; 
+                        break;
+                    }
+                }
+            }
+
+            return transportConnections;
+        }
+        
+        private Dictionary<string, DepartureAndArrivalModel> GenerateTransportsConnections(CriteriaForTransports criteria)
+        {
+            Dictionary<string, DepartureAndArrivalModel> transportConnections = new Dictionary<string, DepartureAndArrivalModel>();
+
+            var destinationFlights = _transportRepository.GetDepartureFlightConnections(criteria.Departure)
+                .Where(f => f.ArrivalCountry == criteria.Country); 
+            foreach (var destinationFlight in destinationFlights)
+            {
+                var transportsDF = _transportRepository.GetTransportsById(destinationFlight.Id);
+
+                foreach (var transportDF in transportsDF)
+                {
+                    int seatsTotal = transportDF.NumberOfSeats;
+                    int seatsTaken = _transportRepository.GetNumberOfTakenSeatsForTransport(transportDF.Id);
+
+                    if ((criteria.NumberOfPeople <= (seatsTotal - seatsTaken)) && (criteria.BeginDate >= transportDF.DepartureDate))
+                    {
+                        if (!transportConnections.ContainsKey(destinationFlight.DepartureLocation))
+                        {
+                            transportConnections[destinationFlight.DepartureLocation] = new DepartureAndArrivalModel();
+                        }
+
+                        transportConnections[destinationFlight.DepartureLocation].DepartureId = transportDF.Id;
+                        transportConnections[destinationFlight.DepartureLocation].Price += transportDF.PricePerSeat; 
+                        break;
+                    }
+                }
+            }
+
+            var returnFlights = _transportRepository.GetArrivalFlightConnections(criteria.Departure)
+                .Where(f => f.ArrivalCountry == criteria.Country);
+            foreach (var returnFlight in returnFlights)
+            {
+                var transportsRF = _transportRepository.GetTransportsById(returnFlight.Id);
+
+                foreach (var transportRF in transportsRF)
+                {
+                    int seatsTotal = transportRF.NumberOfSeats;
+                    int seatsTaken = _transportRepository.GetNumberOfTakenSeatsForTransport(transportRF.Id);
+
+                    if ((criteria.NumberOfPeople <= (seatsTotal - seatsTaken)) && (criteria.EndDate <= transportRF.DepartureDate))
+                    {
+                        if (!transportConnections.ContainsKey(returnFlight.ArrivalLocation))
+                        {
+                            transportConnections[returnFlight.ArrivalLocation] = new DepartureAndArrivalModel();
+                        }
+
+                        transportConnections[returnFlight.ArrivalLocation].ArrivalId = transportRF.Id;
+                        transportConnections[returnFlight.ArrivalLocation].Price += transportRF.PricePerSeat; 
+                        break;
+                    }
+                }
+            }
+
+            return transportConnections;
         }
     }
 }
