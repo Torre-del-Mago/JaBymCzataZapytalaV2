@@ -1,4 +1,4 @@
-
-export type TripsDTO {
+import {TripDTO} from './TripDTO'
+export type TripsDTO = {
     Trips: TripDTO[]
 }

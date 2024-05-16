@@ -1,1 +1,15 @@
-<p>detail works!</p>
+<a routerLink="/">Wróć do strony głównej</a>
+<h1>Wycieczka do hotelu {{hotelName}} w {{destinationName}}</h1>
+<p>W przedziałach czasowych </p>
+<p>Cena za osobę {{pricePerPerson}}</p>
+<p>Dla pokoju Pokój {{numberOfPeople}}os.</p>
+<p>Typ posiłku: {{mealType}}</p>
+<div>
+    Number of adults: {{numberOfAdults}} 
+    <button (click)="addAdult()" [disabled]="!canIncreasePeople">+</button>
+    <button (click)="minusAdult()" [disabled]="!canDecreaseAdults">-</button><br>
+    Number of children: {{numberOfChildren}} 
+    <button (click)="addChild()" [disabled]="!canIncreasePeople">+</button>
+    <button (click)="minusChild()" [disabled]="!canDecreaseChildren">-</button>
+</div>
+

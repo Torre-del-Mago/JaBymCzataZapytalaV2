@@ -7,7 +7,7 @@ import { TripDTO } from '../dto/TripDTO';
   providedIn: 'root',
 })
 export class BackendService {
-  constructor(private client: HttpClient) {}
+  constructor(/*private client: HttpClient*/) {}
 
   //Nie wiem czy tu jest http czy https więc zmieńcie jak coś
   //Nie wiem jaki port czy też jak nazwiecie bramę w dockerze
@@ -36,7 +36,7 @@ export class BackendService {
     numberOfChildren: number
   ): TripDTO[] {
     return Mocks.trips.filter(
-      (t) =>
+      (t: TripDTO) =>
         t.Country === destination &&
         t.ChosenFlight.Departure === startCity &&
         t.BeginDate >= startDate &&
