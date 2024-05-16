@@ -11,6 +11,10 @@
         public DateTime BeginDate { get; set; }
 
         public DateTime EndDate { get; set; }
+        
+        public string Departure { get; set; }
+        
+        public string Destination { get; set; }
 
     }
 }
