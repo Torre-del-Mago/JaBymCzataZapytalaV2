@@ -6,66 +6,214 @@ services:
     build:
       context: .
       dockerfile: Gate/Dockerfile
+    hostname: 'gate'
+    container_name: 'gate'
+    depends_on:
+        - rabbitmq 
+        - postgres 
+    # ports:
+    #     - 8010:80 
+    networks:
+        - backend
+         
 
   hotelcommand:
     image: ${DOCKER_REGISTRY-}hotelcommand
     build:
       context: .
       dockerfile: HotelCommand/Dockerfile
-
+    hostname: 'hotelcommand'
+    container_name: 'hotelcommand'
+    depends_on:
+        - rabbitmq 
+        - postgres 
+    # ports:
+    #     - 8020:80 
+    networks:
+        - backend
 
   hotelquery:
     image: ${DOCKER_REGISTRY-}hotelquery
     build:
       context: .
       dockerfile: HotelQuery/Dockerfile
-
+    hostname: 'hotelquery'
+    container_name: 'hotelquery'
+    depends_on:
+        - rabbitmq 
+        - postgres 
+    # ports:
+    #     - 8030:80 
+    networks:
+        - backend
 
   login:
     image: ${DOCKER_REGISTRY-}login
     build:
       context: .
       dockerfile: Login/Dockerfile
-
+    hostname: 'login'
+    container_name: 'login'
+    depends_on:
+        - rabbitmq 
+        - postgres 
+    # ports:
+    #     - 8040:80 
+    networks:
+        - backend
 
   offercommand:
     image: ${DOCKER_REGISTRY-}offercommand
     build:
       context: .
       dockerfile: OfferCommand/Dockerfile
-
+    hostname: 'offercommand'
+    container_name: 'offercommand'
+    depends_on:
+        - rabbitmq 
+        - postgres 
+    # ports:
+    #     - 8050:80 
+    networks:
+        - backend
 
   offerquery:
     image: ${DOCKER_REGISTRY-}offerquery
     build:
       context: .
       dockerfile: OfferQuery/Dockerfile
-
+    hostname: 'offerquery'
+    container_name: 'offerquery'
+    depends_on:
+        - rabbitmq 
+        - postgres 
+    # ports:
+    #     - 8060:80 
+    networks:
+        - backend
 
   payment:
     image: ${DOCKER_REGISTRY-}payment
     build:
       context: .
       dockerfile: Payment/Dockerfile
-
+    hostname: 'payment'
+    container_name: 'payment'
+    depends_on:
+        - rabbitmq 
+        - postgres 
+    # ports:
+    #     - 8070:80 
+    networks:
+        - backend
 
   transportcommand:
     image: ${DOCKER_REGISTRY-}transportcommand
     build:
       context: .
       dockerfile: TransportCommand/Dockerfile
-
+    hostname: 'transportcommand'
+    container_name: 'transportcommand'
+    depends_on:
+        - rabbitmq 
+        - postgres 
+    # ports:
+    #     - 8090:80 
+    networks:
+        - backend
 
   transportquery:
     image: ${DOCKER_REGISTRY-}transportquery
     build:
       context: .
       dockerfile: TransportQuery/Dockerfile
-
+    hostname: 'transportquery'
+    container_name: 'transportquery'
+    depends_on:
+        - rabbitmq 
+        - postgres 
+    # ports:
+    #     - 8100:80 
+    networks:
+        - backend
 
   trip:
     image: ${DOCKER_REGISTRY-}trip
     build:
       context: .
       dockerfile: Trip/Dockerfile
+    hostname: 'trip'
+    container_name: 'trip'
+    depends_on:
+        - rabbitmq 
+        - postgres 
+    # ports:
+    #     - 8110:80 
+    networks:
+        - backend
 
+  postgres:
+    image: postgres:latest
+    restart: always
+    hostname: 'postgres'
+    container_name: 'postgres'
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_DB=local_database
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root 
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      backend:
+        aliases:
+          - psql
+  
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: test@example.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
+          
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    ports:
+        - 5672:5672
+        - 15672:15672
+    volumes:
+        - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
+        - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
+
+
+  mongo:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+
+
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: example
+      ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
+      ME_CONFIG_BASICAUTH: false
+
+
+networks:
+  backend: {}
+
+
+volumes:
+  postgres_data:
