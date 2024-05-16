@@ -1,12 +1,15 @@
 ﻿using MassTransit;
 using Microsoft.AspNetCore.Mvc;
+using Models.Gate.Offer.Request;
+using Models.Gate.Offer.Response;
 using Models.Login;
+using Models.Offer;
 
 namespace Gate.Controllers
 {
     [ApiController]
     [Route("api/logging/")]
-    public class LoggingController
+    public class LoggingController : ControllerBase
     {
         private IRequestClient<CheckLoginEvent> _requestClient { get; set; }
 
@@ -15,14 +18,25 @@ namespace Gate.Controllers
             _requestClient = requestClient;
         }
 
-        /*[HttpGet("check")]
-        public async IEnumerable<> checkLogin(String login)
+        [HttpGet("check")]
+        public async Task<IActionResult> checkLogin(String login)
         {
-            var request = new CheckLoginEvent()
+            try {
+                var clientResponse = await _requestClient.GetResponse<CheckLoginEventReply> (
+                    new CheckLoginEvent() { Login = login });
+                if (clientResponse.Message.LoggedIn == CheckLoginEventReply.State.LOGGED)
+                {
+                    return Ok();
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
+            catch (Exception ex)
             {
-            };
-            var response = await _requestClient.GetResponse<CheckLoginEventReply>(request);
-            return response.Message.Status;
-        }*/
+                return NotFound();
+            }
+        }
     }
 }

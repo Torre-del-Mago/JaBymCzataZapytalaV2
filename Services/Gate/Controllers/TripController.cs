@@ -1,13 +1,19 @@
 ﻿using MassTransit;
+using MassTransit.Clients;
 using Microsoft.AspNetCore.Mvc;
+using Models.Gate.Offer.Request;
+using Models.Gate.Offer.Response;
+using Models.Gate.Trip.Request;
+using Models.Gate.Trip.Response;
+using Models.Offer;
 using Models.Trip;
-using Models.Trip.DTO;
+
 
 namespace Gate.Controllers
 {
     [ApiController]
     [Route("api/trip/")]
-    public class TripController
+    public class TripController : ControllerBase
     {
         private IRequestClient<GenerateTripEvent> _tripRequestClient { get; set; }
         private IRequestClient<GenerateTripsEvent> _tripListRequestClient { get; set; }
@@ -18,29 +24,37 @@ namespace Gate.Controllers
         }
 
         [HttpGet("trip-info")]
-        public async Task<TripDTO> getTripInfo()
+        public async Task<IActionResult> getTripInfo([FromBody] GenerateTripRequest request)
         {
-            var request = new GenerateTripEvent()
+            try
             {
-
-            };
-            var response = await _tripRequestClient.GetResponse<GenerateTripEventReply>(request);
-            return response.Message.TripDTO; // possible
+                var clientResponse = await _tripRequestClient.GetResponse<GenerateTripEventReply>(
+                    new GenerateTripEvent() { Criteria = request.Criteria });
+                var response = new GenerateTripResponse();
+                response.TripDTO = clientResponse.Message.TripDTO;
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return NotFound();
+            }
         }
 
         [HttpGet("trip-list-info")]
-        public async Task<TripsDTO> getTripListInfo()
+        public async Task<IActionResult> getTripListInfo([FromBody] GenerateTripsReqeust request)
         {
-            var request = new GenerateTripsEvent()
+            try
             {
-
-            };
-            var response = await _tripRequestClient.GetResponse<GenerateTripsEventReply>(request);
-            return response.Message.Trips;
+                var clientResponse = await _tripRequestClient.GetResponse<GenerateTripsEventReply>(
+                    new GenerateTripsEvent() { Criteria = request.Criteria });
+                var response = new GenerateTripsResponse();
+                response.Trips = clientResponse.Message.Trips;
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return NotFound();
+            }
         }
-
-        /*
-         !!!!! TODO: Calculate price endpoint
-         */
     }
 }
