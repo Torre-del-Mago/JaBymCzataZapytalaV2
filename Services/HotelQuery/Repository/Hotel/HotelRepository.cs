@@ -1,101 +1,115 @@
 ﻿using HotelQuery.Database.Entity;
 using MongoDB.Driver;
 
-namespace HotelQuery.Repository;
+namespace HotelQuery.Repository.Hotel;
 
 public class HotelRepository : IHotelRepository
 {
-    const string connectionString = "mongodb://mongo:27017";
-    private MongoClient _client { get; set; }
-    private IMongoDatabase _database { get; set; }
+    const string ConnectionString = "mongodb://mongo:27017";
+    private MongoClient Client { get; set; }
+    private IMongoDatabase Database { get; set; }
     
     public HotelRepository()
     {
-        _client = new MongoClient(connectionString);
-        _database = _client.GetDatabase("hotel_query");
+        Client = new MongoClient(ConnectionString);
+        Database = Client.GetDatabase("hotel_query");
     }
     
-    public List<Hotel> getHotels()
+    public List<Database.Entity.Hotel> GetHotels()
     {
-        var connectionCollection = _database.GetCollection<Hotel>("hotels").AsQueryable();
+        var connectionCollection = Database.GetCollection<Database.Entity.Hotel>("hotels").AsQueryable();
         var result = connectionCollection.ToList();
         return result;
     }
 
-    public Hotel getHotel(int hotelId)
+    public Database.Entity.Hotel GetHotel(int hotelId)
     {
-        var hotelCollection = _database.GetCollection<Hotel>("hotels");
+        var hotelCollection = Database.GetCollection<Database.Entity.Hotel>("hotels");
         var hotel = hotelCollection.Find(h => h.Id == hotelId).FirstOrDefault();
         return hotel;
     }
 
-    public List<RoomType> getRoomTypes()
+    public List<RoomType> GetRoomTypes()
     {
-        var roomTypeCollection = _database.GetCollection<RoomType>("roomTypes").AsQueryable();
+        var roomTypeCollection = Database.GetCollection<RoomType>("room_types").AsQueryable();
         var result = roomTypeCollection.ToList();
         return result;
     }
 
-    public RoomType getRoomType(int roomTypeId)
+    public RoomType GetRoomType(int roomTypeId)
     {
-        var roomTypeCollection = _database.GetCollection<RoomType>("roomTypes");
+        var roomTypeCollection = Database.GetCollection<RoomType>("room_types");
         var roomType = roomTypeCollection.Find(rt => rt.Id == roomTypeId).FirstOrDefault();
         return roomType;
     }
 
-    public List<Diet> getDiets()
+    public List<Diet> GetDiets()
     {
-        var dietCollection = _database.GetCollection<Diet>("diets").AsQueryable();
+        var dietCollection = Database.GetCollection<Diet>("diets").AsQueryable();
         var result = dietCollection.ToList();
         return result;
     }
 
-    public Diet getDiet(int dietId)
+    public Diet GetDiet(int dietId)
     {
-        var dietCollection = _database.GetCollection<Diet>("diets");
+        var dietCollection = Database.GetCollection<Diet>("diets");
         var diet = dietCollection.Find(d => d.Id == dietId).FirstOrDefault();
         return diet;
     }
 
-    public List<Reservation> getReservations()
+    public List<Reservation> GetReservations()
     {
-        var reservationCollection = _database.GetCollection<Reservation>("reservations").AsQueryable();
+        var reservationCollection = Database.GetCollection<Reservation>("reservations").AsQueryable();
         var result = reservationCollection.ToList();
         return result;
     }
 
-    public Reservation getReservation(int reservationId)
+    public Reservation GetReservation(int reservationId)
     {
-        var reservationCollection = _database.GetCollection<Reservation>("reservations");
+        var reservationCollection = Database.GetCollection<Reservation>("reservations");
         var reservation = reservationCollection.Find(r => r.Id == reservationId).FirstOrDefault();
         return reservation;
     }
 
-    public List<Reservation> getReservationWithin(DateTime from, DateTime to)
+    public List<Reservation> GetReservationWithin(DateTime from, DateTime to)
     {
-        var reservationCollection = _database.GetCollection<Reservation>("reservations");
+        var reservationCollection = Database.GetCollection<Reservation>("reservations");
         var reservations = reservationCollection.Find(r => r.From >= from && r.To <= to).ToList();
         return reservations;
     }
 
-    public List<ReservedRoom> getReservedRooms()
+    public List<ReservedRoom> GetReservedRooms()
     {
-        var reservedRoomCollection = _database.GetCollection<ReservedRoom>("reservedRooms").AsQueryable();
+        var reservedRoomCollection = Database.GetCollection<ReservedRoom>("reserved_rooms").AsQueryable();
         var result = reservedRoomCollection.ToList();
         return result;
     }
 
-    public ReservedRoom getReservedRoom(int reservedRoomId)
+    public ReservedRoom GetReservedRoom(int reservedRoomId)
     {
-        var reservedRoomCollection = _database.GetCollection<ReservedRoom>("reservedRooms");
+        var reservedRoomCollection = Database.GetCollection<ReservedRoom>("reserved_rooms");
         var reservedRoom = reservedRoomCollection.Find(rr => rr.Id == reservedRoomId).FirstOrDefault();
         return reservedRoom;
     }
 
-    public List<ReservedRoom> getRoomsForReservation(Guid reservationId)
+    public List<ReservedRoom> GetRoomsForReservation(int reservationId)
     {
-        var reservedRoomCollection = _database.GetCollection<ReservedRoom>("reservedRooms");
+        var reservedRoomCollection = Database.GetCollection<ReservedRoom>("reserved_rooms");
         var reservedRooms = reservedRoomCollection.Find(rr => rr.ReservationId == reservationId).ToList();
         return reservedRooms;
+    }
+
+    public List<HotelRoomType> GetHotelRoomTypes()
+    {
+        var hotelRoomTypeCollection = Database.GetCollection<HotelRoomType>("hotel_room_types").AsQueryable();
+        var result = hotelRoomTypeCollection.ToList();
+        return result;
+    }
+
+    public HotelRoomType GetHotelRoomType(int hotelRoomTypeId)
+    {
+        var hotelRoomTypeCollection = Database.GetCollection<HotelRoomType>("hotel_room_types");
+        var hotelRoomType = hotelRoomTypeCollection.Find(rr => rr.Id == hotelRoomTypeId).FirstOrDefault();
+        return hotelRoomType;
     }
 }

@@ -1,25 +1,26 @@
 ﻿using HotelQuery.Database.Entity;
-using Models.Hotel.DTO;
 
-namespace HotelQuery.Repository;
+namespace HotelQuery.Repository.Hotel;
 
 public interface IHotelRepository
 {
-    public List<Hotel> getHotels();
-    public Hotel getHotel(int hotelId);
+    public List<Database.Entity.Hotel> GetHotels();
+    public Database.Entity.Hotel GetHotel(int hotelId);
     
-    public List<RoomType> getRoomTypes();
-    public RoomType getRoomType(int roomTypeId);
+    public List<RoomType> GetRoomTypes();
+    public RoomType GetRoomType(int roomTypeId);
     
-    public List<Diet> getDiets();
-    public Diet getDiet (int dietId);
+    public List<Diet> GetDiets();
+    public Diet GetDiet (int dietId);
     
-    public List<Reservation> getReservations();
-    public Reservation getReservation(int reservationId);
-    public List<Reservation> getReservationWithin(DateTime from, DateTime to);
+    public List<Reservation> GetReservations();
+    public Reservation GetReservation(int reservationId);
+    public List<Reservation> GetReservationWithin(DateTime from, DateTime to);
     
-    public List<ReservedRoom> getReservedRooms();
-    public ReservedRoom getReservedRoom(int reservedRoomId);
-    public List<ReservedRoom> getRoomsForReservation(Guid reservationId);
+    public List<ReservedRoom> GetReservedRooms();
+    public ReservedRoom GetReservedRoom(int reservedRoomId);
+    public List<ReservedRoom> GetRoomsForReservation(int reservationId);
 
+    public List<HotelRoomType> GetHotelRoomTypes();
+    public HotelRoomType GetHotelRoomType (int hotelRoomTypeId);
 }
