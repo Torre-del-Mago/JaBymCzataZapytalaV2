@@ -14,9 +14,6 @@ namespace TransportQuery.Consumer
 
         public async Task Consume(ConsumeContext<GetTransportDataForTripEvent> context)
         {
-            /*
-             Do something
-             */
             var result = _service.GetTransportForCriteria(context.Message.Criteria);
             await context.Publish(new GetTransportDataForTripEventReply() {Transport = result });
         }
