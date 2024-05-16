@@ -6,5 +6,15 @@ import { Component } from '@angular/core';
   styleUrls: ['./search.component.css']
 })
 export class SearchComponent {
+  destinations = ['', 'Grecja', 'Włochy', 'Hiszpania', 'Egipt'];
+  startCities = ['', 'Warszawa', 'Gdańsk', 'Katowice'];
+  destination = '';
+  startCity = '';
+  startDate = '';
+  endDate = '';
+  adults = 1;
+  children = 0;
 
+  search(): void {
+  } 
 }

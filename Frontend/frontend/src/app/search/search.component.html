@@ -1,1 +1,39 @@
 <a routerLink="/login">Login</a>
+<div>
+    <label for="destination">Destynacja</label>
+    <select name="destination" [(ngModel)]="destination">
+      <option *ngFor="let country of destinations" [ngValue]="country">
+        {{ country }}
+      </option>
+    </select>
+    <label for="startDate">Data wylotu</label>
+    <input type="date" name="startDate" [(ngModel)]="startDate" />
+    <label for="endDate">Data powrotu</label>
+    <input type="date" name="endDate" [(ngModel)]="endDate" />
+    <label for="startCity">Miejsce wylotu</label>
+    <select name="startCity" [(ngModel)]="startCity">
+      <option *ngFor="let city of startCities" [ngValue]="city">
+        {{ city }}
+      </option>
+    </select>
+    <label for="adults">Liczba dorosłych</label>
+    <input
+      type="number"
+      name="adults"
+      [(ngModel)]="adults"
+      min="1"
+      max="100"
+      step="1"
+    />
+    <label for="children">Liczba dzieci</label>
+    <input
+      type="number"
+      name="children"
+      [(ngModel)]="children"
+      min="0"
+      max="100"
+      step="1"
+    />
+    <button (click)="search()">Szukaj</button>
+</div>
+  
