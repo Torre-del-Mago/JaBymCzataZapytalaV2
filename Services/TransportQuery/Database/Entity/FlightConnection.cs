@@ -7,7 +7,7 @@ public class FlightConnection
 {
     [BsonId]
     [BsonRepresentation(BsonType.ObjectId)]
-    public string Id { get; set; }
+    public int Id { get; set; }
     
     [BsonElement("departureLocation")]
     public string DepartureLocation { get; set; }
