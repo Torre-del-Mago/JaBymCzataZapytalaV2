@@ -1,5 +1,6 @@
 using HotelQuery.Consumer;
 using HotelQuery.Repository;
+using HotelQuery.Repository.Hotel;
 using MassTransit;
 
 var builder = WebApplication.CreateBuilder(args);
