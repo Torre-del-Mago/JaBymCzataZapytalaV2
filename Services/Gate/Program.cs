@@ -10,29 +10,15 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddMassTransit(cfg =>
+builder.Services.AddMassTransit(conf =>
 {
-    //cfg.AddRequestClient<CheckLoginEvent>(new Uri("exchange:name"));
-
-
-
-    cfg.UsingRabbitMq((context, rabbitCfg) =>
+    conf.UsingRabbitMq((ctx, cfg) =>
     {
-
-        rabbitCfg.Host("rabbitmq", "/", h =>
+        cfg.Host("localhost", "/", h =>
         {
             h.Username("guest");
             h.Password("guest");
         });
-
-        //rabbitCfg.ReceiveEndpoint("input-queue", e =>
-        //{
-        //    e.Bind("exchange-name");
-        //    e.Bind<MessageType>();
-        //});
-
-
-        rabbitCfg.ConfigureEndpoints(context);
     });
 });
 

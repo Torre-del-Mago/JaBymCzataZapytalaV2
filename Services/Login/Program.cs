@@ -9,33 +9,62 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddMassTransit(cfg =>
+
+
+
+builder.Services.AddMassTransit(conf =>
 {
+    conf.SetKebabCaseEndpointNameFormatter();
+    conf.SetInMemorySagaRepositoryProvider();
+    var asb = typeof(Program).Assembly;
 
+    conf.AddConsumers(asb);
+    conf.AddSagaStateMachines(asb);
+    conf.AddActivities(asb);
 
-    // adding consumers
-    cfg.AddConsumer<LoginConsumer>();
+    conf.AddConsumer<LoginConsumer>();
 
-    // telling masstransit to use rabbitmq
-    cfg.UsingRabbitMq((context, rabbitCfg) =>
+    conf.UsingRabbitMq((ctx, cfg) =>
     {
-        // rabbitmq config
-        rabbitCfg.Host("rabbitmq", "/", h =>
+        cfg.Host("localhost", "/", h =>
         {
             h.Username("guest");
             h.Password("guest");
         });
 
-        rabbitCfg.ReceiveEndpoint("custom-queue-name", x =>
+        cfg.ReceiveEndpoint("custom-queue-name", x =>
         {
-            //x.Bind("exchange-name");
-            //x.Bind<CheckLoginEvent>();
-            x.ConfigureConsumer<LoginConsumer>(context);        
+            x.ConfigureConsumer<LoginConsumer>(ctx);
         });
-
-        rabbitCfg.ConfigureEndpoints(context);
     });
 });
+//builder.Services.AddMassTransit(cfg =>
+//{
+
+
+//    // adding consumers
+//    cfg.AddConsumer<LoginConsumer>();
+
+//    // telling masstransit to use rabbitmq
+//    cfg.UsingRabbitMq((context, rabbitCfg) =>
+//    {
+//        // rabbitmq config
+//        rabbitCfg.Host("rabbitmq://localhost", "/", h =>
+//        {
+//            h.Username("guest");
+//            h.Password("guest");
+//        });
+
+//        rabbitCfg.ReceiveEndpoint("custom-queue-name", x =>
+//        {
+//            //x.Bind("exchange-name");
+//            //x.Bind<CheckLoginEvent>();
+//            x.ConfigureConsumer<LoginConsumer>(context);        
+//        });
+
+//        rabbitCfg.ConfigureEndpoints(context);
+//    });
+//});
 
 var app = builder.Build();
 

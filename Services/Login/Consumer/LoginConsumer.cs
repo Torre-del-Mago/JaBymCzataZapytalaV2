@@ -17,11 +17,11 @@ namespace Login.Consumer
         public async Task Consume(ConsumeContext<CheckLoginEvent> context)
         {
             _logger.LogInformation("AAA");
-            var userLoggedIn = _service.isUsernameCorrect(context.Message.Login);
+            //var userLoggedIn = _service.isUsernameCorrect(context.Message.Login);
 
-            await context.Publish(new CheckLoginEventReply() { LoggedIn = userLoggedIn ? 
-                CheckLoginEventReply.State.LOGGED : 
-                CheckLoginEventReply.State.UNLOGGED });
+            //await context.Publish(new CheckLoginEventReply() { LoggedIn = userLoggedIn ? 
+            //    CheckLoginEventReply.State.LOGGED : 
+            //    CheckLoginEventReply.State.UNLOGGED });
         }
     }
 }
