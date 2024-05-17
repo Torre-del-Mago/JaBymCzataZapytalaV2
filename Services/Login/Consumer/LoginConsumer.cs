@@ -6,17 +6,17 @@ namespace Login.Consumer
 {
     public class LoginConsumer : IConsumer<CheckLoginEvent>
     {
-
+        private ILogger _logger { get; set; }
         private ILoginService _service { get; set; }
 
-        public LoginConsumer(ILoginService loginService)
-        {
-            _service = loginService;
-        }
+        //public LoginConsumer(ILoginService loginService)
+        //{
+        //    _service = loginService;
+        //}
 
         public async Task Consume(ConsumeContext<CheckLoginEvent> context)
         {
-
+            _logger.LogInformation("AAA");
             var userLoggedIn = _service.isUsernameCorrect(context.Message.Login);
 
             await context.Publish(new CheckLoginEventReply() { LoggedIn = userLoggedIn ? 

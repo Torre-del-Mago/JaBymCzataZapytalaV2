@@ -1,5 +1,4 @@
 using HotelQuery.Consumer;
-using HotelQuery.Repository;
 using HotelQuery.Repository.Hotel;
 using MassTransit;
 
@@ -23,25 +22,25 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-builder.Services.AddMassTransit(cfg =>
-{
-    // adding consumers
-    cfg.AddConsumer<HotelQueryConsumer>();
-    cfg.AddConsumer<HotelListQueryConsumer>();
+//builder.Services.AddMassTransit(cfg =>
+//{
+//    // adding consumers
+//    cfg.AddConsumer<HotelQueryConsumer>();
+//    cfg.AddConsumer<HotelListQueryConsumer>();
 
-    // telling masstransit to use rabbitmq
-    cfg.UsingRabbitMq((context, rabbitCfg) =>
-    {
-        // rabbitmq config
-        rabbitCfg.Host("rabbitmq", "/", h =>
-        {
-            h.Username("guest");
-            h.Password("guest");
-        });
-        // automatic endpoint configuration (and I think the reason why naming convention is important
-        rabbitCfg.ConfigureEndpoints(context);
-    });
-});
+//    // telling masstransit to use rabbitmq
+//    cfg.UsingRabbitMq((context, rabbitCfg) =>
+//    {
+//        // rabbitmq config
+//        rabbitCfg.Host("rabbitmq", "/", h =>
+//        {
+//            h.Username("guest");
+//            h.Password("guest");
+//        });
+
+//        rabbitCfg.ConfigureEndpoints(context);
+//    });
+//});
 
 app.UseHttpsRedirection();
 
