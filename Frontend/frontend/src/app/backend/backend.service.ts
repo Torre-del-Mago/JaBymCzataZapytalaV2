@@ -42,7 +42,20 @@ export class BackendService {
         t.BeginDate >= startDate &&
         t.EndDate <= endDate
     );
-    /* return this.client.get<TripsDTO>(this.gateUrl + this.tripListUrl + "?body=") */
+    /* 
+    Przykład pseudokodu wysyłania na backend
+    var criteria: GenerateTripsRequest = {
+      Criteria: {
+        NrOfPeople: Math.min(numberOfAdults, 3) + Math.min(numberOfChildren, 3),
+        Country: '',
+        BeginDate: startDate,
+        EndDate: endDate,
+        Destination: startCity
+      }
+    }
+    //ta linia nie działa
+    var stringifiedcriteria = criteria.stringify()
+    return this.client.get<TripsDTO>(this.gateUrl + this.tripListUrl + "?request=" + stringifiedcriteria) */
   }
 
   public getInfoForTrip() {}
