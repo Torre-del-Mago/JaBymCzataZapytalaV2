@@ -16,25 +16,25 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-builder.Services.AddMassTransit(cfg =>
-{
-    // adding consumers
-    cfg.AddConsumer<TransportQueryConsumer>();
-    cfg.AddConsumer<TransportListQueryConsumer>();
+//builder.Services.AddMassTransit(cfg =>
+//{
+//    // adding consumers
+//    cfg.AddConsumer<TransportQueryConsumer>();
+//    cfg.AddConsumer<TransportListQueryConsumer>();
 
-    // telling masstransit to use rabbitmq
-    cfg.UsingRabbitMq((context, rabbitCfg) =>
-    {
-        // rabbitmq config
-        rabbitCfg.Host("rabbitmq", "/", h =>
-        {
-            h.Username("guest");
-            h.Password("guest");
-        });
-        // automatic endpoint configuration (and I think the reason why naming convention is important
-        rabbitCfg.ConfigureEndpoints(context);
-    });
-});
+//    // telling masstransit to use rabbitmq
+//    cfg.UsingRabbitMq((context, rabbitCfg) =>
+//    {
+//        // rabbitmq config
+//        rabbitCfg.Host("rabbitmq", "/", h =>
+//        {
+//            h.Username("guest");
+//            h.Password("guest");
+//        });
+//        // automatic endpoint configuration (and I think the reason why naming convention is important
+//        rabbitCfg.ConfigureEndpoints(context);
+//    });
+//});
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

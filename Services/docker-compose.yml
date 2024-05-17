@@ -13,6 +13,8 @@ services:
         - postgres 
     # ports:
     #     - 8010:80 
+    environment:
+        ASPNETCORE_ENVIRONMENT: Development
     networks:
         - backend
          
@@ -184,15 +186,17 @@ services:
       - postgres
           
   rabbitmq:
-    image: rabbitmq:3-management-alpine
+    image: heidiks/rabbitmq-delayed-message-exchange:latest 
     hostname: 'rabbitmq'
-    container_name: 'rabbitmq'
-    ports:
-        - 5672:5672
-        - 15672:15672
-    volumes:
-        - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
-        - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
+    container_name: 'rabbitmq' 
+    ports: 
+        - 5672:5672  
+        - 15672:15672 
+    environment:
+        RABBITMQ_DEFAULT_USER: guest
+        RABBITMQ_DEFAULT_PASS: guest
+    networks:
+        - backend
 
 
   mongo:
@@ -203,6 +207,8 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
+    networks:
+        - backend
 
 
   mongo-express:
@@ -217,6 +223,8 @@ services:
       ME_CONFIG_MONGODB_ADMINPASSWORD: example
       ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
       ME_CONFIG_BASICAUTH: false
+    networks:
+        - backend
 
 
 networks:
