@@ -40,9 +40,10 @@
   <div>Wyniki wyszukiwania</div>
   <div *ngFor="let trip of result">
     <span>
-      Hotel: {{ trip.HotelName }}, {{ trip.City }} Miasto:
-      {{ trip.ChosenFlight.Departure }}</span
-    >
+      Hotel: {{ trip.HotelName }}, {{ trip.City }} Miasto wylotu:
+      {{ trip.ChosenFlight.Departure }}
+      Cena
+    </span>
     <button (click)="detail(trip)">Wybierz</button>
   </div>
 </div>
