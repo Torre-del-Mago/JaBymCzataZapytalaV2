@@ -34,6 +34,7 @@ export class SearchComponent {
 
   async detail(trip: TripDTO): Promise<void> {
     this.service.setCurrentTrip(trip);
+    this.service.setNumbers(this.children, this.adults)
     await this.router.navigateByUrl('detail');
   }
 }
