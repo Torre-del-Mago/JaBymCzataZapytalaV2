@@ -1,6 +1,5 @@
 using MassTransit;
-using Models.Login;
-using Models.Trip;
+using MassTransit.RabbitMqTransport;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,30 +10,30 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddMassTransit(cfg =>
+{
+    cfg.AddDelayedMessageScheduler();
+    cfg.UsingRabbitMq((context, rabbitCfg) =>
+    {
+        rabbitCfg.Host(new Uri(builder.Configuration["MessageBroker:Host"]), h =>
+        {
+            h.Username("guest");
+            h.Password("guest");
+        });
+        rabbitCfg.UseDelayedMessageScheduler();
+        rabbitCfg.ConfigureEndpoints(context);
+    });
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+    app.UseDeveloperExceptionPage();
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "app v1"));
 }
-
-builder.Services.AddMassTransit(cfg =>
-{
-    // telling masstransit to use rabbitmq
-    cfg.UsingRabbitMq((context, rabbitCfg) =>
-    {
-        // rabbitmq config
-        rabbitCfg.Host("rabbitmq", "/", h =>
-        {
-            h.Username("guest");
-            h.Password("guest");
-        });
-        // automatic endpoint configuration (and I think the reason why naming convention is important
-        rabbitCfg.ConfigureEndpoints(context);
-    });
-});
 
 app.UseHttpsRedirection();
 

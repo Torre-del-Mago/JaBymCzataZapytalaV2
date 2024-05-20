@@ -17,6 +17,6 @@ namespace HotelQuery.Consumer
         {
             var result = _service.GetHotelsForCriteria(context.Message.Criteria);
             await context.Publish(new GetHotelDataForTripsEventReply() {Hotels = result});
-       }
+        }
     }
 }

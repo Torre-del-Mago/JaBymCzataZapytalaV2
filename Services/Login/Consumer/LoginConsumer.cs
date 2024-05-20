@@ -4,24 +4,25 @@ using Models.Login;
 
 namespace Login.Consumer
 {
-    public class LoginConsumer : IConsumer<CheckLoginEvent>
+    public sealed class LoginConsumer : IConsumer<CheckLoginEvent>
     {
-
+        //private ILogger _logger { get; set; }
         private ILoginService _service { get; set; }
 
-        public LoginConsumer(ILoginService loginService)
-        {
-            _service = loginService;
-        }
+        //public LoginConsumer(ILoginService loginService)
+        //{
+        //    _service = loginService;
+        //}
 
         public async Task Consume(ConsumeContext<CheckLoginEvent> context)
         {
+            Console.WriteLine("AAA");
+            //_logger.LogInformation("AAA");
+            //var userLoggedIn = _service.isUsernameCorrect(context.Message.Login);
 
-            var userLoggedIn = _service.isUsernameCorrect(context.Message.Login);
-
-            await context.Publish(new CheckLoginEventReply() { LoggedIn = userLoggedIn ? 
-                CheckLoginEventReply.State.LOGGED : 
-                CheckLoginEventReply.State.UNLOGGED });
+            //await context.Publish(new CheckLoginEventReply() { LoggedIn = userLoggedIn ? 
+            //    CheckLoginEventReply.State.LOGGED : 
+            //    CheckLoginEventReply.State.UNLOGGED });
         }
     }
 }
