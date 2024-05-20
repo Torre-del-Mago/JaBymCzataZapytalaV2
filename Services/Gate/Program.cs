@@ -17,8 +17,8 @@ builder.Services.AddMassTransit(cfg =>
     {
         rabbitCfg.Host(new Uri(builder.Configuration["MessageBroker:Host"]), h =>
         {
-            h.Username("guest");
-            h.Password("guest");
+            h.Username(builder.Configuration["MessageBroker:Username"]);
+            h.Password(builder.Configuration["MessageBroker:Password"]);
         });
         rabbitCfg.UseDelayedMessageScheduler();
         rabbitCfg.ConfigureEndpoints(context);

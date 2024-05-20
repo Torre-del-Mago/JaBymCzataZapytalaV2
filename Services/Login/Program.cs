@@ -14,7 +14,8 @@ builder.Services.AddMassTransit(cfg =>
     cfg.SetKebabCaseEndpointNameFormatter();
 
     cfg.AddConsumer<LoginConsumer>();
-    
+
+    cfg.AddDelayedMessageScheduler();
     cfg.UsingRabbitMq((context, rabbitCfg) =>
     {
         
@@ -23,7 +24,7 @@ builder.Services.AddMassTransit(cfg =>
             h.Username(builder.Configuration["MessageBroker:Username"]);
             h.Password(builder.Configuration["MessageBroker:Password"]);
         });
-
+        rabbitCfg.UseDelayedMessageScheduler();
         rabbitCfg.ConfigureEndpoints(context);
     });
 });
