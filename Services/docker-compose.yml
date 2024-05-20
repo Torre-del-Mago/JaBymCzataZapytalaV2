@@ -184,6 +184,8 @@ services:
       - "5050:80"
     depends_on:
       - postgres
+    networks:
+      - backend
           
   rabbitmq:
     image: heidiks/rabbitmq-delayed-message-exchange:latest 

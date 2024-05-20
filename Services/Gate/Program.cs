@@ -1,6 +1,5 @@
 using MassTransit;
 using MassTransit.RabbitMqTransport;
-using Models.Login;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,22 +10,6 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-//builder.Services.AddMassTransit(cfg =>
-//{
-//    cfg.SetKebabCaseEndpointNameFormatter();
-
-//    cfg.UsingRabbitMq((context, rabbitCfg) =>
-//    {
-
-//        rabbitCfg.Host(new Uri(builder.Configuration["MessageBroker:Host"]), h =>
-//        {
-//            h.Username(builder.Configuration["MessageBroker:Username"]);
-//            h.Password(builder.Configuration["MessageBroker:Password"]);
-//        });
-
-//        rabbitCfg.ConfigureEndpoints(context);
-//    });
-//});
 builder.Services.AddMassTransit(cfg =>
 {
     cfg.AddDelayedMessageScheduler();

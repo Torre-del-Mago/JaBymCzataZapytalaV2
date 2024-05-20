@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace Models.Transport
 {
-    internal class CancelReservationTransportEvent
+    public class CancelReservationTransportEvent :EventModel
     {
+        public int OfferId { get; set; }
     }
 }

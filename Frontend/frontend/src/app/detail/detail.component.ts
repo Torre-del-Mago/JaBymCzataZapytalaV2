@@ -18,6 +18,7 @@ export class DetailComponent implements OnInit {
   public destinationName?: string
   public chosenFlight?: FlightDTO
   public pricePerPerson: number = 0
+  public priceRounded: string = ''
   public mealType?: string
   public numberOfAdults: number = 0
   public numberOfChildren: number = 0
@@ -27,9 +28,16 @@ export class DetailComponent implements OnInit {
   public canDecreaseAdults?: boolean
   public canIncreasePeople?: boolean
   public roomName?: string
+  public mealTypes: string[] = []
+  public flights: FlightDTO[] = []
+  public configurationNotAvailable = false
 
   constructor(private route: ActivatedRoute, private service: BackendService) {
 
+  }
+
+  displayPrice() {
+    this.priceRounded = this.pricePerPerson.toFixed(2)
   }
 
   ngOnInit() {
@@ -37,9 +45,12 @@ export class DetailComponent implements OnInit {
     this.hotelName = this.trip?.HotelName
     this.destinationName = this.trip?.City
     this.pricePerPerson = Math.random() * (500) + 500;
+    this.priceRounded = this.pricePerPerson.toFixed(2)
     this.numberOfAdults = this.service.getNumbers()[0]
     this.numberOfChildren = this.service.getNumbers()[1]
     this.numberOfPeople = this.numberOfChildren + this.numberOfAdults
+    this.mealTypes = this.trip?.TypesOfMeals || [];
+    this.flights = this.trip?.PossibleFlights || [];
     if(this.numberOfPeople == 6) {
       this.canIncreasePeople = false
     }
@@ -56,33 +67,43 @@ export class DetailComponent implements OnInit {
     this.numberOfAdults++
     this.numberOfPeople++
     if(this.numberOfPeople == 6) {
-      this.canIncreasePeople = false
+      this.canIncreasePeople = true
     }
     this.pricePerPerson -= Math.random() *40 + 40;
+    this.displayPrice()
   }
 
   minusAdult() : void{
     this.numberOfAdults--;
+    this.numberOfPeople--;
     if(this.numberOfAdults == 0) {
-      this.canDecreaseAdults = false
+      this.canDecreaseAdults = true
     }
     this.pricePerPerson += Math.random() * 40 + 40;
+    this.displayPrice()
   }
 
   addChild() : void{
     this.numberOfChildren++;
     this.numberOfPeople++;
     if(this.numberOfPeople == 6) {
-      this.canIncreasePeople = false;
+      this.canIncreasePeople = true;
     }
     this.pricePerPerson -= Math.random() * 20 + 20;
+    this.displayPrice()
   }
 
   minusChild(): void {
     this.numberOfChildren--;
+    this.numberOfPeople--;
     if(this.numberOfChildren == 0) {
-      this.canDecreaseAdults = false;
+      this.canDecreaseChildren = true;
     } 
     this.pricePerPerson += Math.random() * 20 + 20;
+    this.displayPrice()
+  }
+
+  flightChanged(flight: FlightDTO): void {
+
   }
 }
