@@ -27,6 +27,10 @@ export class SearchComponent {
     {
       this.notAllValuesPresent = true;
     }
+    else {
+      this.notAllValuesPresent = false;
+    }
+    console.log(this.startDate)
     this.result = this.service.getInfoForTrips(
       this.destination,
       this.startCity,
@@ -40,6 +44,7 @@ export class SearchComponent {
   async detail(trip: TripDTO): Promise<void> {
     this.service.setCurrentTrip(trip);
     this.service.setNumbers(this.children, this.adults)
+    this.service.setDates(this.startDate, this.endDate)
     await this.router.navigateByUrl('detail');
   }
 }
