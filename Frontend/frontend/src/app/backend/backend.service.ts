@@ -27,6 +27,8 @@ export class BackendService {
   private numOfChildren: number = 0;
   private numOfAdult: number = 0;
 
+  private dates: string[] = [];
+
   public checkLogin(userName: string): boolean {
     return ['jasio', 'kasia', 'zbysio'].includes(userName.trim())
       ? true
@@ -57,28 +59,33 @@ export class BackendService {
         numberOfAdults + numberOfChildren,
         true
       );
-      console.log(roomCombinations);
-      if(roomCombinations.length > 0) {
-        let defaultRooms: RoomDTO[] = []
+      if (roomCombinations.length > 0) {
+        let defaultRooms: RoomDTO[] = [];
         for (const [index, value] of roomCombinations.entries()) {
-          if(value > 0) {
-            let foundRoom = hotel.Rooms.find(r => r.NumberOfPeopleForTheRoom == (index+1) && r.Count >= value);
-            if(foundRoom !== undefined) {
-              defaultRooms.push(foundRoom)
+          if (value > 0) {
+            let foundRoom = hotel.Rooms.find(
+              (r) => r.NumberOfPeopleForTheRoom == index + 1 && r.Count >= value
+            );
+            if (foundRoom !== undefined) {
+              defaultRooms.push(foundRoom);
             }
           }
         }
-        let price = hotel.ChosenFlight.PricePerSeat * (numberOfAdults + numberOfChildren);
+        let price =
+          hotel.ChosenFlight.PricePerSeat * (numberOfAdults + numberOfChildren);
         let timediff = endDate.getTime() - startDate.getTime();
-        let days = Math.round
-        (timediff / (1000 * 3600 * 24));
-        for(const defroom of defaultRooms) {
+        let days = Math.round(timediff / (1000 * 3600 * 24));
+        for (const defroom of defaultRooms) {
           price += defroom.PricePerRoom * days;
         }
-        trips.push({ ...hotel, RoomCombination: roomCombinations, ChosenRooms: defaultRooms, Price: price });
+        trips.push({
+          ...hotel,
+          RoomCombination: roomCombinations,
+          ChosenRooms: defaultRooms,
+          Price: price,
+        });
       }
     }
-    console.log(trips);
     return trips;
     /* return this.client.get<TripsDTO>(this.gateUrl + this.tripListUrl + "?body=") */
   }
@@ -93,6 +100,10 @@ export class BackendService {
     this.currentTrip = trip;
   }
 
+  public setDates(begin: string, end: string): void {
+    this.dates = [begin, end];
+  }
+
   public setNumbers(numOfChild: number, numOfAdult: number) {
     this.numOfAdult = numOfAdult;
     this.numOfChildren = numOfChild;
@@ -100,6 +111,10 @@ export class BackendService {
 
   public getNumbers(): number[] {
     return [this.numOfAdult, this.numOfChildren];
+  }
+
+  public getDates(): string[] {
+    return this.dates;
   }
 
   public getCurrentTrip(): TripDTO | undefined {
@@ -120,7 +135,6 @@ export class BackendService {
       );
       if (exactMatchRooms !== undefined) {
         combinations = Array(numberOfPeople).fill(0);
-        console.log(exactMatchRooms)
         combinations[numberOfPeople - 1] = 1;
       }
     }
@@ -152,21 +166,15 @@ export class BackendService {
       let areAllFree = true;
       for (const [index, value] of numbers.entries()) {
         if (value > 0) {
-          console.log("Got value" + value + " at index " + index);
           const room = rooms.find(
-            (r) => r.NumberOfPeopleForTheRoom == (index + 1) && r.Count >= value
+            (r) => r.NumberOfPeopleForTheRoom == index + 1 && r.Count >= value
           );
-          console.log(room);
           if (room === undefined) {
             areAllFree = false;
-          }
-          else {
-            console.log(room)
-          }
+          } 
         }
       }
       if (areAllFree) {
-        console.log("Found numbers")
         return numbers;
       }
     }
