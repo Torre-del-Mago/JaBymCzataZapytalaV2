@@ -1,0 +1,7 @@
+#docker build . -t front:dev
+version: '1'
+services:
+  front:
+    image: front:dev
+    ports:
+      - 80:80

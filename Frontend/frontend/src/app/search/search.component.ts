@@ -18,10 +18,19 @@ export class SearchComponent {
   adults = 1;
   children = 0;
   result: TripDTO[] = [];
+  notAllValuesPresent = false;
 
   constructor(private service: BackendService, private router: Router) {}
 
   search(): void {
+    if(this.destination === '' || this.startCity === '' || this.endDate === '' || this.startDate === '' || (this.adults+this.children) === 0)
+    {
+      this.notAllValuesPresent = true;
+    }
+    else {
+      this.notAllValuesPresent = false;
+    }
+    console.log(this.startDate)
     this.result = this.service.getInfoForTrips(
       this.destination,
       this.startCity,
@@ -35,6 +44,7 @@ export class SearchComponent {
   async detail(trip: TripDTO): Promise<void> {
     this.service.setCurrentTrip(trip);
     this.service.setNumbers(this.children, this.adults)
+    this.service.setDates(this.startDate, this.endDate)
     await this.router.navigateByUrl('detail');
   }
 }

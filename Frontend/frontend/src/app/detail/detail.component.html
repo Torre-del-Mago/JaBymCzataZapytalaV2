@@ -1,16 +1,21 @@
 <a routerLink="/">Wróć do strony głównej</a>
 <h1>Wycieczka do hotelu {{hotelName}} w {{destinationName}}</h1>
-<div [hidden]="!configurationNotAvailable">
+<div [hidden]="configurationAvailable">
     <p>W przedziałach czasowych </p>
-<p>Cena za osobę {{priceRounded}}</p>
-<p>Dla pokoju Pokój {{numberOfPeople}}os.</p>
+<p>Od: {{beginDate}} do {{endDate}}</p>
+<p>Cena łączna {{trip?.Price}}zł</p>
 <div>Typ posiłku: <select [(ngModel)]="mealType">
 <option [value]="mealType" *ngFor="let mealType of this.mealTypes">{{mealType}}</option>
 </select>
 </div>
-<div>Wybrany lot <select [ngModel]="chosenFlight" (ngModelChange)="flightChanged($event)">
-<option [value]="flight" *ngFor="let flight of flights">{{flight.Departure}}:{{flight.PricePerSeat}}zł</option>
+<div>Wybrany lot <select [ngModel]="this.trip?.ChosenFlight" (ngModelChange)="flightChanged($event)">
+<option [value]="flight" *ngFor="let flight of this.trip?.PossibleFlights">{{flight.Departure}}:{{flight.PricePerSeat}}zł</option>
 </select></div>
+<div>
+    <div *ngFor="let numOfRooms of this.trip?.RoomCombination; index as i">
+        <span *ngIf="numOfRooms > 0">{{numOfRooms}} Pokój {{i+1}}os.</span>
+    </div>
+</div>
 <div>
     Number of adults: {{numberOfAdults}} 
     <button (click)="addAdult()" [disabled]="canIncreasePeople">+</button>
@@ -20,6 +25,6 @@
     <button (click)="minusChild()" [disabled]="canDecreaseChildren">-</button>
 </div>
 </div>
-<div [hidden]="configurationNotAvailable">
+<div [hidden]="!configurationAvailable">
     Konfiguracji nie znaleziono
 </div>

@@ -35,6 +35,9 @@
     step="1"
   />
   <button (click)="search()">Szukaj</button>
+  <div [hidden]="!notAllValuesPresent">
+    Not all fields of form have been filled
+  </div>
 </div>
 <div *ngIf="result.length > 0">
   <div>Wyniki wyszukiwania</div>
@@ -42,7 +45,7 @@
     <span>
       Hotel: {{ trip.HotelName }}, {{ trip.City }} Miasto wylotu:
       {{ trip.ChosenFlight.Departure }}
-      Cena
+      Cena {{trip.Price}} zł
     </span>
     <button (click)="detail(trip)">Wybierz</button>
   </div>

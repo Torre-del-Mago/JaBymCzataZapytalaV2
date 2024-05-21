@@ -6,11 +6,18 @@ import { TripsDTO } from './TripsDTO';
 export const rooms: RoomDTO[] = [
   {
     Count: 2,
-    NumberOfPeopleForTheRoom: 3,
+    NumberOfPeopleForTheRoom: 1,
     PricePerRoom: 500,
     TypeOfRoom: '',
   },
 ];
+export const dummyRoom: RoomDTO = 
+  {
+    Count: 0,
+    NumberOfPeopleForTheRoom: 0,
+    PricePerRoom: 500,
+    TypeOfRoom: '',
+  };
 
 export const flights: FlightDTO[] = [
   {
