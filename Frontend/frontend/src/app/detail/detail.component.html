@@ -4,7 +4,6 @@
     <p>W przedziałach czasowych </p>
 <p>Od: {{beginDate}} do {{endDate}}</p>
 <p>Cena łączna {{trip?.Price}}zł</p>
-<p>Dla pokoju Pokój {{numberOfPeople}}os.</p>
 <div>Typ posiłku: <select [(ngModel)]="mealType">
 <option [value]="mealType" *ngFor="let mealType of this.mealTypes">{{mealType}}</option>
 </select>
@@ -12,6 +11,11 @@
 <div>Wybrany lot <select [ngModel]="this.trip?.ChosenFlight" (ngModelChange)="flightChanged($event)">
 <option [value]="flight" *ngFor="let flight of this.trip?.PossibleFlights">{{flight.Departure}}:{{flight.PricePerSeat}}zł</option>
 </select></div>
+<div>
+    <div *ngFor="let numOfRooms of this.trip?.RoomCombination; index as i">
+        <span *ngIf="numOfRooms > 0">{{numOfRooms}} Pokój {{i+1}}os.</span>
+    </div>
+</div>
 <div>
     Number of adults: {{numberOfAdults}} 
     <button (click)="addAdult()" [disabled]="canIncreasePeople">+</button>
