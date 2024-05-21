@@ -6,7 +6,6 @@ namespace Login.Consumer
 {
     public sealed class LoginConsumer : IConsumer<CheckLoginEvent>
     {
-        //private ILogger _logger { get; set; }
         private ILoginService _service { get; set; }
 
         //public LoginConsumer(ILoginService loginService)
@@ -16,13 +15,16 @@ namespace Login.Consumer
 
         public async Task Consume(ConsumeContext<CheckLoginEvent> context)
         {
-            Console.WriteLine("AAA");
-            //_logger.LogInformation("AAA");
-            //var userLoggedIn = _service.isUsernameCorrect(context.Message.Login);
-
-            //await context.Publish(new CheckLoginEventReply() { LoggedIn = userLoggedIn ? 
-            //    CheckLoginEventReply.State.LOGGED : 
-            //    CheckLoginEventReply.State.UNLOGGED });
+            var @event = context.Message;
+            var userLoggedIn = _service.isUsernameCorrect(context.Message.Login);
+            await context.RespondAsync(new CheckLoginEventReply()
+            {
+                Id = @event.Id,
+                CorrelationId = @event.CorrelationId,
+                LoggedIn = userLoggedIn ?
+                CheckLoginEventReply.State.LOGGED :
+                CheckLoginEventReply.State.UNLOGGED
+            });
         }
     }
 }
