@@ -11,6 +11,13 @@ export const rooms: RoomDTO[] = [
     TypeOfRoom: '',
   },
 ];
+export const dummyRoom: RoomDTO = 
+  {
+    Count: 0,
+    NumberOfPeopleForTheRoom: 0,
+    PricePerRoom: 500,
+    TypeOfRoom: '',
+  };
 
 export const flights: FlightDTO[] = [
   {

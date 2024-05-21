@@ -60,14 +60,16 @@ export class BackendService {
         true
       );
       if (roomCombinations.length > 0) {
-        let defaultRooms: RoomDTO[] = [];
+        let defaultRooms: RoomDTO[] = Array(
+          numberOfChildren + numberOfAdults
+        ).fill(Mocks.dummyRoom);
         for (const [index, value] of roomCombinations.entries()) {
           if (value > 0) {
             let foundRoom = hotel.Rooms.find(
               (r) => r.NumberOfPeopleForTheRoom == index + 1 && r.Count >= value
             );
             if (foundRoom !== undefined) {
-              defaultRooms.push(foundRoom);
+              defaultRooms[index + 1] = foundRoom;
             }
           }
         }
@@ -75,8 +77,10 @@ export class BackendService {
           hotel.ChosenFlight.PricePerSeat * (numberOfAdults + numberOfChildren);
         let timediff = endDate.getTime() - startDate.getTime();
         let days = Math.round(timediff / (1000 * 3600 * 24));
-        for (const defroom of defaultRooms) {
-          price += defroom.PricePerRoom * days;
+        for (const [index, defroom] of defaultRooms.entries()) {
+          if (roomCombinations[index] > 0) {
+            price += defroom.PricePerRoom * days;
+          }
         }
         trips.push({
           ...hotel,
@@ -151,18 +155,18 @@ export class BackendService {
     let numbers = Array(numberOfPeople).fill(0);
     for (let numOfPeople = numberOfPeople; numOfPeople > 0; numOfPeople--) {
       numbers = Array(numberOfPeople).fill(0);
-      console.log(numOfPeople)
+      console.log(numOfPeople);
       let indexOfPeople = numOfPeople - 1;
       if (numOfPeople == numberOfPeople) {
         numbers[indexOfPeople] = 1;
       } else if (numOfPeople == 1) {
         numbers[indexOfPeople] = numberOfPeople;
-        console.log(numbers)
-        console.log(numbers)
-      }else if (numOfPeople >= Math.ceil(numberOfPeople / 2)) {
+        console.log(numbers);
+        console.log(numbers);
+      } else if (numOfPeople >= Math.ceil(numberOfPeople / 2)) {
         numbers[indexOfPeople] = 1;
-        numbers[(numberOfPeople - 1) - indexOfPeople] += 1;
-      }  else {
+        numbers[numberOfPeople - 1 - indexOfPeople] += 1;
+      } else {
         numbers[indexOfPeople] = Math.floor(numberOfPeople / numOfPeople);
         numbers[(numberOfPeople % numOfPeople) - 1] = 1;
       }
@@ -175,7 +179,7 @@ export class BackendService {
           );
           if (room === undefined) {
             areAllFree = false;
-          } 
+          }
         }
       }
       if (areAllFree) {
