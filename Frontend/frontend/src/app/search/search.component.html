@@ -35,6 +35,9 @@
     step="1"
   />
   <button (click)="search()">Szukaj</button>
+  <div [hidden]="!notAllValuesPresent">
+    Not all fields of form have been filled
+  </div>
 </div>
 <div *ngIf="result.length > 0">
   <div>Wyniki wyszukiwania</div>

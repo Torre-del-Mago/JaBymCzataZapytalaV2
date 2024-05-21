@@ -18,10 +18,15 @@ export class SearchComponent {
   adults = 1;
   children = 0;
   result: TripDTO[] = [];
+  notAllValuesPresent = false;
 
   constructor(private service: BackendService, private router: Router) {}
 
   search(): void {
+    if(this.destination === '' || this.startCity === '' || this.endDate === '' || this.startDate === '' || (this.adults+this.children) === 0)
+    {
+      this.notAllValuesPresent = true;
+    }
     this.result = this.service.getInfoForTrips(
       this.destination,
       this.startCity,
