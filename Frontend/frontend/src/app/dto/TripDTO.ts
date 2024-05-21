@@ -8,6 +8,7 @@ export type TripDTO = {
   EndDate: Date;
   TypesOfMeals: string[];
   Discount: number;
+  RoomCombination?: number[];
   Rooms: RoomDTO[];
   ChosenFlight: FlightDTO;
   PossibleFlights: FlightDTO[];

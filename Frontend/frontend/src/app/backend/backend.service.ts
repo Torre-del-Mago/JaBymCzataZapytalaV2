@@ -41,7 +41,7 @@ export class BackendService {
     numberOfAdults: number,
     numberOfChildren: number
   ): TripDTO[] {
-    const trips: TripDTO[] = [];
+    var trips: TripDTO[] = [];
     const hotels = Mocks.trips.filter(
       (t) =>
         t.Country === destination &&
@@ -49,14 +49,20 @@ export class BackendService {
         t.BeginDate >= startDate &&
         t.EndDate <= endDate
     );
+
     for (const hotel of hotels) {
+      console.log(hotel);
       const roomCombinations = this.calculateRoomCombinations(
         hotel.Rooms,
         numberOfAdults + numberOfChildren,
         true
       );
-      roomCombinations.forEach((c) => trips.push({ ...hotel, ChosenRooms: c }));
+      console.log(roomCombinations);
+      if(roomCombinations.length > 0) {
+        trips.push({ ...hotel, RoomCombination: roomCombinations });
+      }
     }
+
     return trips;
     /* return this.client.get<TripsDTO>(this.gateUrl + this.tripListUrl + "?body=") */
   }
@@ -88,116 +94,66 @@ export class BackendService {
     rooms: RoomDTO[],
     numberOfPeople: number,
     exactNumberMatch: boolean
-  ): RoomDTO[][] {
-    let combinations: RoomDTO[][] = [];
+  ): number[] {
+    let combinations: number[] = [];
+    console.log(numberOfPeople);
     // find rooms that exactly match numberOfPeople - only if exactNumberMatch === true
     if (exactNumberMatch) {
-      const exactMatchRooms = rooms.filter(
+      const exactMatchRooms = rooms.find(
         (r) => r.NumberOfPeopleForTheRoom === numberOfPeople
       );
-      exactMatchRooms.forEach((r) => combinations.push([r]));
+      if (exactMatchRooms !== undefined) {
+        combinations = Array(numberOfPeople).fill(0);
+        console.log(exactMatchRooms)
+        combinations[numberOfPeople - 1] = 1;
+      }
     }
     if (combinations.length === 0) {
-      // get all room sizes
-      const roomSizes = Array.from(
-        new Set(rooms.map((r) => r.NumberOfPeopleForTheRoom))
-      );
-      // loop by rising number of rooms, start with 2, step 1, finish with number of people
-      for (
-        let numberOfRooms = 2;
-        numberOfRooms <= numberOfPeople;
-        numberOfRooms++
-      ) {
-        // calculate all possible combinations of room sizes for given number of rooms
-        const roomSizecombinations = new Set(
-          this.calculateRoomSizesCombinations(
-            this.getRoomSizes(rooms),
-            numberOfPeople,
-            numberOfRooms
-          )
-        );
-        // if for given number of rooms there's a combination, get rooms and break loop
-        if (roomSizecombinations.size > 0) {
-          // get rooms combinations from room sizes combinations
-          // TODO magic happens here
-          // break
-          break;
-        }
-      }
-      // if still nothing is found - run a loop with recursive calls from numberOfPeople+1 to numberOfPeople * 2 with exactNumberMatch === false
-      for (
-        let numberOfPlaces = numberOfPeople + 1;
-        numberOfPlaces <= numberOfPeople * 2;
-        numberOfPlaces++
-      ) {
-        combinations = this.calculateRoomCombinations(
-          rooms,
-          numberOfPlaces,
-          false
-        );
-        if (combinations.length > 0) break;
+      let numbers = this.getRooms(rooms, numberOfPeople);
+      if (numbers.length > 0) {
+        combinations = numbers;
       }
     }
     return combinations;
   }
 
-  private calculateRoomSizesCombinations(
-    roomSizes: RoomSize[],
-    numberOfPeople: number,
-    numberOfRooms: number
-  ): RoomSize[][] {
-    if (numberOfRooms === 1) {
-      const room = roomSizes.find((r) => r.Size === numberOfPeople);
-      if (room !== undefined) return [[room]];
-      else return [];
-    } else {
-      const result: RoomSize[][] = [];
-      for (const roomSize of roomSizes.filter(
-        (rs) => rs.Count > 0 && rs.Size <= numberOfPeople
-      )) {
-        const copyOfRoomSizes = this.cloneObjects(roomSizes);
-        const roomSizeToUpdate = copyOfRoomSizes.find(
-          (rs) => rs.Size === roomSize.Size
-        );
-        if (roomSizeToUpdate !== undefined) {
-          roomSizeToUpdate.Count--;
-          const subResult = this.calculateRoomSizesCombinations(
-            copyOfRoomSizes,
-            numberOfPeople - roomSizeToUpdate.Size,
-            numberOfRooms - 1
+  private getRooms(rooms: RoomDTO[], numberOfPeople: number): number[] {
+    let numbers = Array(numberOfPeople).fill(0);
+    for (let numOfPeople = numberOfPeople; numOfPeople > 0; numOfPeople--) {
+      let indexOfPeople = numOfPeople - 1;
+      if (numOfPeople == numberOfPeople) {
+        numbers[indexOfPeople] = 1;
+      } else if (numOfPeople >= Math.ceil(numberOfPeople / 2)) {
+        numbers[indexOfPeople] = 1;
+        numbers[numberOfPeople - 1 - indexOfPeople] = 1;
+      } else if (numOfPeople == 1) {
+        numbers[indexOfPeople] == numberOfPeople;
+      } else {
+        numbers[indexOfPeople] = Math.floor(numberOfPeople / numOfPeople);
+        numbers[(numberOfPeople % numOfPeople) - 1] = 1;
+      }
+      //check for rooms
+      let areAllFree = true;
+      for (const [index, value] of numbers.entries()) {
+        if (value > 0) {
+          console.log("Got value" + value + " at index " + index);
+          const room = rooms.find(
+            (r) => r.NumberOfPeopleForTheRoom == (index + 1) && r.Count >= value
           );
-          if (subResult.length > 0) {
-            for (const subResultItem of subResult) {
-              const roomInSubResult = subResultItem.find(
-                (rs) => rs.Size === roomSizeToUpdate.Size
-              );
-              if (roomInSubResult !== undefined) {
-                roomInSubResult.Count++;
-              } else {
-                subResultItem.push({ Size: roomSizeToUpdate.Size, Count: 1 });
-              }
-              result.push(subResultItem);
-            }
+          console.log(room);
+          if (room === undefined) {
+            areAllFree = false;
+          }
+          else {
+            console.log(room)
           }
         }
       }
-      return result;
+      if (areAllFree) {
+        console.log("Found numbers")
+        return numbers;
+      }
     }
-  }
-
-  private getRoomSizes(rooms: RoomDTO[]): RoomSize[] {
-    const roomSizes: RoomSize[] = [];
-    const map: Map<number, number> = new Map();
-    for (const room of rooms) {
-      let val = map.get(room.NumberOfPeopleForTheRoom) ?? 0;
-      val += room.Count;
-      map.set(room.NumberOfPeopleForTheRoom, val);
-    }
-    return Array.from(map.entries()).map((v) => ({ Size: v[0], Count: v[1] }));
-  }
-
-  // there are libraries for it, but why not code it...
-  private cloneObjects<T>(objects: T[]): T[] {
-    return JSON.parse(JSON.stringify(objects));
+    return [];
   }
 }
