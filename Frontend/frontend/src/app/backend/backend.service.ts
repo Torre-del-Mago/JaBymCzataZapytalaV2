@@ -59,10 +59,26 @@ export class BackendService {
       );
       console.log(roomCombinations);
       if(roomCombinations.length > 0) {
-        trips.push({ ...hotel, RoomCombination: roomCombinations });
+        let defaultRooms: RoomDTO[] = []
+        for (const [index, value] of roomCombinations.entries()) {
+          if(value > 0) {
+            let foundRoom = hotel.Rooms.find(r => r.NumberOfPeopleForTheRoom == (index+1) && r.Count >= value);
+            if(foundRoom !== undefined) {
+              defaultRooms.push(foundRoom)
+            }
+          }
+        }
+        let price = hotel.ChosenFlight.PricePerSeat * (numberOfAdults + numberOfChildren);
+        let timediff = endDate.getTime() - startDate.getTime();
+        let days = Math.round
+        (timediff / (1000 * 3600 * 24));
+        for(const defroom of defaultRooms) {
+          price += defroom.PricePerRoom * days;
+        }
+        trips.push({ ...hotel, RoomCombination: roomCombinations, ChosenRooms: defaultRooms, Price: price });
       }
     }
-
+    console.log(trips);
     return trips;
     /* return this.client.get<TripsDTO>(this.gateUrl + this.tripListUrl + "?body=") */
   }
