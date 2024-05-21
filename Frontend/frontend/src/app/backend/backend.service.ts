@@ -150,15 +150,19 @@ export class BackendService {
   private getRooms(rooms: RoomDTO[], numberOfPeople: number): number[] {
     let numbers = Array(numberOfPeople).fill(0);
     for (let numOfPeople = numberOfPeople; numOfPeople > 0; numOfPeople--) {
+      numbers = Array(numberOfPeople).fill(0);
+      console.log(numOfPeople)
       let indexOfPeople = numOfPeople - 1;
       if (numOfPeople == numberOfPeople) {
         numbers[indexOfPeople] = 1;
-      } else if (numOfPeople >= Math.ceil(numberOfPeople / 2)) {
-        numbers[indexOfPeople] = 1;
-        numbers[numberOfPeople - 1 - indexOfPeople] = 1;
       } else if (numOfPeople == 1) {
-        numbers[indexOfPeople] == numberOfPeople;
-      } else {
+        numbers[indexOfPeople] = numberOfPeople;
+        console.log(numbers)
+        console.log(numbers)
+      }else if (numOfPeople >= Math.ceil(numberOfPeople / 2)) {
+        numbers[indexOfPeople] = 1;
+        numbers[(numberOfPeople - 1) - indexOfPeople] += 1;
+      }  else {
         numbers[indexOfPeople] = Math.floor(numberOfPeople / numOfPeople);
         numbers[(numberOfPeople % numOfPeople) - 1] = 1;
       }
