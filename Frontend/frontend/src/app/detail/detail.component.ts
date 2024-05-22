@@ -33,6 +33,7 @@ export class DetailComponent implements OnInit {
   public beginDate = ''
   public endDate = ''
   public numOfDays = 0
+  private days = 0
 
   constructor(private route: ActivatedRoute, private service: BackendService) {}
 
@@ -41,6 +42,11 @@ export class DetailComponent implements OnInit {
 
   getFormattedDate(date: Date) {
     return date.toISOString().slice(0, 10);
+  }
+
+  changeDays() {
+    let timediff = new Date(this.endDate).getTime() - new Date(this.beginDate).getTime();
+    this.days = Math.round(timediff / (1000 * 3600 * 24));
   }
 
   ngOnInit() {
@@ -53,6 +59,7 @@ export class DetailComponent implements OnInit {
     let dates = this.service.getDates()
     this.beginDate = dates[0];
     this.endDate = dates[1];
+    this.changeDays();
     this.numberOfPeople = this.numberOfChildren + this.numberOfAdults;
     this.mealTypes = this.trip?.TypesOfMeals || [];
     this.flights = this.trip?.PossibleFlights || [];
@@ -117,10 +124,18 @@ export class DetailComponent implements OnInit {
   }
 
   flightChanged(flight: FlightDTO): void {
+    console.log(flight)
+    this.changePriceForFlight(this.trip!.ChosenFlight, flight);
     this.trip!.ChosenFlight = flight;
   }
 
   roomChanged(room: RoomDTO, position: number): void {
     this.trip!.ChosenRooms![position] = room;
+  }
+
+  changePriceForFlight(flight: FlightDTO, newflight: FlightDTO): void {
+    this.trip!.Price! -= (flight.PricePerSeat * (this.numberOfAdults + this.numberOfChildren));
+    console.log(newflight)
+    this.trip!.Price! += (newflight.PricePerSeat * (this.numberOfAdults + this.numberOfChildren));
   }
 }

@@ -9,7 +9,7 @@
 </select>
 </div>
 <div>Wybrany lot <select [ngModel]="this.trip?.ChosenFlight" (ngModelChange)="flightChanged($event)">
-<option [value]="flight" *ngFor="let flight of this.trip?.PossibleFlights">{{flight.Departure}}:{{flight.PricePerSeat}}zł</option>
+<option [ngValue]="flight" *ngFor="let flight of this.trip?.PossibleFlights">{{flight.Departure}}:{{flight.PricePerSeat}}zł</option>
 </select></div>
 <div>
     <div *ngFor="let numOfRooms of this.trip?.RoomCombination; index as i">
