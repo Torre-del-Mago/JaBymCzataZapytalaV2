@@ -22,7 +22,6 @@ export class DetailComponent implements OnInit {
   public numberOfAdults: number = 0;
   public numberOfChildren: number = 0;
   public numberOfPeople: number = 0;
-  public maxPeople?: number;
   public canDecreaseChildren?: boolean;
   public canDecreaseAdults?: boolean;
   public canIncreasePeople?: boolean;

@@ -16,24 +16,12 @@
       {{ city }}
     </option>
   </select>
-  <label for="adults">Liczba dorosłych</label>
-  <input
-    type="number"
-    name="adults"
-    [(ngModel)]="adults"
-    min="1"
-    max="100"
-    step="1"
-  />
-  <label for="children">Liczba dzieci</label>
-  <input
-    type="number"
-    name="children"
-    [(ngModel)]="children"
-    min="0"
-    max="100"
-    step="1"
-  />
+  Number of adults: {{numberOfAdults}} 
+  <button (click)="addAdult()" [disabled]="canIncreasePeople">+</button>
+  <button (click)="minusAdult()" [disabled]="canDecreaseAdults">-</button>
+  Number of children: {{numberOfChildren}} 
+  <button (click)="addChild()" [disabled]="canIncreasePeople">+</button>
+  <button (click)="minusChild()" [disabled]="canDecreaseChildren">-</button>
   <button (click)="search()">Szukaj</button>
   <div [hidden]="!notAllValuesPresent">
     Not all fields of form have been filled
