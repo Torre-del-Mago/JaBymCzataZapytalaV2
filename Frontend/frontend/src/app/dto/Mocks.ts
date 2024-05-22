@@ -6,6 +6,12 @@ import { TripsDTO } from './TripsDTO';
 export const rooms: RoomDTO[] = [
   {
     Count: 2,
+    NumberOfPeopleForTheRoom: 2,
+    PricePerRoom: 200,
+    TypeOfRoom: 'Cowabunga',
+  },
+  {
+    Count: 2,
     NumberOfPeopleForTheRoom: 1,
     PricePerRoom: 500,
     TypeOfRoom: 'Funky Monkey',

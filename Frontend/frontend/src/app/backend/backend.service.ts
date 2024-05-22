@@ -165,7 +165,7 @@ export class BackendService {
         console.log(numbers);
       } else if (numOfPeople >= Math.ceil(numberOfPeople / 2)) {
         numbers[indexOfPeople] = 1;
-        numbers[numberOfPeople - 1 - indexOfPeople] += 1;
+        numbers[(numberOfPeople - 1) - numOfPeople] += 1;
       } else {
         numbers[indexOfPeople] = Math.floor(numberOfPeople / numOfPeople);
         numbers[(numberOfPeople % numOfPeople) - 1] = 1;
