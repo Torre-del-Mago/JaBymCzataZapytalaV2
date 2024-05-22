@@ -4,16 +4,16 @@ using OfferQuery.Service;
 
 namespace OfferQuery.Consumer
 {
-    public class ReserveOfferConsumer : IConsumer<ReserveOfferEvent>
+    public class ReservedOfferSyncConsumer : IConsumer<ReservedOfferSyncEvent>
     {
         private readonly IOfferService _service;
 
-        public ReserveOfferConsumer(IOfferService service)
+        public ReservedOfferSyncConsumer(IOfferService service)
         {
             _service = service;
         }
 
-        public Task Consume(ConsumeContext<ReserveOfferEvent> context)
+        public Task Consume(ConsumeContext<ReservedOfferSyncEvent> context)
         {
             throw new NotImplementedException();
         }

@@ -3,9 +3,9 @@ using Models.Offer;
 
 namespace OfferCommand.Consumer
 {
-    public class ReserveOfferConsumer : IConsumer<ReserveOfferEvent>
+    public class RemoveOfferConsumer : IConsumer<RemoveOfferEvent>
     {
-        public async Task Consume(ConsumeContext<ReserveOfferEvent> context)
+        public Task Consume(ConsumeContext<RemoveOfferEvent> context)
         {
             throw new NotImplementedException();
         }
