@@ -129,7 +129,7 @@ export class DetailComponent implements OnInit {
   }
 
   roomChanged(room: RoomDTO, position: number): void {
-    //this.changePriceForRoom(this.trip!.ChosenRooms![position], room, this.trip!.RoomCombination![position])
+    this.changePriceForRoom(this.trip!.ChosenRooms![position], room, this.trip!.RoomCombination![position])
     this.trip!.ChosenRooms![position] = room;
   }
 
@@ -144,8 +144,6 @@ export class DetailComponent implements OnInit {
   }
 
   compareRoomTypes(room: RoomDTO, nextRoom: RoomDTO): boolean {
-    console.log(room)
-    console.log(nextRoom)
     return room.TypeOfRoom == nextRoom.TypeOfRoom && room.NumberOfPeopleForTheRoom == nextRoom.NumberOfPeopleForTheRoom;
   }
 }
