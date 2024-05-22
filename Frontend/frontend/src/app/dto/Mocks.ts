@@ -8,7 +8,13 @@ export const rooms: RoomDTO[] = [
     Count: 2,
     NumberOfPeopleForTheRoom: 1,
     PricePerRoom: 500,
-    TypeOfRoom: '',
+    TypeOfRoom: 'Funky Monkey',
+  },
+  {
+    Count: 2,
+    NumberOfPeopleForTheRoom: 1,
+    PricePerRoom: 300,
+    TypeOfRoom: 'Chilled dog',
   },
 ];
 export const dummyRoom: RoomDTO = 
@@ -26,6 +32,12 @@ export const flights: FlightDTO[] = [
     PricePerSeat: 100,
     ReturnTransportId: '',
   },
+  {
+    Departure: 'Kraków',
+    DepartureTransportId: '',
+    PricePerSeat: 80,
+    ReturnTransportId: '',
+  }
 ];
 
 export const trips: TripDTO[] = [

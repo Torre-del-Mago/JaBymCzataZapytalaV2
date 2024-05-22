@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { TripDTO } from '../dto/TripDTO';
+import { RoomDTO } from '../dto/RoomDTO';
 import { BackendService } from '../backend/backend.service';
 import { ActivatedRoute } from '@angular/router';
 import { FlightDTO } from '../dto/FlightDTO';
@@ -111,7 +112,15 @@ export class DetailComponent implements OnInit {
     this.displayPrice();
   }
 
+  getRoomsFor(numberOfPeople: number, numberOfRooms: number): RoomDTO[] {
+    return this.trip?.Rooms.filter(r => r.Count >= numberOfRooms && r.NumberOfPeopleForTheRoom == numberOfPeople) || [];
+  }
+
   flightChanged(flight: FlightDTO): void {
     this.trip!.ChosenFlight = flight;
+  }
+
+  roomChanged(room: RoomDTO, position: number): void {
+    this.trip!.ChosenRooms![position] = room;
   }
 }
