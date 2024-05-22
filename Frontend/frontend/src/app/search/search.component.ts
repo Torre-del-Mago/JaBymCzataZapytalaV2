@@ -15,15 +15,20 @@ export class SearchComponent {
   startCity = '';
   startDate = '';
   endDate = '';
-  adults = 1;
-  children = 0;
   result: TripDTO[] = [];
   notAllValuesPresent = false;
+  numberOfAdults: number = 1;
+  numberOfChildren: number = 0;
+  numberOfPeople: number = 0;
+  canDecreaseChildren?: boolean = true;
+  canDecreaseAdults?: boolean = false;
+  canIncreasePeople?: boolean = false;
+
 
   constructor(private service: BackendService, private router: Router) {}
 
   search(): void {
-    if(this.destination === '' || this.startCity === '' || this.endDate === '' || this.startDate === '' || (this.adults+this.children) === 0)
+    if(this.destination === '' || this.startCity === '' || this.endDate === '' || this.startDate === '' || (this.numberOfAdults+this.numberOfChildren) === 0)
     {
       this.notAllValuesPresent = true;
     }
@@ -36,15 +41,53 @@ export class SearchComponent {
       this.startCity,
       new Date(this.startDate),
       new Date(this.endDate),
-      this.adults,
-      this.children
+      this.numberOfAdults,
+      this.numberOfChildren
     );
   }
 
   async detail(trip: TripDTO): Promise<void> {
     this.service.setCurrentTrip(trip);
-    this.service.setNumbers(this.children, this.adults)
+    this.service.setNumbers(this.numberOfChildren, this.numberOfAdults)
     this.service.setDates(this.startDate, this.endDate)
     await this.router.navigateByUrl('detail');
+  }
+
+  
+  addAdult(): void {
+    this.numberOfAdults++;
+    this.numberOfPeople++;
+    if (this.numberOfPeople == 6) {
+      this.canIncreasePeople = true;
+    }
+    this.canDecreaseAdults = false;
+  }
+
+  minusAdult(): void {
+    this.numberOfAdults--;
+    this.numberOfPeople--;
+    if (this.numberOfAdults == 0) {
+      this.canDecreaseAdults = true;
+    }
+    this.canIncreasePeople = false;
+  }
+
+  addChild(): void {
+    this.numberOfChildren++;
+    this.numberOfPeople++;
+    if (this.numberOfPeople == 6) {
+      this.canIncreasePeople = true;
+    }
+    this.canDecreaseChildren = false;
+  }
+  
+  
+  minusChild(): void {
+    this.numberOfChildren--;
+    this.numberOfPeople--;
+    if (this.numberOfChildren == 0) {
+      this.canDecreaseChildren = true;
+    }
+    this.canIncreasePeople = false;
   }
 }

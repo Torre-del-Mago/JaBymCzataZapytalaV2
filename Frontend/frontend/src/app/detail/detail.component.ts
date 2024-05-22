@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { TripDTO } from '../dto/TripDTO';
+import { RoomDTO } from '../dto/RoomDTO';
 import { BackendService } from '../backend/backend.service';
 import { ActivatedRoute } from '@angular/router';
 import { FlightDTO } from '../dto/FlightDTO';
@@ -21,7 +22,6 @@ export class DetailComponent implements OnInit {
   public numberOfAdults: number = 0;
   public numberOfChildren: number = 0;
   public numberOfPeople: number = 0;
-  public maxPeople?: number;
   public canDecreaseChildren?: boolean;
   public canDecreaseAdults?: boolean;
   public canIncreasePeople?: boolean;
@@ -32,6 +32,7 @@ export class DetailComponent implements OnInit {
   public beginDate = ''
   public endDate = ''
   public numOfDays = 0
+  private days = 0
 
   constructor(private route: ActivatedRoute, private service: BackendService) {}
 
@@ -40,6 +41,11 @@ export class DetailComponent implements OnInit {
 
   getFormattedDate(date: Date) {
     return date.toISOString().slice(0, 10);
+  }
+
+  changeDays() {
+    let timediff = new Date(this.endDate).getTime() - new Date(this.beginDate).getTime();
+    this.days = Math.round(timediff / (1000 * 3600 * 24));
   }
 
   ngOnInit() {
@@ -52,6 +58,7 @@ export class DetailComponent implements OnInit {
     let dates = this.service.getDates()
     this.beginDate = dates[0];
     this.endDate = dates[1];
+    this.changeDays();
     this.numberOfPeople = this.numberOfChildren + this.numberOfAdults;
     this.mealTypes = this.trip?.TypesOfMeals || [];
     this.flights = this.trip?.PossibleFlights || [];
@@ -73,6 +80,7 @@ export class DetailComponent implements OnInit {
     if (this.numberOfPeople == 6) {
       this.canIncreasePeople = true;
     }
+    this.canDecreaseAdults = false;
     this.pricePerPerson -= Math.random() * 40 + 40;
     this.displayPrice();
   }
@@ -83,6 +91,7 @@ export class DetailComponent implements OnInit {
     if (this.numberOfAdults == 0) {
       this.canDecreaseAdults = true;
     }
+    this.canIncreasePeople = false;
     this.pricePerPerson += Math.random() * 40 + 40;
     this.displayPrice();
   }
@@ -93,6 +102,7 @@ export class DetailComponent implements OnInit {
     if (this.numberOfPeople == 6) {
       this.canIncreasePeople = true;
     }
+    this.canDecreaseChildren = false;
     this.pricePerPerson -= Math.random() * 20 + 20;
     this.displayPrice();
   }
@@ -103,11 +113,39 @@ export class DetailComponent implements OnInit {
     if (this.numberOfChildren == 0) {
       this.canDecreaseChildren = true;
     }
+    this.canIncreasePeople = false;
     this.pricePerPerson += Math.random() * 20 + 20;
     this.displayPrice();
   }
 
+  getRoomsFor(numberOfPeople: number, numberOfRooms: number): RoomDTO[] {
+    return this.trip?.Rooms.filter(r => r.Count >= numberOfRooms && r.NumberOfPeopleForTheRoom == numberOfPeople) || [];
+  }
+
   flightChanged(flight: FlightDTO): void {
+    console.log(flight)
+    this.changePriceForFlight(this.trip!.ChosenFlight, flight);
     this.trip!.ChosenFlight = flight;
+  }
+
+  roomChanged(room: RoomDTO, position: number): void {
+    //this.changePriceForRoom(this.trip!.ChosenRooms![position], room, this.trip!.RoomCombination![position])
+    this.trip!.ChosenRooms![position] = room;
+  }
+
+  changePriceForFlight(flight: FlightDTO, newflight: FlightDTO): void {
+    this.trip!.Price! -= (flight.PricePerSeat * (this.numberOfAdults + this.numberOfChildren));
+    this.trip!.Price! += (newflight.PricePerSeat * (this.numberOfAdults + this.numberOfChildren));
+  }
+
+  changePriceForRoom(room: RoomDTO, newroom: RoomDTO, numberOfRooms: number): void {
+    this.trip!.Price! -= (room.PricePerRoom * this.days * numberOfRooms);
+    this.trip!.Price! += (newroom.PricePerRoom * this.days * numberOfRooms);
+  }
+
+  compareRoomTypes(room: RoomDTO, nextRoom: RoomDTO): boolean {
+    console.log(room)
+    console.log(nextRoom)
+    return room.TypeOfRoom == nextRoom.TypeOfRoom && room.NumberOfPeopleForTheRoom == nextRoom.NumberOfPeopleForTheRoom;
   }
 }
