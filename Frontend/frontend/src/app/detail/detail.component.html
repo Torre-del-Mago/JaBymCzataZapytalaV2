@@ -15,8 +15,8 @@
     <div *ngFor="let numOfRooms of this.trip?.RoomCombination; index as i">
         <div *ngIf="numOfRooms > 0">
             <span>{{numOfRooms}} {{numOfRooms == 1 ? "Pokój" : "Pokoje"}} {{i+1}}os.</span>
-            <select [ngModel]="this.trip!.ChosenRooms![i]" (ngModelChange)="roomChanged($event, i)">
-                <option [value]="roomType" *ngFor="let roomType of this.getRoomsFor(i+1, numOfRooms)">{{roomType.TypeOfRoom}} - {{roomType.PricePerRoom}} zł za noc</option>
+            <select [ngModel]="this.trip!.ChosenRooms![i+1]" (ngModelChange)="roomChanged($event, i)">
+                <option [ngValue]="roomType" *ngFor="let roomType of this.getRoomsFor(i+1, numOfRooms)">{{roomType.TypeOfRoom}} - {{roomType.PricePerRoom}} zł za noc</option>
             </select>
         </div>
     </div>

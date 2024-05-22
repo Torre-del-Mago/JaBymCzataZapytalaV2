@@ -130,12 +130,23 @@ export class DetailComponent implements OnInit {
   }
 
   roomChanged(room: RoomDTO, position: number): void {
+    //this.changePriceForRoom(this.trip!.ChosenRooms![position], room, this.trip!.RoomCombination![position])
     this.trip!.ChosenRooms![position] = room;
   }
 
   changePriceForFlight(flight: FlightDTO, newflight: FlightDTO): void {
     this.trip!.Price! -= (flight.PricePerSeat * (this.numberOfAdults + this.numberOfChildren));
-    console.log(newflight)
     this.trip!.Price! += (newflight.PricePerSeat * (this.numberOfAdults + this.numberOfChildren));
+  }
+
+  changePriceForRoom(room: RoomDTO, newroom: RoomDTO, numberOfRooms: number): void {
+    this.trip!.Price! -= (room.PricePerRoom * this.days * numberOfRooms);
+    this.trip!.Price! += (newroom.PricePerRoom * this.days * numberOfRooms);
+  }
+
+  compareRoomTypes(room: RoomDTO, nextRoom: RoomDTO): boolean {
+    console.log(room)
+    console.log(nextRoom)
+    return room.TypeOfRoom == nextRoom.TypeOfRoom && room.NumberOfPeopleForTheRoom == nextRoom.NumberOfPeopleForTheRoom;
   }
 }

@@ -79,7 +79,7 @@ export class BackendService {
         let days = Math.round(timediff / (1000 * 3600 * 24));
         for (const [index, defroom] of defaultRooms.entries()) {
           if (roomCombinations[index] > 0) {
-            price += defroom.PricePerRoom * days;
+            price += defroom.PricePerRoom * days * roomCombinations[index];
           }
         }
         trips.push({
