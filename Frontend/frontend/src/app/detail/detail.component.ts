@@ -73,6 +73,7 @@ export class DetailComponent implements OnInit {
     if (this.numberOfPeople == 6) {
       this.canIncreasePeople = true;
     }
+    this.canDecreaseAdults = false;
     this.pricePerPerson -= Math.random() * 40 + 40;
     this.displayPrice();
   }
@@ -83,6 +84,7 @@ export class DetailComponent implements OnInit {
     if (this.numberOfAdults == 0) {
       this.canDecreaseAdults = true;
     }
+    this.canIncreasePeople = false;
     this.pricePerPerson += Math.random() * 40 + 40;
     this.displayPrice();
   }
@@ -93,6 +95,7 @@ export class DetailComponent implements OnInit {
     if (this.numberOfPeople == 6) {
       this.canIncreasePeople = true;
     }
+    this.canDecreaseChildren = false;
     this.pricePerPerson -= Math.random() * 20 + 20;
     this.displayPrice();
   }
@@ -103,6 +106,7 @@ export class DetailComponent implements OnInit {
     if (this.numberOfChildren == 0) {
       this.canDecreaseChildren = true;
     }
+    this.canIncreasePeople = false;
     this.pricePerPerson += Math.random() * 20 + 20;
     this.displayPrice();
   }
