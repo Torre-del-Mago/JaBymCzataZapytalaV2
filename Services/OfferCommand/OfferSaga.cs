@@ -33,6 +33,8 @@ namespace OfferCommand
         public Event<ReserveHotelEventReply> ReserveHotelEvent { get; set; }
         public Event<ReserveTransportEventReply> ReserveTransportEvent { get; set; }
 
+        
+
         private void sendHotelReservation()
         {
 
@@ -86,6 +88,11 @@ namespace OfferCommand
         public OfferSaga() 
         {
             InstanceState(x => x.CurrentState);
+
+            Event(() => ReserveOfferEvent, x => x.CorrelateById(ctx => ctx.Message.CorrelationId));
+            Event(() => PaymentEvent, x => x.CorrelateById(ctx => ctx.Message.CorrelationId));
+            Event(() => ReserveHotelEvent, x => x.CorrelateById(ctx => ctx.Message.CorrelationId));
+            Event(() => ReserveTransportEvent, x => x.CorrelateById(ctx => ctx.Message.CorrelationId));
 
             Initially(
                 When(ReserveOfferEvent).
