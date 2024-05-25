@@ -22,12 +22,15 @@
     </div>
 </div>
 <div>
-    Number of adults: {{numberOfAdults}} 
+    Ilość dorosłych: {{numberOfAdults}} 
     <button (click)="addAdult()" [disabled]="canIncreasePeople">+</button>
     <button (click)="minusAdult()" [disabled]="canDecreaseAdults">-</button><br>
-    Number of children: {{numberOfChildren}} 
+    Ilość dzieci: {{numberOfChildren}} 
     <button (click)="addChild()" [disabled]="canIncreasePeople">+</button>
     <button (click)="minusChild()" [disabled]="canDecreaseChildren">-</button>
+</div>
+<div>
+    <button (click)="reserve()">Rezerwuj</button>
 </div>
 </div>
 <div [hidden]="!configurationAvailable">

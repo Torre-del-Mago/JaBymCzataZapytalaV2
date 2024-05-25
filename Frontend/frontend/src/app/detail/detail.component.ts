@@ -5,6 +5,7 @@ import { BackendService } from '../backend/backend.service';
 import { ActivatedRoute } from '@angular/router';
 import { FlightDTO } from '../dto/FlightDTO';
 import { Subscription } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-detail',
@@ -34,7 +35,7 @@ export class DetailComponent implements OnInit {
   public numOfDays = 0
   private days = 0
 
-  constructor(private route: ActivatedRoute, private service: BackendService) {}
+  constructor(private route: ActivatedRoute, private service: BackendService, private router: Router) {}
 
   displayPrice() {
   }
@@ -145,5 +146,10 @@ export class DetailComponent implements OnInit {
 
   compareRoomTypes(room: RoomDTO, nextRoom: RoomDTO): boolean {
     return room.TypeOfRoom == nextRoom.TypeOfRoom && room.NumberOfPeopleForTheRoom == nextRoom.NumberOfPeopleForTheRoom;
+  }
+
+  async reserve(): Promise<void> {
+    this.service.reserveOffer(this.trip!);
+    await this.router.navigateByUrl('reserve');
   }
 }
