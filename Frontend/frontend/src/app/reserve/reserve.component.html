@@ -1,0 +1,30 @@
+<div [hidden]="!canPay">
+    <div>{{trip?.Country}} Wycieczka do miejscowości {{trip?.City}} do hotelu {{trip?.HotelName}}</div>
+    <div>Od {{trip?.BeginDate | date: 'yyyy/MM/dd'}} do {{trip?.EndDate | date: 'yyyy/MM/dd'}}</div>
+    <div>Z pokojami<br>
+    <div *ngFor="let numOfRooms of trip?.RoomCombination; index as i">
+        <div *ngIf="numOfRooms > 0">
+            <span>{{numOfRooms}} {{numOfRooms == 1 ? "Pokój" : "Pokoje"}} {{i+1}}os. typu {{trip!.ChosenRooms![i+1].TypeOfRoom}} za cenę {{trip!.ChosenRooms![i+1].PricePerRoom}}</span>
+        </div>
+    </div>
+    </div>
+    <div>
+    Lecąc z {{trip?.ChosenFlight?.Departure}}: Cena biletów per osoba w dwie strony {{trip?.ChosenFlight?.PricePerSeat}}
+    </div>
+    <div>
+    Z wybranym typem posiłków {{trip?.ChosenMeal}}
+    </div>
+    <div>
+    Dla {{numberOfAdults}} {{numberOfAdults > 1 ? "dorosłych" : "dorosłego"}} i {{numberOfChildren}} {{numberOfChildren > 1 ? "dzieci" : "dziecka"}}
+    </div>
+    <div>
+    Cena łączna {{this.trip?.Price}} zł
+    </div>
+    <div>
+    Czas do zapłacenia {{this.display}}
+    </div>
+    <button>Zapłać</button>
+</div>
+<div [hidden]="canPay">
+    Skończył się czas rezerwacji. Przekierowujemy do ekranu głównego
+</div>

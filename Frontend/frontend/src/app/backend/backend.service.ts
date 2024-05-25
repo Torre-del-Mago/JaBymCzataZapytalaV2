@@ -25,7 +25,8 @@ export class BackendService {
 
   private currentTrip?: TripDTO;
   private numOfChildren: number = 0;
-  private numOfAdult: number = 0;
+  private numOfAdults: number = 0;
+  private tripToReserve?: TripDTO;
 
   private dates: string[] = [];
 
@@ -96,7 +97,15 @@ export class BackendService {
 
   public getInfoForTrip() {}
 
-  public reserveOffer() {}
+  public reserveOffer(trip: TripDTO, numOfAdults: number, numOfChildren: number) {
+    this.tripToReserve = trip;
+    this.numOfAdults = numOfAdults;
+    this.numOfChildren = numOfChildren;
+  }
+
+  public getReservedOffer(): TripDTO {
+    return this.tripToReserve!;
+  }
 
   public payOffer() {}
 
@@ -109,12 +118,12 @@ export class BackendService {
   }
 
   public setNumbers(numOfChild: number, numOfAdult: number) {
-    this.numOfAdult = numOfAdult;
+    this.numOfAdults = numOfAdult;
     this.numOfChildren = numOfChild;
   }
 
   public getNumbers(): number[] {
-    return [this.numOfAdult, this.numOfChildren];
+    return [this.numOfAdults, this.numOfChildren];
   }
 
   public getDates(): string[] {
