@@ -13,5 +13,6 @@ export type TripDTO = {
   ChosenFlight: FlightDTO;
   PossibleFlights: FlightDTO[];
   ChosenRooms?: RoomDTO[];
+  ChosenMeal?: string
   Price?: number
 };

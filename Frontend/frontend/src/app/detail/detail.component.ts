@@ -30,22 +30,26 @@ export class DetailComponent implements OnInit {
   public mealTypes: string[] = [];
   public flights: FlightDTO[] = [];
   public configurationAvailable = false;
-  public beginDate = ''
-  public endDate = ''
-  public numOfDays = 0
-  private days = 0
+  public beginDate = '';
+  public endDate = '';
+  public numOfDays = 0;
+  private days = 0;
 
-  constructor(private route: ActivatedRoute, private service: BackendService, private router: Router) {}
+  constructor(
+    private route: ActivatedRoute,
+    private service: BackendService,
+    private router: Router
+  ) {}
 
-  displayPrice() {
-  }
+  displayPrice() {}
 
   getFormattedDate(date: Date) {
     return date.toISOString().slice(0, 10);
   }
 
   changeDays() {
-    let timediff = new Date(this.endDate).getTime() - new Date(this.beginDate).getTime();
+    let timediff =
+      new Date(this.endDate).getTime() - new Date(this.beginDate).getTime();
     this.days = Math.round(timediff / (1000 * 3600 * 24));
   }
 
@@ -56,7 +60,7 @@ export class DetailComponent implements OnInit {
     this.pricePerPerson = Math.random() * 500 + 500;
     this.numberOfAdults = this.service.getNumbers()[0];
     this.numberOfChildren = this.service.getNumbers()[1];
-    let dates = this.service.getDates()
+    let dates = this.service.getDates();
     this.beginDate = dates[0];
     this.endDate = dates[1];
     this.changeDays();
@@ -120,36 +124,56 @@ export class DetailComponent implements OnInit {
   }
 
   getRoomsFor(numberOfPeople: number, numberOfRooms: number): RoomDTO[] {
-    return this.trip?.Rooms.filter(r => r.Count >= numberOfRooms && r.NumberOfPeopleForTheRoom == numberOfPeople) || [];
+    return (
+      this.trip?.Rooms.filter(
+        (r) =>
+          r.Count >= numberOfRooms &&
+          r.NumberOfPeopleForTheRoom == numberOfPeople
+      ) || []
+    );
   }
 
   flightChanged(flight: FlightDTO): void {
-    console.log(flight)
+    console.log(flight);
     this.changePriceForFlight(this.trip!.ChosenFlight, flight);
     this.trip!.ChosenFlight = flight;
   }
 
   roomChanged(room: RoomDTO, position: number): void {
-    this.changePriceForRoom(this.trip!.ChosenRooms![position], room, this.trip!.RoomCombination![position])
+    this.changePriceForRoom(
+      this.trip!.ChosenRooms![position],
+      room,
+      this.trip!.RoomCombination![position]
+    );
     this.trip!.ChosenRooms![position] = room;
   }
 
   changePriceForFlight(flight: FlightDTO, newflight: FlightDTO): void {
-    this.trip!.Price! -= (flight.PricePerSeat * (this.numberOfAdults + this.numberOfChildren));
-    this.trip!.Price! += (newflight.PricePerSeat * (this.numberOfAdults + this.numberOfChildren));
+    this.trip!.Price! -=
+      flight.PricePerSeat * (this.numberOfAdults + this.numberOfChildren);
+    this.trip!.Price! +=
+      newflight.PricePerSeat * (this.numberOfAdults + this.numberOfChildren);
   }
 
-  changePriceForRoom(room: RoomDTO, newroom: RoomDTO, numberOfRooms: number): void {
-    this.trip!.Price! -= (room.PricePerRoom * this.days * numberOfRooms);
-    this.trip!.Price! += (newroom.PricePerRoom * this.days * numberOfRooms);
+  changePriceForRoom(
+    room: RoomDTO,
+    newroom: RoomDTO,
+    numberOfRooms: number
+  ): void {
+    this.trip!.Price! -= room.PricePerRoom * this.days * numberOfRooms;
+    this.trip!.Price! += newroom.PricePerRoom * this.days * numberOfRooms;
   }
 
   compareRoomTypes(room: RoomDTO, nextRoom: RoomDTO): boolean {
-    return room.TypeOfRoom == nextRoom.TypeOfRoom && room.NumberOfPeopleForTheRoom == nextRoom.NumberOfPeopleForTheRoom;
+    return (
+      room.TypeOfRoom == nextRoom.TypeOfRoom &&
+      room.NumberOfPeopleForTheRoom == nextRoom.NumberOfPeopleForTheRoom
+    );
   }
 
   async reserve(): Promise<void> {
-    this.service.reserveOffer(this.trip!);
+    this.trip!.ChosenMeal = this.mealType;
+    this.service.reserveOffer(this.trip!, this.numberOfAdults, this.numberOfChildren);
     await this.router.navigateByUrl('reserve');
   }
 }
