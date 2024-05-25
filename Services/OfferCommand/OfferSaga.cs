@@ -19,14 +19,18 @@ namespace OfferCommand
         public bool MadeReservation {  get; set; }
         public bool MadeHotelReservation {  get; set; }
         public bool MadeTransportReservation {  get; set; }
+        public int TransportReservationId { get; set; } = 0;
+        public int HotelReservationId { get; set; } = 0;
         public bool PaidForReservation {  get; set; }
 
     }
-    public class OfferSaga: MassTransitStateMachine<OfferReservation>
+    public class OfferSaga : MassTransitStateMachine<OfferReservation>
     {
-        public State WaitingForHotel {  get; set; }
+        public State WaitingForHotel { get; set; }
         public State WaitingForTransport { get; set; }
-        public State ReservedOffer {  get; set; }
+        public State ReservedOffer { get; set; }
+
+        private IPublishEndpoint _publishEndpoint { get; set; }
 
         public Event<ReserveOfferEvent> ReserveOfferEvent { get; set; }
         public Event<CheckPaymentEventReply> PaymentEvent { get; set; }
@@ -55,19 +59,34 @@ namespace OfferCommand
 
         }
 
-        private void cancelReservations()
+        private void cancelReservations(OfferReservation reservation)
         {
-
+            if(reservation.TransportReservationId != 0)
+            {
+                _publishEndpoint.Publish(new CancelReservationTransportEvent()
+                {
+                    CorrelationId = reservation.CorrelationId,
+                    OfferId = reservation.TransportReservationId
+                });
+            }
+            if(reservation.HotelReservationId != 0)
+            {
+                _publishEndpoint.Publish(new CancelReservationHotelEvent()
+                {
+                    CorrelationId = reservation.CorrelationId,
+                    OfferId = reservation.HotelReservationId
+                });
+            }
         }
 
-        private void processHotel()
+        private void processHotel(ReserveHotelEventReply reply, OfferReservation reservation)
         {
-
+            reservation.MadeHotelReservation = reply.Answer == ReserveHotelEventReply.State.RESERVED;
         }
 
-        private void processTransport()
+        private void processTransport(ReserveTransportEventReply reply, OfferReservation reservation)
         {
-
+            reservation.MadeTransportReservation = reply.Answer == ReserveTransportEventReply.State.RESERVED;
         }
 
         private void sendPaymentMessage()
@@ -98,23 +117,42 @@ namespace OfferCommand
                 When(ReserveOfferEvent).
                 Then(ctx => ctx.Saga.Registration = ctx.Message.Registration).
                 Then(ctx => ctx.Saga.Offer = ctx.Message.Offer).
-                Then(ctx => sendHotelReservation()).
+                Publish(ctx => new ReserveHotelEvent()
+                {
+                    CorrelationId = ctx.Saga.CorrelationId,
+                    Reservation = new Models.Hotel.DTO.HotelReservationDTO()
+                    {
+                        HotelId = ctx.Saga.Offer.HotelId,
+                        BeginDate = ctx.Saga.Offer.BeginDate,
+                        EndDate = ctx.Saga.Offer.EndDate,
+                        Rooms = ctx.Saga.Offer.Rooms
+                    }
+                }).
                 TransitionTo(WaitingForHotel)
                 );
 
             During(WaitingForHotel,
                 When(ReserveHotelEvent).
-                Then(ctx => processHotel()).
+                Then(ctx => processHotel(ctx.Message, ctx.Saga)).
                 IfElse(ctx => ctx.Saga.MadeHotelReservation,
-valid => valid.Then(ctx => sendTransportReservation()).TransitionTo(ReservedOffer),
-invalid => invalid.Then(ctx => cancelReservations()).Finalize()));
+                valid => valid.Publish(ctx => new ReserveTransportEvent() { 
+                    CorrelationId = ctx.Saga.CorrelationId,
+                    Reservation = new Models.Transport.DTO.TransportReservationDTO()
+                    {
+                        ArrivalTransportId = ctx.Saga.Offer.Flight.DepartureTransportId,
+                        ReturnTransportId = ctx.Saga.Offer.Flight.ReturnTransportId,
+                        NumberOfPeople = ctx.Saga.Offer.NumberOfAdults + ctx.Saga.Offer.NumberOfNewborns + 
+                        ctx.Saga.Offer.NumberOfTeenagers + ctx.Saga.Offer.NumberOfToddlers
+                    }
+                }).TransitionTo(ReservedOffer),
+                invalid => invalid.Then(ctx => cancelReservations(ctx.Saga)).Finalize()));
 
             During(WaitingForTransport,
                 When(ReserveTransportEvent).
-                Then(ctx => processTransport()).
+                Then(ctx => processTransport(ctx.Message, ctx.Saga)).
                 IfElse(ctx => ctx.Saga.MadeTransportReservation,
-valid => valid.Then(ctx => publishReserveOfferResponse()).Then(ctx => sendPaymentMessage()).TransitionTo(ReservedOffer),
-invalid => invalid.Then(ctx => cancelReservations()).Finalize()));
+                valid => valid.Then(ctx => publishReserveOfferResponse()).Then(ctx => sendPaymentMessage()).TransitionTo(ReservedOffer),
+                invalid => invalid.Then(ctx => cancelReservations(ctx.Saga)).Finalize()));
 
 
             During(ReservedOffer,
@@ -122,7 +160,7 @@ invalid => invalid.Then(ctx => cancelReservations()).Finalize()));
                 Then(ctx => processPayment()).
                 IfElse(ctx => ctx.Saga.PaidForReservation,
                 valid => valid.Then(ctx => publishPaymentResponse()).Finalize(),
-                invalid => invalid.Then(ctx => cancelReservations()).Finalize()));
+                invalid => invalid.Then(ctx => cancelReservations(ctx.Saga)).Finalize()));
 
 
 
