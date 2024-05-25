@@ -174,7 +174,14 @@ namespace OfferCommand
 
 
             During(ReservedOffer,
+                When(PaymentNotSentTimeout.Received).
+                Publish(ctx => new RemoveOfferEvent()
+                {
+                    OfferId = ctx.Saga.Registration
+                })
+                .Finalize(),
                 When(PaymentEvent).
+                Unschedule(PaymentNotSentTimeout).
                 Finalize());
 
 
