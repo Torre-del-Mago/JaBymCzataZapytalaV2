@@ -7,6 +7,10 @@ using Models.Transport;
 
 namespace OfferCommand
 {
+    public class PaymentTimeout { 
+        public Guid CorrelationId { get; set; }
+    }
+
     public class OfferReservation : SagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; }
@@ -23,6 +27,8 @@ namespace OfferCommand
         public int HotelReservationId { get; set; } = 0;
         public bool PaidForReservation {  get; set; }
 
+        public Guid? PaymentTimeoutId { get; set; }
+
     }
     public class OfferSaga : MassTransitStateMachine<OfferReservation>
     {
@@ -36,6 +42,8 @@ namespace OfferCommand
         public Event<CheckPaymentEventReply> PaymentEvent { get; set; }
         public Event<ReserveHotelEventReply> ReserveHotelEvent { get; set; }
         public Event<ReserveTransportEventReply> ReserveTransportEvent { get; set; }
+
+        public Schedule<OfferReservation, PaymentTimeout> PaymentNotSentTimeout { get; set; }
 
         private void processPayment()
         {
@@ -90,6 +98,13 @@ namespace OfferCommand
             Event(() => PaymentEvent, x => x.CorrelateById(ctx => ctx.Message.CorrelationId));
             Event(() => ReserveHotelEvent, x => x.CorrelateById(ctx => ctx.Message.CorrelationId));
             Event(() => ReserveTransportEvent, x => x.CorrelateById(ctx => ctx.Message.CorrelationId));
+
+            Schedule(() => PaymentNotSentTimeout, instance => instance.PaymentTimeoutId, s =>
+            {
+                s.Delay = TimeSpan.FromSeconds(70);
+
+                s.Received = r => r.CorrelateById(context => context.Message.CorrelationId);
+            });
 
             Initially(
                 When(ReserveOfferEvent).
@@ -146,6 +161,7 @@ namespace OfferCommand
                                 {
                                     CorrelationId = ctx.Saga.CorrelationId
                                 })
+                                .Schedule(PaymentNotSentTimeout, context => context.Init<PaymentTimeout>(new PaymentTimeout (){ CorrelationId = context.Saga.CorrelationId}))
                                 .TransitionTo(ReservedOffer),
                 invalid => invalid.Then(ctx => cancelReservations(ctx.Saga))
                                       .Publish(ctx => new ReserveOfferEventReply()
