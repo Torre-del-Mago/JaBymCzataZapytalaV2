@@ -37,23 +37,6 @@ namespace OfferCommand
         public Event<ReserveHotelEventReply> ReserveHotelEvent { get; set; }
         public Event<ReserveTransportEventReply> ReserveTransportEvent { get; set; }
 
-        
-
-        private void sendHotelReservation()
-        {
-
-        }
-
-        private void sendTransportReservation()
-        {
-
-        }
-
-        private void startPayment()
-        {
-
-        }
-
         private void processPayment()
         {
 
@@ -99,11 +82,6 @@ namespace OfferCommand
 
         }
 
-        private void publishPaymentResponse()
-        {
-
-        }
-
         public OfferSaga() 
         {
             InstanceState(x => x.CurrentState);
@@ -145,22 +123,43 @@ namespace OfferCommand
                         ctx.Saga.Offer.NumberOfTeenagers + ctx.Saga.Offer.NumberOfToddlers
                     }
                 }).TransitionTo(ReservedOffer),
-                invalid => invalid.Then(ctx => cancelReservations(ctx.Saga)).Finalize()));
+                invalid => invalid.Then(ctx => cancelReservations(ctx.Saga)).Publish(ctx => new ReserveOfferEventReply()
+                {
+                    Answer = ReserveOfferEventReply.State.NOT_RESERVED,
+                    CorrelationId = ctx.Saga.CorrelationId,
+                    Error = "Could not reserve hotel",
+                    Registration = ctx.Saga.Registration
+                }
+                ).Finalize()));
 
             During(WaitingForTransport,
                 When(ReserveTransportEvent).
                 Then(ctx => processTransport(ctx.Message, ctx.Saga)).
                 IfElse(ctx => ctx.Saga.MadeTransportReservation,
-                valid => valid.Then(ctx => publishReserveOfferResponse()).Then(ctx => sendPaymentMessage()).TransitionTo(ReservedOffer),
-                invalid => invalid.Then(ctx => cancelReservations(ctx.Saga)).Finalize()));
+                valid => valid.Publish(ctx => new ReserveOfferEventReply()
+                                {
+                                    Answer = ReserveOfferEventReply.State.RESERVED,
+                                    CorrelationId = ctx.Saga.CorrelationId,
+                                    Registration = ctx.Saga.Registration
+                                })
+                                .Publish(ctx => new CheckPaymentEvent()
+                                {
+                                    CorrelationId = ctx.Saga.CorrelationId
+                                })
+                                .TransitionTo(ReservedOffer),
+                invalid => invalid.Then(ctx => cancelReservations(ctx.Saga))
+                                      .Publish(ctx => new ReserveOfferEventReply()
+                                    {
+                                        Answer = ReserveOfferEventReply.State.NOT_RESERVED,
+                                        CorrelationId = ctx.Saga.CorrelationId,
+                                        Error = "Could not reserve transport",
+                                        Registration = ctx.Saga.Registration
+                                    }).Finalize()));
 
 
             During(ReservedOffer,
                 When(PaymentEvent).
-                Then(ctx => processPayment()).
-                IfElse(ctx => ctx.Saga.PaidForReservation,
-                valid => valid.Then(ctx => publishPaymentResponse()).Finalize(),
-                invalid => invalid.Then(ctx => cancelReservations(ctx.Saga)).Finalize()));
+                Finalize());
 
 
 
