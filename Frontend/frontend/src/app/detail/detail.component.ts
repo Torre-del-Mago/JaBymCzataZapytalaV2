@@ -29,11 +29,13 @@ export class DetailComponent implements OnInit {
   public roomName?: string;
   public mealTypes: string[] = [];
   public flights: FlightDTO[] = [];
-  public configurationAvailable = false;
+  public configurationAvailable = true;
   public beginDate = '';
   public endDate = '';
   public numOfDays = 0;
+  public backup: number[] = [0, 0]
   private days = 0;
+  
 
   constructor(
     private route: ActivatedRoute,
@@ -54,9 +56,7 @@ export class DetailComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.trip = this.service.getCurrentTrip();
-    this.hotelName = this.trip?.HotelName;
-    this.destinationName = this.trip?.City;
+    this.refreshTrip();
     this.pricePerPerson = Math.random() * 500 + 500;
     this.numberOfAdults = this.service.getNumbers()[0];
     this.numberOfChildren = this.service.getNumbers()[1];
@@ -65,8 +65,6 @@ export class DetailComponent implements OnInit {
     this.endDate = dates[1];
     this.changeDays();
     this.numberOfPeople = this.numberOfChildren + this.numberOfAdults;
-    this.mealTypes = this.trip?.TypesOfMeals || [];
-    this.flights = this.trip?.PossibleFlights || [];
     if (this.numberOfPeople == 6) {
       this.canIncreasePeople = false;
     }
@@ -76,49 +74,61 @@ export class DetailComponent implements OnInit {
     if (this.numberOfChildren == 0) {
       this.canDecreaseAdults = false;
     }
-    this.mealType = this.trip?.TypesOfMeals[0];
+  }
+
+  createBackup() {
+    this.backup[0] = this.numberOfAdults;
+    this.backup[1] = this.numberOfChildren;
   }
 
   addAdult(): void {
+    this.createBackup();
     this.numberOfAdults++;
     this.numberOfPeople++;
     if (this.numberOfPeople == 6) {
       this.canIncreasePeople = true;
     }
     this.canDecreaseAdults = false;
+    this.refreshTrip();
     this.pricePerPerson -= Math.random() * 40 + 40;
     this.displayPrice();
   }
 
   minusAdult(): void {
+    this.createBackup();
     this.numberOfAdults--;
     this.numberOfPeople--;
     if (this.numberOfAdults == 0) {
       this.canDecreaseAdults = true;
     }
     this.canIncreasePeople = false;
+    this.refreshTrip();
     this.pricePerPerson += Math.random() * 40 + 40;
     this.displayPrice();
   }
 
   addChild(): void {
+    this.createBackup();
     this.numberOfChildren++;
     this.numberOfPeople++;
     if (this.numberOfPeople == 6) {
       this.canIncreasePeople = true;
     }
     this.canDecreaseChildren = false;
+    this.refreshTrip();
     this.pricePerPerson -= Math.random() * 20 + 20;
     this.displayPrice();
   }
 
   minusChild(): void {
+    this.createBackup()
     this.numberOfChildren--;
     this.numberOfPeople--;
     if (this.numberOfChildren == 0) {
       this.canDecreaseChildren = true;
     }
     this.canIncreasePeople = false;
+    this.refreshTrip();
     this.pricePerPerson += Math.random() * 20 + 20;
     this.displayPrice();
   }
@@ -137,6 +147,11 @@ export class DetailComponent implements OnInit {
     console.log(flight);
     this.changePriceForFlight(this.trip!.ChosenFlight, flight);
     this.trip!.ChosenFlight = flight;
+  }
+
+  restore(): void {
+    this.numberOfAdults = this.backup[0]
+    this.numberOfChildren = this.backup[1]
   }
 
   roomChanged(room: RoomDTO, position: number): void {
@@ -173,7 +188,39 @@ export class DetailComponent implements OnInit {
 
   async reserve(): Promise<void> {
     this.trip!.ChosenMeal = this.mealType;
-    this.service.reserveOffer(this.trip!, this.numberOfAdults, this.numberOfChildren);
+    this.service.reserveOffer(
+      this.trip!,
+      this.numberOfAdults,
+      this.numberOfChildren
+    );
     await this.router.navigateByUrl('reserve');
+  }
+
+  private refreshTrip(): void {
+    if (this.trip) {
+      const tripsForChangedCriteria = this.service.getInfoForTrip(
+        this.country ?? '',
+        this.trip.ChosenFlight.Departure,
+        new Date(this.beginDate),
+        new Date(this.endDate),
+        this.numberOfAdults,
+        this.numberOfChildren,
+        this.hotelName
+      );
+      if(tripsForChangedCriteria == null) {
+        this.configurationAvailable = false;
+        return;
+      }
+      this.trip = tripsForChangedCriteria;
+      this.service.setCurrentTrip(this.trip!);
+    } else {
+      this.trip = this.service.getCurrentTrip();
+    }
+    this.country = this.trip?.Country;
+    this.hotelName = this.trip?.HotelName;
+    this.destinationName = this.trip?.City;
+    this.mealTypes = this.trip?.TypesOfMeals || [];
+    this.flights = this.trip?.PossibleFlights || [];
+    this.mealType = this.trip?.TypesOfMeals[0];
   }
 }

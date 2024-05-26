@@ -50,7 +50,7 @@ export class BackendService {
         t.Country === destination &&
         t.ChosenFlight.Departure === startCity &&
         t.BeginDate >= startDate &&
-        t.EndDate <= endDate
+        t.EndDate <= endDate 
     );
 
     for (const hotel of hotels) {
@@ -95,9 +95,72 @@ export class BackendService {
     /* return this.client.get<TripsDTO>(this.gateUrl + this.tripListUrl + "?body=") */
   }
 
-  public getInfoForTrip() {}
+  public getInfoForTrip(
+    destination: string,
+    startCity: string,
+    startDate: Date,
+    endDate: Date,
+    numberOfAdults: number,
+    numberOfChildren: number,
+    selectedHotel: string | undefined = undefined
+  ): TripDTO | null {
+    var trip: TripDTO | null = null;
+    const hotel = Mocks.trips.find(
+      (t) =>
+        t.Country === destination &&
+        t.ChosenFlight.Departure === startCity &&
+        t.BeginDate >= startDate &&
+        t.EndDate <= endDate &&
+        t.HotelName === (selectedHotel ?? t.HotelName)
+    );
 
-  public reserveOffer(trip: TripDTO, numOfAdults: number, numOfChildren: number) {
+    if(hotel === undefined) {
+      return null;
+    }
+
+    const roomCombinations = this.calculateRoomCombinations(
+      hotel.Rooms,
+      numberOfAdults + numberOfChildren,
+      true
+    );
+    if (roomCombinations.length > 0) {
+      let defaultRooms: RoomDTO[] = Array(
+        numberOfChildren + numberOfAdults
+      ).fill(Mocks.dummyRoom);
+      for (const [index, value] of roomCombinations.entries()) {
+        if (value > 0) {
+          let foundRoom = hotel.Rooms.find(
+            (r) => r.NumberOfPeopleForTheRoom == index + 1 && r.Count >= value
+          );
+          if (foundRoom !== undefined) {
+            defaultRooms[index + 1] = foundRoom;
+          }
+        }
+      }
+      let price =
+        hotel.ChosenFlight.PricePerSeat * (numberOfAdults + numberOfChildren);
+      let timediff = endDate.getTime() - startDate.getTime();
+      let days = Math.round(timediff / (1000 * 3600 * 24));
+      for (const [index, defroom] of defaultRooms.entries()) {
+        if (roomCombinations[index] > 0) {
+          price += defroom.PricePerRoom * days * roomCombinations[index];
+        }
+      }
+      trip = {
+        ...hotel,
+        RoomCombination: roomCombinations,
+        ChosenRooms: defaultRooms,
+        Price: price,
+      } as TripDTO;
+    }
+    return trip;
+  }
+
+  public reserveOffer(
+    trip: TripDTO,
+    numOfAdults: number,
+    numOfChildren: number
+  ) {
     this.tripToReserve = trip;
     this.numOfAdults = numOfAdults;
     this.numOfChildren = numOfChildren;

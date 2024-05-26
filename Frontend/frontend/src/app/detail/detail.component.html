@@ -1,6 +1,6 @@
 <a routerLink="/">Wróć do strony głównej</a>
 <h1>Wycieczka do hotelu {{hotelName}} w {{destinationName}}</h1>
-<div [hidden]="configurationAvailable">
+<div [hidden]="!configurationAvailable">
     <p>W przedziałach czasowych </p>
 <p>Od: {{beginDate}} do {{endDate}}</p>
 <p>Cena łączna {{trip?.Price}}zł</p>
@@ -33,6 +33,6 @@
     <button (click)="reserve()">Rezerwuj</button>
 </div>
 </div>
-<div [hidden]="!configurationAvailable">
+<div [hidden]="configurationAvailable">
     Konfiguracji nie znaleziono
 </div>
