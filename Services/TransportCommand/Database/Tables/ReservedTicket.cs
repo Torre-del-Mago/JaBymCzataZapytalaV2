@@ -7,9 +7,9 @@ public class ReservedTicket
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public string Id { get; set; }
+    public int Id { get; set; }
     
-    public string TransportId { get; set; }
+    public int TransportId { get; set; }
     
     public int NumberOfReservedSeats { get; set; }
 }

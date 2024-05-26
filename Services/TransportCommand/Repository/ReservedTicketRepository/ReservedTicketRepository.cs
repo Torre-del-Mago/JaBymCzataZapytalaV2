@@ -22,4 +22,15 @@ public class ReservedTicketRepository : IReservedTicketRepository
     {
         return await _context.ReservedTickets.FindAsync(ticketId);
     }
+
+    public Task<List<ReservedTicket>> GetReservedTicketsByTransportId(int transportId)
+    {
+        return Task.FromResult(_context.ReservedTickets.Where(r => r.TransportId == transportId).ToList());
+    }
+
+    public async Task<int> insertTicket(ReservedTicket ticket)
+    {
+        _context.ReservedTickets.Add(ticket);
+        return ticket.Id;
+    }
 }
