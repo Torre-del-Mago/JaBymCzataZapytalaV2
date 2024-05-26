@@ -11,6 +11,7 @@ namespace TransportCommand.Database.Tables
         public int Id { get; set; }
 
         public int TicketId { get; set; }
+        public int TransportId {  get; set; }
 
         public DateTime Timestamp { get; set; }
 

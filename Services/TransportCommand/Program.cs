@@ -1,6 +1,8 @@
 using MassTransit;
 using TransportCommand.Database;
 using TransportCommand.Repository.ReservedTicketRepository;
+using TransportCommand.Repository.TransportRepository;
+using TransportCommand.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +14,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<TransportContext>();
 builder.Services.AddScoped<IReservedTicketRepository, ReservedTicketRepository>();
+builder.Services.AddScoped<ITransportRepository, TransportRepository>();
+builder.Services.AddScoped<IEventService, EventService>();
 
 builder.Services.AddMassTransit(cfg =>
 {
