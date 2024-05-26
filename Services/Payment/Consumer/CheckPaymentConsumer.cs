@@ -1,17 +1,18 @@
 ﻿using MassTransit;
 using Models.Payment;
+using Payment.Service;
 
 namespace Payment.Consumer
 {
     public class CheckPaymentConsumer : IConsumer<CheckPaymentEvent>
     {
+        private IPaymentService _service;
+        CheckPaymentConsumer(IPaymentService paymentService) { 
+            _service = paymentService;
+        }
         public async Task Consume(ConsumeContext<CheckPaymentEvent> context)
         {
-            /*
-             Do something
-             */
-
-            await context.Publish(new CheckPaymentEventReply() { });
+            _service.insertPayment(context.Message.TimeForPayment, context.Message.OfferId);
         }
     }
 }
