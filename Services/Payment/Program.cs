@@ -1,5 +1,6 @@
 using MassTransit;
 using Payment.Consumer;
+using Payment.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,10 +10,13 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
 
 builder.Services.AddMassTransit(cfg =>
 {
     cfg.AddDelayedMessageScheduler();
+    cfg.AddConsumer<CheckPaymentConsumer>();
+    cfg.AddConsumer<PayConsumer>();
     cfg.UsingRabbitMq((context, rabbitCfg) =>
     {
         rabbitCfg.Host(new Uri(builder.Configuration["MessageBroker:Host"]), h =>

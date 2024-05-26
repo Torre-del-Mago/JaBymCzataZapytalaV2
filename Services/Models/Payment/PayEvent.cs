@@ -6,6 +6,10 @@ namespace Models.Payment
     {
         public int OfferId { get; set; }
 
+        public Guid OfferCorrelationId { get; set; }
+
         public int Amount { get; set; }
+
+        public DateTime PaymentDateTime { get; set; }
     }
 }
