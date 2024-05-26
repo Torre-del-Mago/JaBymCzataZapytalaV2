@@ -91,5 +91,14 @@ namespace TransportCommand.Service
             return true;
             
         }
+
+        public async Task cancelTransport(int arrivalTicketId, int returnTicketId)
+        {
+            var arrivalTicket = await _ticketRepository.GetReservedTicketByIdAsync(arrivalTicketId);
+            var returnTicket = await _ticketRepository.GetReservedTicketByIdAsync(returnTicketId);
+
+            await _eventRepository.insertCancellationEvent(arrivalTicket.Id, arrivalTicketId);
+            await _eventRepository.insertCancellationEvent(returnTicket.Id, returnTicketId); 
+        }
     }
 }
