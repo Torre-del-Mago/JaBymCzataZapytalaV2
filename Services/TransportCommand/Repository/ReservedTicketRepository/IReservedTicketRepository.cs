@@ -7,4 +7,6 @@ public interface IReservedTicketRepository
     public Task<List<ReservedTicket>> GetAllReservedTicketsAsync();
 
     public Task<ReservedTicket> GetReservedTicketByIdAsync(int ticketId);
+
+    public List<ReservedTicket> GetReservedTicketsByTransportId(int transportId);
 }

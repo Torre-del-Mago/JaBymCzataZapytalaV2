@@ -22,4 +22,9 @@ public class ReservedTicketRepository : IReservedTicketRepository
     {
         return await _context.ReservedTickets.FindAsync(ticketId);
     }
+
+    public List<ReservedTicket> GetReservedTicketsByTransportId(int transportId)
+    {
+        return _context.ReservedTickets.Where(r => r.TransportId == transportId).ToList();
+    }
 }
