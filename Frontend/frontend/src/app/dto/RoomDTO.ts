@@ -1,6 +1,6 @@
 export type RoomDTO = {
-    Count: number,
-    TypeOfRoom: string,
-    NumberOfPeopleForTheRoom: number,
-    PricePerRoom: number
+    count: number,
+    typeOfRoom: string,
+    numberOfPeopleForTheRoom: number,
+    pricePerRoom: number
 }

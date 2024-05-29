@@ -1,18 +1,18 @@
 import { FlightDTO } from './FlightDTO';
 import { RoomDTO } from './RoomDTO';
 export type TripDTO = {
-  HotelName: string;
-  Country: string;
-  City: string;
-  BeginDate: Date;
-  EndDate: Date;
-  TypesOfMeals: string[];
-  Discount: number;
-  RoomCombination?: number[];
-  Rooms: RoomDTO[];
-  ChosenFlight: FlightDTO;
-  PossibleFlights: FlightDTO[];
-  ChosenRooms?: RoomDTO[];
-  ChosenMeal?: string
-  Price?: number
+  hotelName: string;
+  country: string;
+  city: string;
+  beginDate: Date;
+  endDate: Date;
+  typesOfMeals: string[];
+  discount: number;
+  roomCombination?: number[];
+  rooms: RoomDTO[];
+  chosenFlight: FlightDTO;
+  possibleFlights: FlightDTO[];
+  chosenRooms?: RoomDTO[];
+  chosenMeal?: string
+  price?: number
 };

@@ -23,6 +23,12 @@ namespace HotelCommand.Repository.HotelRoomTypeRepository
             return await _context.HotelRoomTypes.FindAsync(hotelRoomTypeId);
         }
 
+        public async Task<HotelRoomType> GetHotelRoomTypeByNameAsync(string hotelRoomTypeName)
+        {
+            return await _context.HotelRoomTypes
+                .FirstOrDefaultAsync(x => x.RoomType.Name == hotelRoomTypeName);
+        }
+
         // Add other methods as needed
     }
 }

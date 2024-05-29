@@ -16,7 +16,7 @@ namespace OfferCommand
         public Guid CorrelationId { get; set; }
         public string CurrentState { get; set; }
 
-        public int Registration { get; set; }
+        public int OfferId { get; set; }
 
         public OfferDTO Offer { get; set; }
 
@@ -38,17 +38,12 @@ namespace OfferCommand
 
         private IPublishEndpoint _publishEndpoint { get; set; }
 
-        public Event<ReserveOfferEvent> ReserveOfferEvent { get; set; }
+        public Event<CreatedOfferEvent> CreatedOfferEvent { get; set; }
         public Event<CheckPaymentEventReply> PaymentEvent { get; set; }
         public Event<ReserveHotelEventReply> ReserveHotelEvent { get; set; }
         public Event<ReserveTransportEventReply> ReserveTransportEvent { get; set; }
 
         public Schedule<OfferReservation, PaymentTimeout> PaymentNotSentTimeout { get; set; }
-
-        private void processPayment()
-        {
-
-        }
 
         private void cancelReservations(OfferReservation reservation)
         {
@@ -57,7 +52,7 @@ namespace OfferCommand
                 _publishEndpoint.Publish(new CancelReservationTransportEvent()
                 {
                     CorrelationId = reservation.CorrelationId,
-                    OfferId = reservation.TransportReservationId
+                    OfferId = reservation.OfferId
                 });
             }
             if(reservation.HotelReservationId != 0)
@@ -65,7 +60,7 @@ namespace OfferCommand
                 _publishEndpoint.Publish(new CancelReservationHotelEvent()
                 {
                     CorrelationId = reservation.CorrelationId,
-                    OfferId = reservation.HotelReservationId
+                    OfferId = reservation.OfferId
                 });
             }
         }
@@ -80,21 +75,11 @@ namespace OfferCommand
             reservation.MadeTransportReservation = reply.Answer == ReserveTransportEventReply.State.RESERVED;
         }
 
-        private void sendPaymentMessage()
-        {
-
-        }
-
-        private void publishReserveOfferResponse()
-        {
-
-        }
-
         public OfferSaga() 
         {
             InstanceState(x => x.CurrentState);
 
-            Event(() => ReserveOfferEvent, x => x.CorrelateById(ctx => ctx.Message.CorrelationId));
+            Event(() => CreatedOfferEvent, x => x.SelectId(ctx => ctx.Message.CorrelationId));
             Event(() => PaymentEvent, x => x.CorrelateById(ctx => ctx.Message.CorrelationId));
             Event(() => ReserveHotelEvent, x => x.CorrelateById(ctx => ctx.Message.CorrelationId));
             Event(() => ReserveTransportEvent, x => x.CorrelateById(ctx => ctx.Message.CorrelationId));
@@ -107,8 +92,8 @@ namespace OfferCommand
             });
 
             Initially(
-                When(ReserveOfferEvent).
-                Then(ctx => ctx.Saga.Registration = ctx.Message.Registration).
+                When(CreatedOfferEvent).
+                Then(ctx => ctx.Saga.OfferId = ctx.Message.OfferId).
                 Then(ctx => ctx.Saga.Offer = ctx.Message.Offer).
                 Publish(ctx => new ReserveHotelEvent()
                 {
@@ -138,12 +123,11 @@ namespace OfferCommand
                         ctx.Saga.Offer.NumberOfTeenagers + ctx.Saga.Offer.NumberOfToddlers
                     }
                 }).TransitionTo(ReservedOffer),
-                invalid => invalid.Then(ctx => cancelReservations(ctx.Saga)).Publish(ctx => new ReserveOfferEventReply()
+                invalid => invalid.Then(ctx => cancelReservations(ctx.Saga)).Respond(ctx => new ReserveOfferEventReply()
                 {
                     Answer = ReserveOfferEventReply.State.NOT_RESERVED,
                     CorrelationId = ctx.Saga.CorrelationId,
-                    Error = "Could not reserve hotel",
-                    Registration = ctx.Saga.Registration
+                    Error = "Could not reserve hotel"
                 }
                 ).Finalize()));
 
@@ -151,25 +135,26 @@ namespace OfferCommand
                 When(ReserveTransportEvent).
                 Then(ctx => processTransport(ctx.Message, ctx.Saga)).
                 IfElse(ctx => ctx.Saga.MadeTransportReservation,
-                valid => valid.Publish(ctx => new ReserveOfferEventReply()
+                valid => valid.Respond(ctx => new ReserveOfferEventReply()
                                 {
                                     Answer = ReserveOfferEventReply.State.RESERVED,
-                                    CorrelationId = ctx.Saga.CorrelationId,
-                                    Registration = ctx.Saga.Registration
+                                    CorrelationId = ctx.Saga.CorrelationId
                                 })
                                 .Publish(ctx => new CheckPaymentEvent()
                                 {
-                                    CorrelationId = ctx.Saga.CorrelationId
+                                    CorrelationId = ctx.Saga.CorrelationId,
+                                    OfferId = ctx.Saga.OfferId,
+                                    TimeForPayment = DateTime.Now
+                                    
                                 })
                                 .Schedule(PaymentNotSentTimeout, context => context.Init<PaymentTimeout>(new PaymentTimeout (){ CorrelationId = context.Saga.CorrelationId}))
                                 .TransitionTo(ReservedOffer),
                 invalid => invalid.Then(ctx => cancelReservations(ctx.Saga))
-                                      .Publish(ctx => new ReserveOfferEventReply()
+                                      .Respond(ctx => new ReserveOfferEventReply()
                                     {
                                         Answer = ReserveOfferEventReply.State.NOT_RESERVED,
                                         CorrelationId = ctx.Saga.CorrelationId,
                                         Error = "Could not reserve transport",
-                                        Registration = ctx.Saga.Registration
                                     }).Finalize()));
 
 
@@ -177,7 +162,7 @@ namespace OfferCommand
                 When(PaymentNotSentTimeout.Received).
                 Publish(ctx => new RemoveOfferEvent()
                 {
-                    OfferId = ctx.Saga.Registration
+                    OfferId = ctx.Saga.OfferId
                 })
                 .Finalize(),
                 When(PaymentEvent).

@@ -19,7 +19,6 @@ namespace Login.Consumer
             var userLoggedIn = _service.isUsernameCorrect(context.Message.Login);
             await context.RespondAsync(new CheckLoginEventReply()
             {
-                Id = @event.Id,
                 CorrelationId = @event.CorrelationId,
                 LoggedIn = userLoggedIn ?
                 CheckLoginEventReply.State.LOGGED :

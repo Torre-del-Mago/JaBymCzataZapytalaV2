@@ -6,7 +6,6 @@ namespace TransportQuery.Database.Entity;
 public class Transport
 {
     [BsonId]
-    [BsonRepresentation(BsonType.ObjectId)]
     public int Id { get; set; }
     
     [BsonElement("connectionId")]

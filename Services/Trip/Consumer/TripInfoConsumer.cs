@@ -1,7 +1,9 @@
 ﻿using MassTransit;
 using MassTransit.Clients;
 using Models.Hotel;
+using Models.Hotel.DTO;
 using Models.Transport;
+using Models.Transport.DTO;
 using Models.Trip;
 using Models.Trip.DTO;
 
@@ -20,13 +22,53 @@ namespace Trip.Consumer
 
         public async Task Consume(ConsumeContext<GenerateTripEvent> context)
         {
-            var hotelRequest = new GetHotelDataForTripEvent() { };
-            var transportRequest = new GetTransportDataForTripEvent() { };
-            var hotelResponse = await _hotelClient.GetResponse<GetHotelDataForTripEventReply>(hotelRequest);
-            var transportResponse = await _hotelClient.GetResponse<GetTransportDataForTripEventReply>(transportRequest);
+            var @event = context.Message;
+            var hotelRequest = new GetHotelDataForTripEvent() { Criteria = new CriteriaForHotel() { 
+                BeginDate = context.Message.Criteria.BeginDate,
+                EndDate = context.Message.Criteria.EndDate,
+                NumberOfPeople= context.Message.Criteria.NrOfPeople,
+                HotelId = context.Message.Criteria.HotelId,
+            }
+            };
+            var transportRequest = new GetTransportDataForTripEvent() { Criteria = new CriteriaForTransport() {
+                BeginDate= context.Message.Criteria.BeginDate,
+                EndDate= context.Message.Criteria.EndDate,
+                NumberOfPeople=context.Message.Criteria.NrOfPeople,
+                Country= context.Message.Criteria.Country,
+                Departure= context.Message.Criteria.Departure,
+                }
+            };
+            HotelDTO hotelDto = new HotelDTO();
 
-            var hotelDto = hotelResponse.Message.Hotel;
-            var transportDto = transportResponse.Message.Transport;
+            var hotelResponse = await _hotelClient.GetResponse<GetHotelDataForTripEventReply, HotelDataForTripNotFoundEvent>(hotelRequest);
+
+            if (hotelResponse.Is(out Response<HotelDataForTripNotFoundEvent> responseA))
+            {
+                await context.RespondAsync(new TripNotFoundEvent()
+                {
+                    CorrelationId = @event.CorrelationId,
+                });
+            }
+            else if (hotelResponse.Is(out Response<GetHotelDataForTripEventReply> responseB))
+            {
+                hotelDto = responseB.Message.Hotel;
+            }
+
+            TransportDTO transportDto = new TransportDTO();
+
+            var transportResponse = await _hotelClient.GetResponse<GetTransportDataForTripEventReply, TransportDataForTripNotFoundEvent>(transportRequest);
+
+            if (transportResponse.Is(out Response<TransportDataForTripNotFoundEvent> responseC))
+            {
+                await context.RespondAsync(new TripNotFoundEvent()
+                {
+                    CorrelationId = @event.CorrelationId,
+                });
+            }
+            else if (transportResponse.Is(out Response<GetTransportDataForTripEventReply> responseD))
+            {
+                transportDto = responseD.Message.Transport;
+            }
 
             var tripDto = new TripDTO
             {
@@ -42,7 +84,9 @@ namespace Trip.Consumer
                 PossibleFlights = transportDto.PossibleFlights
             };
 
-            await context.Publish(new GenerateTripEventReply() {TripDTO = tripDto});
+            await context.RespondAsync(new GenerateTripEventReply() {
+                CorrelationId = @event.CorrelationId,
+                TripDTO = tripDto});
         }
     }
 }

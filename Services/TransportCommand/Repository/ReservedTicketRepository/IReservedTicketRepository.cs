@@ -4,11 +4,13 @@ namespace TransportCommand.Repository.ReservedTicketRepository;
 
 public interface IReservedTicketRepository
 {
-    public Task<List<ReservedTicket>> GetAllReservedTicketsAsync();
+    Task<List<ReservedTicket>> GetAllReservedTicketsAsync();
 
-    public Task<ReservedTicket> GetReservedTicketByIdAsync(int ticketId);
+    Task<ReservedTicket> GetReservedTicketByIdAsync(int ticketId);
 
-    public Task<List<ReservedTicket>> GetReservedTicketsByTransportId(int transportId);
+    Task<List<ReservedTicket>> GetReservedTicketsByTransportId(int transportId);
 
-    public Task<int> insertTicket(ReservedTicket ticket);
+    Task<List<ReservedTicket>> GetReservedTicketsByOfferId(int offerId);
+
+    Task InsertTicket(ReservedTicket ticket);
 }

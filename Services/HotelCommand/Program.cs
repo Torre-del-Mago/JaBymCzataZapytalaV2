@@ -1,18 +1,39 @@
+using HotelCommand.Consumer;
 using HotelCommand.Database;
+using HotelCommand.Repository.DietRepository;
+using HotelCommand.Repository.HotelRepository;
+using HotelCommand.Repository.HotelDietRepository;
+using HotelCommand.Repository.HotelRoomTypeRepository;
+using HotelCommand.Repository.ReservationEventRepository;
 using MassTransit;
+using HotelCommand.Repository.ReservationRepository;
+using HotelCommand.Repository.ReservedRoomRepository;
+using HotelCommand.Repository.RoomTypeRepository;
+using HotelCommand.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers(); 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<HotelContext>();
+builder.Services.AddScoped<IDietRepository, DietRepository>();
+builder.Services.AddScoped<IHotelDietRepository, HotelDietRepository>();
+builder.Services.AddScoped<IHotelRepository, HotelRepository>();
+builder.Services.AddScoped<IHotelRoomTypeRepository, HotelRoomTypeRepository>();
+builder.Services.AddScoped<IReservationEventRepository, ReservationEventRepository>();
+builder.Services.AddScoped<IReservationRepository, ReservationRepository>();
+builder.Services.AddScoped<IReservedRoomRepository, ReservedRoomRepository>();
+builder.Services.AddScoped<IRoomTypeRepository, RoomTypeRepository>();
+builder.Services.AddScoped<IEventService, EventService>();
 
 builder.Services.AddMassTransit(cfg =>
 {
+    cfg.AddConsumer<CancelReservationHotelConsumer>();
+    cfg.AddConsumer<ReserveHotelConsumer>();
     cfg.AddDelayedMessageScheduler();
     cfg.UsingRabbitMq((context, rabbitCfg) =>
     {

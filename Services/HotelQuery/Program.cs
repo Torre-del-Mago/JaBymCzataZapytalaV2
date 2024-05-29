@@ -1,5 +1,6 @@
 using HotelQuery.Consumer;
 using HotelQuery.Repository.Hotel;
+using HotelQuery.Service.Hotel;
 using MassTransit;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,9 +13,16 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddScoped<IHotelService, HotelService>();
+builder.Services.AddScoped<IHotelRepository, HotelRepository>();
 
 builder.Services.AddMassTransit(cfg =>
 {
+    cfg.AddConsumer<CancelReservationHotelSyncConsumer>();
+    cfg.AddConsumer<HotelQueryConsumer>();
+    cfg.AddConsumer<HotelListQueryConsumer>();
+    cfg.AddConsumer<ReserveHotelSyncConsumer>();
+
     cfg.AddDelayedMessageScheduler();
     cfg.UsingRabbitMq((context, rabbitCfg) =>
     {

@@ -6,8 +6,8 @@ namespace TransportCommand.Repository.EventRepository
     {
         public Task<List<Event>> getAllTicketEventsForTransportId(int transportId);
 
-        public Task insertReservationEvent(int transportId, int ticketId);
+        public Task insertReservationEvent(ReservedTicket ticket);
 
-        public Task insertCancellationEvent(int transportId, int ticketId);
+        public Task insertCancellationEventForTickets(List<ReservedTicket> tickets);
     }
 }

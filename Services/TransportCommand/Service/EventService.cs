@@ -75,30 +75,31 @@ namespace TransportCommand.Service
             ReservedTicket arrivalTicket = new ReservedTicket()
             {
                 NumberOfReservedSeats = dto.NumberOfPeople,
-                TransportId = dto.ArrivalTransportId
+                TransportId = dto.ArrivalTransportId,
+                OfferId = dto.OfferId
             };
             ReservedTicket returnTicket = new ReservedTicket()
             {
                 NumberOfReservedSeats = dto.NumberOfPeople,
-                TransportId = dto.ReturnTransportId
+                TransportId = dto.ReturnTransportId,
+                OfferId = dto.OfferId
             };
-            var arrivalTicketId = await _ticketRepository.insertTicket(arrivalTicket);
-            var returnTicketId = await _ticketRepository.insertTicket(returnTicket);
+            await _ticketRepository.InsertTicket(arrivalTicket);
+            await _ticketRepository.InsertTicket(returnTicket);
 
-            await _eventRepository.insertReservationEvent(dto.ReturnTransportId, arrivalTicketId);
-            await _eventRepository.insertReservationEvent(dto.ReturnTransportId, returnTicketId);
+            await _eventRepository.insertReservationEvent(arrivalTicket);
+            await _eventRepository.insertReservationEvent(returnTicket);
 
             return true;
             
         }
 
-        public async Task cancelTransport(int arrivalTicketId, int returnTicketId)
+        public async Task cancelTransport(int offerId)
         {
-            var arrivalTicket = await _ticketRepository.GetReservedTicketByIdAsync(arrivalTicketId);
-            var returnTicket = await _ticketRepository.GetReservedTicketByIdAsync(returnTicketId);
 
-            await _eventRepository.insertCancellationEvent(arrivalTicket.Id, arrivalTicketId);
-            await _eventRepository.insertCancellationEvent(returnTicket.Id, returnTicketId); 
+            var tickets = await _ticketRepository.GetReservedTicketsByOfferId(offerId);
+
+            await _eventRepository.insertCancellationEventForTickets(tickets);
         }
     }
 }

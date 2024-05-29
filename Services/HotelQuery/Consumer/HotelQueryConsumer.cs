@@ -14,8 +14,23 @@ namespace HotelQuery.Consumer
         
         public async Task Consume(ConsumeContext<GetHotelDataForTripEvent> context)
         {
+            Console.WriteLine("Hotel Gets Event 1");
+            var @event = context.Message;
             var result = _service.GetHotelForCriteria(context.Message.Criteria);
-            await context.Publish(new GetHotelDataForTripEventReply() {Hotel = result});
+            if (result == null)
+            {
+                await context.RespondAsync(new HotelDataForTripNotFoundEvent { CorrelationId = @event.CorrelationId });
+            }
+            else
+            {
+                await context.RespondAsync(new GetHotelDataForTripEventReply()
+                {
+                    CorrelationId = @event.CorrelationId,
+                    Hotel = result
+                });
+            }
+            
+            Console.WriteLine("Hotel Publish Event");
         }
     }
 }

@@ -1,13 +1,19 @@
-﻿using MassTransit;
+﻿using HotelCommand.Service;
+using MassTransit;
 using Models.Hotel;
 
-namespace HotelQuery.Consumer
+namespace HotelCommand.Consumer
 {
-    public class CancelReservationHotelConsumer : IConsumer<CancelReservationHotelEvent>
+    public class CancelReservationHotelConsumer(IEventService eventService) : IConsumer<CancelReservationHotelEvent>
     {
-        public Task Consume(ConsumeContext<CancelReservationHotelEvent> context)
+        public async Task Consume(ConsumeContext<CancelReservationHotelEvent> context)
         {
-            throw new NotImplementedException();
+            await eventService.cancelHotel(context.Message.OfferId);
+
+            await context.RespondAsync(new CancelReservationHotelSyncEvent()
+            {
+                OfferId = context.Message.OfferId
+            });
         }
     }
 }

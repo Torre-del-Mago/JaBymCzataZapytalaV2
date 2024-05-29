@@ -23,19 +23,39 @@ namespace TransportCommand.Repository.EventRepository
                 EventType = EventType.Deleted,
                 TransportId = transportId,
                 TicketId = ticketId,
-                Timestamp = DateTime.UtcNow
+                Timestamp = DateTime.Now
             };
             _context.Events.Add(reservation);
         }
 
-        public async Task insertReservationEvent(int transportId, int ticketId)
+        public async Task insertCancellationEventForTickets(List<ReservedTicket> tickets)
+        {
+            List<Event> events = new List<Event>();
+            foreach(ReservedTicket ticket in tickets)
+            {
+                var reservation = new Event()
+                {
+                    EventType = EventType.Deleted,
+                    TransportId = ticket.TransportId,
+                    TicketId = ticket.Id,
+                    Timestamp = DateTime.Now
+                };
+                events.Add(reservation);
+            }
+            if(events.Count > 0)
+            {
+                _context.Events.AddRange(events);
+            }
+        }
+
+        public async Task insertReservationEvent(ReservedTicket ticket)
         {
             var reservation = new Event()
             {
                 EventType = EventType.Created,
-                TransportId = transportId,
-                TicketId = ticketId,
-                Timestamp = DateTime.UtcNow
+                TransportId = ticket.TransportId,
+                TicketId = ticket.Id,
+                Timestamp = DateTime.Now
             };
             _context.Events.Add(reservation);
         }

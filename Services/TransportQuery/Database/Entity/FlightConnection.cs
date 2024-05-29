@@ -6,7 +6,6 @@ namespace TransportQuery.Database.Entity;
 public class FlightConnection
 {
     [BsonId]
-    [BsonRepresentation(BsonType.ObjectId)]
     public int Id { get; set; }
     
     [BsonElement("departureLocation")]

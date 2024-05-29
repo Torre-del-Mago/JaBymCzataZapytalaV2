@@ -1,6 +1,6 @@
 ﻿using Models.Transport.DTO;
 using TransportQuery.Model;
-using TransportQuery.Repository.TransportRepository;
+using TransportQuery.Repository.Transport;
 
 namespace TransportQuery.Service.Transport
 {

@@ -22,5 +22,11 @@ namespace HotelCommand.Repository.ReservedRoomRepository
         {
             return await _context.ReservedRooms.FindAsync(reservedRoomId);
         }
+
+        public void InsertReservedRoom(ReservedRoom room)
+        {
+            _context.ReservedRooms.Add(room);
+            _context.SaveChanges();
+        }
     }
 }

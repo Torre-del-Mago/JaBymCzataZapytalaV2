@@ -12,4 +12,6 @@ public class ReservedTicket
     public int TransportId { get; set; }
     
     public int NumberOfReservedSeats { get; set; }
+
+    public int OfferId {  get; set; }
 }
