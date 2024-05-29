@@ -1,5 +1,8 @@
 using MassTransit;
+using TransportCommand.Consumer;
 using TransportCommand.Database;
+using TransportCommand.Repository.EventRepository;
+using TransportCommand.Repository.FlightConnectionRepository;
 using TransportCommand.Repository.ReservedTicketRepository;
 using TransportCommand.Repository.TransportRepository;
 using TransportCommand.Service;
@@ -13,12 +16,16 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<TransportContext>();
+builder.Services.AddScoped<IFlightConnectionRepository, FlightConnectionRepository>();
 builder.Services.AddScoped<IReservedTicketRepository, ReservedTicketRepository>();
 builder.Services.AddScoped<ITransportRepository, TransportRepository>();
+builder.Services.AddScoped<IEventRepository, EventRepository>();
 builder.Services.AddScoped<IEventService, EventService>();
 
 builder.Services.AddMassTransit(cfg =>
 {
+    cfg.AddConsumer<CancelReservationTransportConsumer>();
+    cfg.AddConsumer<ReserveTransportConsumer>();
     cfg.AddDelayedMessageScheduler();
     cfg.UsingRabbitMq((context, rabbitCfg) =>
     {

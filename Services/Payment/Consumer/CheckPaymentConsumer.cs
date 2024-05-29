@@ -7,7 +7,7 @@ namespace Payment.Consumer
     public class CheckPaymentConsumer : IConsumer<CheckPaymentEvent>
     {
         private IPaymentService _service;
-        CheckPaymentConsumer(IPaymentService paymentService) { 
+        public CheckPaymentConsumer(IPaymentService paymentService) { 
             _service = paymentService;
         }
         public async Task Consume(ConsumeContext<CheckPaymentEvent> context)
