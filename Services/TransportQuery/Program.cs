@@ -1,6 +1,6 @@
 using MassTransit;
 using TransportQuery.Consumer;
-using TransportQuery.Repository.TransportRepository;
+using TransportQuery.Repository.Transport;
 using TransportQuery.Service.Transport;
 
 var builder = WebApplication.CreateBuilder(args);
