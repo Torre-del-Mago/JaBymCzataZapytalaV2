@@ -38,7 +38,7 @@ namespace OfferCommand
 
         private IPublishEndpoint _publishEndpoint { get; set; }
 
-        public Event<CreatedOfferEvent> ReserveOfferEvent { get; set; }
+        public Event<CreatedOfferEvent> CreatedOfferEvent { get; set; }
         public Event<CheckPaymentEventReply> PaymentEvent { get; set; }
         public Event<ReserveHotelEventReply> ReserveHotelEvent { get; set; }
         public Event<ReserveTransportEventReply> ReserveTransportEvent { get; set; }
@@ -79,7 +79,7 @@ namespace OfferCommand
         {
             InstanceState(x => x.CurrentState);
 
-            Event(() => ReserveOfferEvent, x => x.CorrelateById(ctx => ctx.Message.CorrelationId));
+            Event(() => CreatedOfferEvent, x => x.SelectId(ctx => ctx.Message.CorrelationId));
             Event(() => PaymentEvent, x => x.CorrelateById(ctx => ctx.Message.CorrelationId));
             Event(() => ReserveHotelEvent, x => x.CorrelateById(ctx => ctx.Message.CorrelationId));
             Event(() => ReserveTransportEvent, x => x.CorrelateById(ctx => ctx.Message.CorrelationId));
@@ -92,7 +92,7 @@ namespace OfferCommand
             });
 
             Initially(
-                When(ReserveOfferEvent).
+                When(CreatedOfferEvent).
                 Then(ctx => ctx.Saga.OfferId = ctx.Message.OfferId).
                 Then(ctx => ctx.Saga.Offer = ctx.Message.Offer).
                 Publish(ctx => new ReserveHotelEvent()

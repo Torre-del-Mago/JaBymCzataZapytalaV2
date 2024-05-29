@@ -42,7 +42,10 @@ namespace TransportCommand.Repository.EventRepository
                 };
                 events.Add(reservation);
             }
-            _context.Events.AddRange(events);
+            if(events.Count > 0)
+            {
+                _context.Events.AddRange(events);
+            }
         }
 
         public async Task insertReservationEvent(ReservedTicket ticket)
