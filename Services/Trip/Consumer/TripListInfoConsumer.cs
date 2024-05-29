@@ -53,13 +53,55 @@ namespace Trip.Consumer
                 context.Message.Criteria.Departure = "Gdańsk";
             }
             
-            var hotelRequest = new GetHotelDataForTripsEvent() { };
-            var transportRequest = new GetTransportDataForTripsEvent() { };
-            var hotelResponse = await _hotelClient.GetResponse<GetHotelDataForTripsEventReply>(hotelRequest);
-            var transportResponse = await _hotelClient.GetResponse<GetTransportDataForTripsEventReply>(transportRequest);
+            var hotelRequest = new GetHotelDataForTripsEvent() { Criteria = new CriteriaForHotels() {
+                    BeginDate = context.Message.Criteria.BeginDate,
+                    EndDate = context.Message.Criteria.EndDate,
+                    Country = context.Message.Criteria.Country,
+                    NumberOfPeople = context.Message.Criteria.NrOfPeople
+            } 
+            };
+            List<HotelDTO> hotelsDto = new List<HotelDTO>();
+            var hotelResponse = await _hotelClient.GetResponse<GetHotelDataForTripsEventReply, HotelDataForTripsNotFoundEvent>(hotelRequest);
             
-            var hotelsDto = hotelResponse.Message.Hotels.Hotels;
-            var transportsDto = transportResponse.Message.Transports.Transports;
+            if (hotelResponse.Is(out Response<HotelDataForTripsNotFoundEvent> responseA))
+            {
+                await context.RespondAsync(new TripsNotFoundEvent()
+                {
+                    CorrelationId = @event.CorrelationId,
+                });
+            }
+            else if (hotelResponse.Is(out Response<GetHotelDataForTripsEventReply> responseB))
+            {
+                hotelsDto = responseB.Message.Hotels.Hotels;
+            }
+
+            var transportRequest = new GetTransportDataForTripsEvent()
+            {
+                Criteria = new CriteriaForTransports()
+                {
+                    BeginDate = context.Message.Criteria.BeginDate,
+                    EndDate = context.Message.Criteria.EndDate,
+                    Country = context.Message.Criteria.Country,
+                    Departure = context.Message.Criteria.Departure,
+                    NumberOfPeople = context.Message.Criteria.NrOfPeople
+                }
+            };
+
+            List<TransportDTO> transportsDto = new List<TransportDTO>();
+
+            var transportResponse = await _hotelClient.GetResponse<GetTransportDataForTripsEventReply, TransportDataForTripsNotFoundEvent>(transportRequest);
+
+            if (transportResponse.Is(out Response<TransportDataForTripsNotFoundEvent> responseC))
+            {
+                await context.RespondAsync(new TripsNotFoundEvent()
+                {
+                    CorrelationId = @event.CorrelationId,
+                });
+            }
+            else if (transportResponse.Is(out Response<GetTransportDataForTripsEventReply> responseD))
+            {
+                transportsDto = responseD.Message.Transports.Transports;
+            }
             
             var matchingTrips = new List<Tuple<HotelDTO, TransportDTO>>();
             foreach (var hotelDto in hotelsDto)
@@ -101,8 +143,7 @@ namespace Trip.Consumer
             }
 
             var tripsDto = new TripsDTO() {Trips = trips};
-            await context.Publish(new GenerateTripsEventReply() {
-                Id = @event.Id,
+            await context.RespondAsync(new GenerateTripsEventReply() {
                 CorrelationId = @event.CorrelationId,
                 Trips = tripsDto
             });

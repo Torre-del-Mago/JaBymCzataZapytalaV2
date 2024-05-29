@@ -1,4 +1,5 @@
 ﻿using MassTransit;
+using Models.Hotel;
 using Models.Transport;
 using TransportQuery.Service.Transport;
 
@@ -16,11 +17,19 @@ namespace TransportQuery.Consumer
         {
             Console.WriteLine("Transport Gets Event");
             var @event = context.Message;
-            var result = _service.GetTransportForCriteria(context.Message.Criteria);
-            await context.Publish(new GetTransportDataForTripEventReply() {
-                Id = @event.Id,
-                CorrelationId = @event.CorrelationId,
-                Transport = result });
+            try
+            {
+                var result = _service.GetTransportForCriteria(context.Message.Criteria);
+                await context.RespondAsync(new GetTransportDataForTripEventReply()
+                {
+                    CorrelationId = @event.CorrelationId,
+                    Transport = result
+                });
+            }
+            catch (Exception ex)
+            {
+                await context.RespondAsync(new TransportDataForTripNotFoundEvent { CorrelationId = @event.CorrelationId });
+            }
             Console.WriteLine("Transport Publish Event");
         }
     }

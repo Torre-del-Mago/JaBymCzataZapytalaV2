@@ -28,6 +28,7 @@ public class HotelService : IHotelService
 
     public HotelDTO GetHotelForCriteria(CriteriaForHotel criteria)
     {
+        Console.WriteLine("abcdf");
         var hotel = _hotelRepository.GetHotel(criteria.HotelId);
 
         if (hotel == null || !IsHotelAvailable(hotel, criteria.BeginDate, criteria.EndDate, criteria.NumberOfPeople))
