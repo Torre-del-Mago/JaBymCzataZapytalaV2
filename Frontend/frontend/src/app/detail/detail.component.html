@@ -2,21 +2,21 @@
 <h1>Wycieczka do hotelu {{hotelName}} w {{destinationName}}</h1>
 <div [hidden]="!configurationAvailable">
     <p>W przedziałach czasowych </p>
-<p>Od: {{beginDate}} do {{endDate}}</p>
-<p>Cena łączna {{trip?.Price}}zł</p>
+<p>Od: {{transformDate(this.trip!.beginDate)}} do {{transformDate(this.trip!.endDate)}}</p>
+<p>Cena łączna {{trip?.price}}zł</p>
 <div>Typ posiłku: <select [(ngModel)]="mealType">
 <option [value]="mealType" *ngFor="let mealType of this.mealTypes">{{mealType}}</option>
 </select>
 </div>
-<div>Wybrany lot <select [ngModel]="this.trip?.ChosenFlight" (ngModelChange)="flightChanged($event)">
-<option [ngValue]="flight" *ngFor="let flight of this.trip?.PossibleFlights">{{flight.Departure}}:{{flight.PricePerSeat}}zł</option>
+<div>Wybrany lot <select [ngModel]="this.trip?.chosenFlight" (ngModelChange)="flightChanged($event)">
+<option [ngValue]="flight" *ngFor="let flight of this.trip?.possibleFlights">{{flight.departure}}:{{flight.pricePerSeat}}zł</option>
 </select></div>
 <div>
-    <div *ngFor="let numOfRooms of this.trip?.RoomCombination; index as i">
+    <div *ngFor="let numOfRooms of this.trip?.roomCombination; index as i">
         <div *ngIf="numOfRooms > 0">
             <span>{{numOfRooms}} {{numOfRooms == 1 ? "Pokój" : "Pokoje"}} {{i+1}}os.</span>
-            <select [ngModel]="this.trip!.ChosenRooms![i+1]" (ngModelChange)="roomChanged($event, i)">
-                <option [ngValue]="roomType" *ngFor="let roomType of this.getRoomsFor(i+1, numOfRooms)">{{roomType.TypeOfRoom}} - {{roomType.PricePerRoom}} zł za noc</option>
+            <select [ngModel]="this.trip!.chosenRooms![i+1]" (ngModelChange)="roomChanged($event, i)">
+                <option [ngValue]="roomType" *ngFor="let roomType of this.getRoomsFor(i+1, numOfRooms)">{{roomType.typeOfRoom}} - {{roomType.pricePerRoom}} zł za noc</option>
             </select>
         </div>
     </div>

@@ -1,24 +1,24 @@
 <div [hidden]="!canPay">
-    <div>{{trip?.Country}} Wycieczka do miejscowości {{trip?.City}} do hotelu {{trip?.HotelName}}</div>
-    <div>Od {{trip?.BeginDate | date: 'yyyy/MM/dd'}} do {{trip?.EndDate | date: 'yyyy/MM/dd'}}</div>
+    <div>{{trip?.country}} Wycieczka do miejscowości {{trip?.city}} do hotelu {{trip?.hotelName}}</div>
+    <div>Od {{trip?.beginDate | date: 'yyyy/MM/dd'}} do {{trip?.endDate | date: 'yyyy/MM/dd'}}</div>
     <div>Z pokojami<br>
-    <div *ngFor="let numOfRooms of trip?.RoomCombination; index as i">
+    <div *ngFor="let numOfRooms of trip?.roomCombination; index as i">
         <div *ngIf="numOfRooms > 0">
-            <span>{{numOfRooms}} {{numOfRooms == 1 ? "Pokój" : "Pokoje"}} {{i+1}}os. typu {{trip!.ChosenRooms![i+1].TypeOfRoom}} za cenę {{trip!.ChosenRooms![i+1].PricePerRoom}}</span>
+            <span>{{numOfRooms}} {{numOfRooms == 1 ? "Pokój" : "Pokoje"}} {{i+1}}os. typu {{trip!.chosenRooms![i+1].typeOfRoom}} za cenę {{trip!.chosenRooms![i+1].pricePerRoom}}</span>
         </div>
     </div>
     </div>
     <div>
-    Lecąc z {{trip?.ChosenFlight?.Departure}}: Cena biletów per osoba w dwie strony {{trip?.ChosenFlight?.PricePerSeat}}
+    Lecąc z {{trip?.chosenFlight?.departure}}: Cena biletów per osoba w dwie strony {{trip?.chosenFlight?.pricePerSeat}}
     </div>
     <div>
-    Z wybranym typem posiłków {{trip?.ChosenMeal}}
+    Z wybranym typem posiłków {{trip?.chosenMeal}}
     </div>
     <div>
     Dla {{numberOfAdults}} {{numberOfAdults > 1 ? "dorosłych" : "dorosłego"}} i {{numberOfChildren}} {{numberOfChildren > 1 ? "dzieci" : "dziecka"}}
     </div>
     <div>
-    Cena łączna {{this.trip?.Price}} zł
+    Cena łączna {{this.trip?.price}} zł
     </div>
     <div>
     Czas do zapłacenia {{this.display}}

@@ -49,9 +49,18 @@ export class DetailComponent implements OnInit {
     return date.toISOString().slice(0, 10);
   }
 
+  transformDate(notdate: Date): string {
+    const date = new Date(notdate);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const formattedDate = `${year}-${month}-${day}`;
+    return formattedDate;
+  }
+
   changeDays() {
     let timediff =
-      new Date(this.endDate).getTime() - new Date(this.beginDate).getTime();
+      new Date(this.trip!.endDate).getTime() - new Date(this.trip!.beginDate).getTime();
     this.days = Math.round(timediff / (1000 * 3600 * 24));
   }
 
@@ -135,18 +144,18 @@ export class DetailComponent implements OnInit {
 
   getRoomsFor(numberOfPeople: number, numberOfRooms: number): RoomDTO[] {
     return (
-      this.trip?.Rooms.filter(
-        (r) =>
-          r.Count >= numberOfRooms &&
-          r.NumberOfPeopleForTheRoom == numberOfPeople
+      this.trip?.rooms.filter(
+        (r: RoomDTO) =>
+          r.count >= numberOfRooms &&
+          r.numberOfPeopleForTheRoom == numberOfPeople
       ) || []
     );
   }
 
   flightChanged(flight: FlightDTO): void {
     console.log(flight);
-    this.changePriceForFlight(this.trip!.ChosenFlight, flight);
-    this.trip!.ChosenFlight = flight;
+    this.changePriceForFlight(this.trip!.chosenFlight, flight);
+    this.trip!.chosenFlight = flight;
   }
 
   restore(): void {
@@ -156,18 +165,18 @@ export class DetailComponent implements OnInit {
 
   roomChanged(room: RoomDTO, position: number): void {
     this.changePriceForRoom(
-      this.trip!.ChosenRooms![position],
+      this.trip!.chosenRooms![position],
       room,
-      this.trip!.RoomCombination![position]
+      this.trip!.roomCombination![position]
     );
-    this.trip!.ChosenRooms![position] = room;
+    this.trip!.chosenRooms![position] = room;
   }
 
   changePriceForFlight(flight: FlightDTO, newflight: FlightDTO): void {
-    this.trip!.Price! -=
-      flight.PricePerSeat * (this.numberOfAdults + this.numberOfChildren);
-    this.trip!.Price! +=
-      newflight.PricePerSeat * (this.numberOfAdults + this.numberOfChildren);
+    this.trip!.price! -=
+      flight.pricePerSeat * (this.numberOfAdults + this.numberOfChildren);
+    this.trip!.price! +=
+      newflight.pricePerSeat * (this.numberOfAdults + this.numberOfChildren);
   }
 
   changePriceForRoom(
@@ -175,19 +184,19 @@ export class DetailComponent implements OnInit {
     newroom: RoomDTO,
     numberOfRooms: number
   ): void {
-    this.trip!.Price! -= room.PricePerRoom * this.days * numberOfRooms;
-    this.trip!.Price! += newroom.PricePerRoom * this.days * numberOfRooms;
+    this.trip!.price! -= room.pricePerRoom * this.days * numberOfRooms;
+    this.trip!.price! += newroom.pricePerRoom * this.days * numberOfRooms;
   }
 
   compareRoomTypes(room: RoomDTO, nextRoom: RoomDTO): boolean {
     return (
-      room.TypeOfRoom == nextRoom.TypeOfRoom &&
-      room.NumberOfPeopleForTheRoom == nextRoom.NumberOfPeopleForTheRoom
+      room.typeOfRoom == nextRoom.typeOfRoom &&
+      room.numberOfPeopleForTheRoom == nextRoom.numberOfPeopleForTheRoom
     );
   }
 
   async reserve(): Promise<void> {
-    this.trip!.ChosenMeal = this.mealType;
+    this.trip!.chosenMeal = this.mealType;
     this.service.reserveOffer(
       this.trip!,
       this.numberOfAdults,
@@ -200,7 +209,7 @@ export class DetailComponent implements OnInit {
     if (this.trip) {
       const tripsForChangedCriteria = this.service.getInfoForTrip(
         this.country ?? '',
-        this.trip.ChosenFlight.Departure,
+        this.trip.chosenFlight.departure,
         new Date(this.beginDate),
         new Date(this.endDate),
         this.numberOfAdults,
@@ -216,11 +225,13 @@ export class DetailComponent implements OnInit {
     } else {
       this.trip = this.service.getCurrentTrip();
     }
-    this.country = this.trip?.Country;
-    this.hotelName = this.trip?.HotelName;
-    this.destinationName = this.trip?.City;
-    this.mealTypes = this.trip?.TypesOfMeals || [];
-    this.flights = this.trip?.PossibleFlights || [];
-    this.mealType = this.trip?.TypesOfMeals[0];
+    this.country = this.trip?.country;
+    this.hotelName = this.trip?.hotelName;
+    this.destinationName = this.trip?.city;
+    this.mealTypes = this.trip?.typesOfMeals || [];
+    this.flights = this.trip?.possibleFlights || [];
+    this.mealType = this.trip?.typesOfMeals[0];
+    this.trip!.chosenFlight = this.trip?.possibleFlights.find((f: FlightDTO) => f.departure == this.trip?.chosenFlight.departure) || this.trip!.chosenFlight
+    console.log(this.trip?.chosenFlight)
   }
 }
