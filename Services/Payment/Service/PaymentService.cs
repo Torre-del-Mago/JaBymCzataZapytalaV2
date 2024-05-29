@@ -1,4 +1,5 @@
 ﻿
+using Models.Payment;
 using Payment.Repository;
 
 namespace Payment.Service
@@ -11,7 +12,7 @@ namespace Payment.Service
         }
         public bool canOfferBePaidFor(DateTime stamp, int offerId)
         {
-            var payment = _repository.getPaymentForOfferId(offerId);
+            var payment = _repository.GetPaymentForOfferId(offerId);
             if(payment == null)
             {
                 return false;
@@ -20,9 +21,11 @@ namespace Payment.Service
             return (stamp - payment.StartTimeOfPayment).TotalSeconds <= 60;
         }
 
-        public void insertPayment(DateTime stamp, int offerId)
+        public void insertPayment(CheckPaymentEvent paymentEvent)
         {
-            _repository.insertPayment(stamp, offerId);
+            _repository.InsertPayment(paymentEvent);
         }
+
+
     }
 }

@@ -23,7 +23,7 @@ namespace TransportCommand.Repository.EventRepository
                 EventType = EventType.Deleted,
                 TransportId = transportId,
                 TicketId = ticketId,
-                Timestamp = DateTime.UtcNow
+                Timestamp = DateTime.Now
             };
             _context.Events.Add(reservation);
         }
@@ -38,7 +38,7 @@ namespace TransportCommand.Repository.EventRepository
                     EventType = EventType.Deleted,
                     TransportId = ticket.TransportId,
                     TicketId = ticket.Id,
-                    Timestamp = DateTime.UtcNow
+                    Timestamp = DateTime.Now
                 };
                 events.Add(reservation);
             }
@@ -52,7 +52,7 @@ namespace TransportCommand.Repository.EventRepository
                 EventType = EventType.Created,
                 TransportId = ticket.TransportId,
                 TicketId = ticket.Id,
-                Timestamp = DateTime.UtcNow
+                Timestamp = DateTime.Now
             };
             _context.Events.Add(reservation);
         }

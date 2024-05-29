@@ -1,5 +1,6 @@
 ﻿using MassTransit;
 using Models.Payment;
+using Payment.Repository;
 using Payment.Service;
 
 namespace Payment.Consumer
@@ -7,7 +8,9 @@ namespace Payment.Consumer
     public class PayConsumer : IConsumer<PayEvent>
     {
         private IPaymentService _service;
-        public PayConsumer(IPaymentService paymentService) { 
+        private IPaymentRepository _repository;
+        public PayConsumer(IPaymentService paymentService, IPaymentRepository repository) { 
+            _repository = repository;
             _service = paymentService;
         }
         public async Task Consume(ConsumeContext<PayEvent> context)
@@ -18,7 +21,7 @@ namespace Payment.Consumer
             {
                 await context.Publish(new PayEventReply()
                 {
-                    CorrelationId = context.Message.OfferCorrelationId,
+                    CorrelationId = context.Message.CorrelationId,
                     Answer = PayEventReply.State.REJECTED});
             }
             bool isPaymentOnTime = _service.canOfferBePaidFor(context.Message.PaymentDateTime, context.Message.OfferId);
@@ -26,18 +29,19 @@ namespace Payment.Consumer
             {
                 await context.Publish(new PayEventReply()
                 {
-                    CorrelationId = context.Message.OfferCorrelationId,
+                    CorrelationId = context.Message.CorrelationId,
                     Answer = PayEventReply.State.REJECTED
                 });
             }
+            Guid offerCorrelationId = _repository.GetPaymentForOfferId(context.Message.OfferId).CorrelationId;
             await context.Publish(new PayEventReply()
             {
-                CorrelationId = context.Message.OfferCorrelationId,
+                CorrelationId = context.Message.CorrelationId,
                 Answer = PayEventReply.State.PAID
             });
             await context.Publish(new CheckPaymentEventReply()
             {
-                CorrelationId = context.Message.OfferCorrelationId,
+                CorrelationId = offerCorrelationId,
                 Answer = CheckPaymentEventReply.State.PAID
             });
         }

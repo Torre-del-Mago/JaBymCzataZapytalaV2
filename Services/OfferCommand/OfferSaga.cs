@@ -142,7 +142,10 @@ namespace OfferCommand
                                 })
                                 .Publish(ctx => new CheckPaymentEvent()
                                 {
-                                    CorrelationId = ctx.Saga.CorrelationId
+                                    CorrelationId = ctx.Saga.CorrelationId,
+                                    OfferId = ctx.Saga.OfferId,
+                                    TimeForPayment = DateTime.Now
+                                    
                                 })
                                 .Schedule(PaymentNotSentTimeout, context => context.Init<PaymentTimeout>(new PaymentTimeout (){ CorrelationId = context.Saga.CorrelationId}))
                                 .TransitionTo(ReservedOffer),
