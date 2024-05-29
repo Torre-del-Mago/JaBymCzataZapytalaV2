@@ -15,8 +15,14 @@ namespace TransportQuery.Consumer
         }
         public async Task Consume(ConsumeContext<GetTransportDataForTripsEvent> context)
         {
+            Console.WriteLine("Transport Gets Event");
+            var @event = context.Message;
             var result = _service.GetTransportsForCriteria(context.Message.Criteria);
-            await context.Publish(new GetTransportDataForTripsEventReply() {Transports = result});
+            await context.Publish(new GetTransportDataForTripsEventReply() {
+                Id = @event.Id,
+                CorrelationId = @event.CorrelationId,
+                Transports = result});
+            Console.WriteLine("Transport Publish Event");
         }
     }
 }
