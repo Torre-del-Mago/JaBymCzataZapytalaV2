@@ -18,17 +18,16 @@ namespace Gate.Controllers
         }
 
         [HttpPost("check")]
-        public async Task<IActionResult> CheckPayment([FromQuery] Guid OfferCorrelationId, [FromQuery] int OfferId, [FromQuery] int Amount)
+        public async Task<IActionResult> CheckPayment([FromQuery] int OfferId, [FromQuery] int Amount)
         {
             try
             {
                 var clientResponse = await _requestClient.GetResponse<PayEventReply>(
                 new PayEvent()
                 {
-                    OfferCorrelationId = OfferCorrelationId,
                     OfferId = OfferId,
                     Amount = Amount,
-                    PaymentDateTime = DateTime.UtcNow
+                    PaymentDateTime = DateTime.Now
                 });
                 var response = new PayResponse();
                 response.OfferId = clientResponse.Message.OfferId;

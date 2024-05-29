@@ -10,5 +10,7 @@ public interface IReservedTicketRepository
 
     Task<List<ReservedTicket>> GetReservedTicketsByTransportId(int transportId);
 
-    Task<int> InsertTicket(ReservedTicket ticket);
+    Task<List<ReservedTicket>> GetReservedTicketsByOfferId(int offerId);
+
+    Task InsertTicket(ReservedTicket ticket);
 }

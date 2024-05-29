@@ -6,7 +6,6 @@ namespace Payment.Database.Entity
     public class Payment
     {
         [BsonId]
-        [BsonRepresentation(BsonType.ObjectId)]
         public int Id { get; set; }
 
         [BsonElement("startTimeOfPayment")]
@@ -14,6 +13,9 @@ namespace Payment.Database.Entity
 
         [BsonElement("offerId")]
         public int OfferId { get; set; }
+
+        [BsonElement("offerCorrelationId")]
+        public Guid CorrelationId {  get; set; }
 
     }
 }

@@ -1,9 +1,11 @@
-﻿namespace Payment.Repository
+﻿using Models.Payment;
+
+namespace Payment.Repository
 {
     public interface IPaymentRepository
     {
-        public Database.Entity.Payment getPaymentForOfferId(int offerId);
+        public Database.Entity.Payment GetPaymentForOfferId(int offerId);
 
-        public void insertPayment(DateTime stamp, int offerId);
+        public void InsertPayment(CheckPaymentEvent paymentEvent);
     }
 }

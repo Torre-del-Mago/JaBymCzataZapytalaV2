@@ -38,7 +38,7 @@ namespace OfferCommand
 
         private IPublishEndpoint _publishEndpoint { get; set; }
 
-        public Event<CreatedOfferEvent> ReserveOfferEvent { get; set; }
+        public Event<CreatedOfferEvent> CreatedOfferEvent { get; set; }
         public Event<CheckPaymentEventReply> PaymentEvent { get; set; }
         public Event<ReserveHotelEventReply> ReserveHotelEvent { get; set; }
         public Event<ReserveTransportEventReply> ReserveTransportEvent { get; set; }
@@ -79,7 +79,7 @@ namespace OfferCommand
         {
             InstanceState(x => x.CurrentState);
 
-            Event(() => ReserveOfferEvent, x => x.CorrelateById(ctx => ctx.Message.CorrelationId));
+            Event(() => CreatedOfferEvent, x => x.SelectId(ctx => ctx.Message.CorrelationId));
             Event(() => PaymentEvent, x => x.CorrelateById(ctx => ctx.Message.CorrelationId));
             Event(() => ReserveHotelEvent, x => x.CorrelateById(ctx => ctx.Message.CorrelationId));
             Event(() => ReserveTransportEvent, x => x.CorrelateById(ctx => ctx.Message.CorrelationId));
@@ -92,7 +92,7 @@ namespace OfferCommand
             });
 
             Initially(
-                When(ReserveOfferEvent).
+                When(CreatedOfferEvent).
                 Then(ctx => ctx.Saga.OfferId = ctx.Message.OfferId).
                 Then(ctx => ctx.Saga.Offer = ctx.Message.Offer).
                 Publish(ctx => new ReserveHotelEvent()
@@ -123,7 +123,7 @@ namespace OfferCommand
                         ctx.Saga.Offer.NumberOfTeenagers + ctx.Saga.Offer.NumberOfToddlers
                     }
                 }).TransitionTo(ReservedOffer),
-                invalid => invalid.Then(ctx => cancelReservations(ctx.Saga)).Publish(ctx => new ReserveOfferEventReply()
+                invalid => invalid.Then(ctx => cancelReservations(ctx.Saga)).Respond(ctx => new ReserveOfferEventReply()
                 {
                     Answer = ReserveOfferEventReply.State.NOT_RESERVED,
                     CorrelationId = ctx.Saga.CorrelationId,
@@ -135,19 +135,22 @@ namespace OfferCommand
                 When(ReserveTransportEvent).
                 Then(ctx => processTransport(ctx.Message, ctx.Saga)).
                 IfElse(ctx => ctx.Saga.MadeTransportReservation,
-                valid => valid.Publish(ctx => new ReserveOfferEventReply()
+                valid => valid.Respond(ctx => new ReserveOfferEventReply()
                                 {
                                     Answer = ReserveOfferEventReply.State.RESERVED,
                                     CorrelationId = ctx.Saga.CorrelationId
                                 })
                                 .Publish(ctx => new CheckPaymentEvent()
                                 {
-                                    CorrelationId = ctx.Saga.CorrelationId
+                                    CorrelationId = ctx.Saga.CorrelationId,
+                                    OfferId = ctx.Saga.OfferId,
+                                    TimeForPayment = DateTime.Now
+                                    
                                 })
                                 .Schedule(PaymentNotSentTimeout, context => context.Init<PaymentTimeout>(new PaymentTimeout (){ CorrelationId = context.Saga.CorrelationId}))
                                 .TransitionTo(ReservedOffer),
                 invalid => invalid.Then(ctx => cancelReservations(ctx.Saga))
-                                      .Publish(ctx => new ReserveOfferEventReply()
+                                      .Respond(ctx => new ReserveOfferEventReply()
                                     {
                                         Answer = ReserveOfferEventReply.State.NOT_RESERVED,
                                         CorrelationId = ctx.Saga.CorrelationId,

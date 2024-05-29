@@ -6,6 +6,6 @@ namespace TransportCommand.Service
     {
         public Task<bool> reserveTransport(TransportReservationDTO dto);
 
-        public Task cancelTransport(int arrivalTicketId, int returnTicketId);
+        public Task cancelTransport(int offerId);
     }
 }

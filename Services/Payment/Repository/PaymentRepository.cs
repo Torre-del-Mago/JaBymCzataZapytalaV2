@@ -1,4 +1,5 @@
 ﻿
+using Models.Payment;
 using MongoDB.Driver;
 
 namespace Payment.Repository
@@ -17,18 +18,19 @@ namespace Payment.Repository
             _database = _client.GetDatabase("payment");
         }
 
-        public Database.Entity.Payment getPaymentForOfferId(int offerId)
+        public Database.Entity.Payment GetPaymentForOfferId(int offerId)
         {
             var collection = _database.GetCollection<Database.Entity.Payment>("payments").AsQueryable();
             return collection.Where(p => p.OfferId == offerId).First();
         }
 
-        public void insertPayment(DateTime stamp, int offerId)
+        public void InsertPayment(CheckPaymentEvent paymentEvent)
         {
             var payment = new Database.Entity.Payment()
             {
-                OfferId = offerId,
-                StartTimeOfPayment = stamp
+                OfferId = paymentEvent.OfferId,
+                StartTimeOfPayment = paymentEvent.TimeForPayment,
+                CorrelationId = paymentEvent.CorrelationId
             };
 
             var collection = _database.GetCollection<Database.Entity.Payment>("payments");
