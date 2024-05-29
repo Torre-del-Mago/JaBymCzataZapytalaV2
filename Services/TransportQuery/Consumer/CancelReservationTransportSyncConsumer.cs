@@ -4,16 +4,16 @@ using TransportQuery.Service.Transport;
 
 namespace TransportQuery.Consumer
 {
-    public class ReserveTransportConsumer : IConsumer<ReserveTransportEvent>
+    public class CancelReservationTransportSyncConsumer : IConsumer<CancelReservationTransportSyncEvent>
     {
         private readonly ITransportService _service;
 
-        public ReserveTransportConsumer(ITransportService service)
+        public CancelReservationTransportSyncConsumer(ITransportService service)
         {
             _service = service;
         }
 
-        public Task Consume(ConsumeContext<ReserveTransportEvent> context)
+        public Task Consume(ConsumeContext<CancelReservationTransportSyncEvent> context)
         {
             throw new NotImplementedException();
         }

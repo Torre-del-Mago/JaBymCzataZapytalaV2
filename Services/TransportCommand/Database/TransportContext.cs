@@ -11,6 +11,8 @@ public class TransportContext : DbContext
 
     public DbSet<Transport> Transports { get; set; }
 
+    public DbSet<Event> Events { get; set; }
+
     private readonly IConfiguration configuration;
 
     public TransportContext(IConfiguration configuration)

@@ -7,18 +7,22 @@ import { DetailComponent } from './detail/detail.component';
 import { LoginComponent } from './login/login.component';
 import { SearchComponent } from './search/search.component';
 import { FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
+import { ReserveComponent } from './reserve/reserve.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     DetailComponent,
     LoginComponent,
-    SearchComponent
+    SearchComponent,
+    ReserveComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    FormsModule
+    FormsModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]

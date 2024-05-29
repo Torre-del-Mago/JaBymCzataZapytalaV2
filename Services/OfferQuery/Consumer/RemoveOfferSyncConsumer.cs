@@ -1,19 +1,17 @@
 ﻿using MassTransit;
-using Models.Hotel;
+using Models.Offer;
 using OfferQuery.Service;
 
 namespace OfferQuery.Consumer
 {
-    public class ReserveHotelReplyConsumer : IConsumer<ReserveHotelEventReply>
+    public class RemoveOfferSyncConsumer : IConsumer<RemoveOfferSyncEvent>
     {
         private readonly IOfferService _service;
-
-        public ReserveHotelReplyConsumer(IOfferService service)
+        public RemoveOfferSyncConsumer(IOfferService service)
         {
             _service = service;
         }
-
-        public Task Consume(ConsumeContext<ReserveHotelEventReply> context)
+        public Task Consume(ConsumeContext<RemoveOfferSyncEvent> context)
         {
             throw new NotImplementedException();
         }

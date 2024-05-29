@@ -1,19 +1,19 @@
 ﻿using MassTransit;
-using Models.Transport;
+using Models.Offer;
 using OfferQuery.Service;
 
 namespace OfferQuery.Consumer
 {
-    public class ReserveTransportReplyConsumer : IConsumer<ReserveTransportEventReply>
+    public class ReserveOfferSyncConsumer : IConsumer<ReserveOfferSyncEvent>
     {
         private readonly IOfferService _service;
 
-        public ReserveTransportReplyConsumer(IOfferService service)
+        public ReserveOfferSyncConsumer(IOfferService service)
         {
             _service = service;
         }
 
-        public Task Consume(ConsumeContext<ReserveTransportEventReply> context)
+        public Task Consume(ConsumeContext<ReserveOfferSyncEvent> context)
         {
             throw new NotImplementedException();
         }

@@ -14,27 +14,22 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-var app = builder.Build();
-
 builder.Services.AddMassTransit(cfg =>
 {
-    // adding consumers
-    cfg.AddConsumer<TransportQueryConsumer>();
-    cfg.AddConsumer<TransportListQueryConsumer>();
-
-    // telling masstransit to use rabbitmq
+    cfg.AddDelayedMessageScheduler();
     cfg.UsingRabbitMq((context, rabbitCfg) =>
     {
-        // rabbitmq config
-        rabbitCfg.Host("rabbitmq", "/", h =>
+        rabbitCfg.Host(new Uri(builder.Configuration["MessageBroker:Host"]), h =>
         {
-            h.Username("guest");
-            h.Password("guest");
+            h.Username(builder.Configuration["MessageBroker:Username"]);
+            h.Password(builder.Configuration["MessageBroker:Password"]);
         });
-        // automatic endpoint configuration (and I think the reason why naming convention is important
+        rabbitCfg.UseDelayedMessageScheduler();
         rabbitCfg.ConfigureEndpoints(context);
     });
 });
+
+var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

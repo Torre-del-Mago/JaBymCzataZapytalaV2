@@ -1,4 +1,8 @@
+using MassTransit;
 using TransportCommand.Database;
+using TransportCommand.Repository.ReservedTicketRepository;
+using TransportCommand.Repository.TransportRepository;
+using TransportCommand.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +13,24 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<TransportContext>();
+builder.Services.AddScoped<IReservedTicketRepository, ReservedTicketRepository>();
+builder.Services.AddScoped<ITransportRepository, TransportRepository>();
+builder.Services.AddScoped<IEventService, EventService>();
+
+builder.Services.AddMassTransit(cfg =>
+{
+    cfg.AddDelayedMessageScheduler();
+    cfg.UsingRabbitMq((context, rabbitCfg) =>
+    {
+        rabbitCfg.Host(new Uri(builder.Configuration["MessageBroker:Host"]), h =>
+        {
+            h.Username(builder.Configuration["MessageBroker:Username"]);
+            h.Password(builder.Configuration["MessageBroker:Password"]);
+        });
+        rabbitCfg.UseDelayedMessageScheduler();
+        rabbitCfg.ConfigureEndpoints(context);
+    });
+});
 
 var app = builder.Build();
 

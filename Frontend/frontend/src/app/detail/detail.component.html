@@ -1,15 +1,38 @@
 <a routerLink="/">Wróć do strony głównej</a>
 <h1>Wycieczka do hotelu {{hotelName}} w {{destinationName}}</h1>
-<p>W przedziałach czasowych </p>
-<p>Cena za osobę {{pricePerPerson}}</p>
-<p>Dla pokoju Pokój {{numberOfPeople}}os.</p>
-<p>Typ posiłku: {{mealType}}</p>
-<div>
-    Number of adults: {{numberOfAdults}} 
-    <button (click)="addAdult()" [disabled]="!canIncreasePeople">+</button>
-    <button (click)="minusAdult()" [disabled]="!canDecreaseAdults">-</button><br>
-    Number of children: {{numberOfChildren}} 
-    <button (click)="addChild()" [disabled]="!canIncreasePeople">+</button>
-    <button (click)="minusChild()" [disabled]="!canDecreaseChildren">-</button>
+<div [hidden]="!configurationAvailable">
+    <p>W przedziałach czasowych </p>
+<p>Od: {{beginDate}} do {{endDate}}</p>
+<p>Cena łączna {{trip?.Price}}zł</p>
+<div>Typ posiłku: <select [(ngModel)]="mealType">
+<option [value]="mealType" *ngFor="let mealType of this.mealTypes">{{mealType}}</option>
+</select>
 </div>
-
+<div>Wybrany lot <select [ngModel]="this.trip?.ChosenFlight" (ngModelChange)="flightChanged($event)">
+<option [ngValue]="flight" *ngFor="let flight of this.trip?.PossibleFlights">{{flight.Departure}}:{{flight.PricePerSeat}}zł</option>
+</select></div>
+<div>
+    <div *ngFor="let numOfRooms of this.trip?.RoomCombination; index as i">
+        <div *ngIf="numOfRooms > 0">
+            <span>{{numOfRooms}} {{numOfRooms == 1 ? "Pokój" : "Pokoje"}} {{i+1}}os.</span>
+            <select [ngModel]="this.trip!.ChosenRooms![i+1]" (ngModelChange)="roomChanged($event, i)">
+                <option [ngValue]="roomType" *ngFor="let roomType of this.getRoomsFor(i+1, numOfRooms)">{{roomType.TypeOfRoom}} - {{roomType.PricePerRoom}} zł za noc</option>
+            </select>
+        </div>
+    </div>
+</div>
+<div>
+    Ilość dorosłych: {{numberOfAdults}} 
+    <button (click)="addAdult()" [disabled]="canIncreasePeople">+</button>
+    <button (click)="minusAdult()" [disabled]="canDecreaseAdults">-</button><br>
+    Ilość dzieci: {{numberOfChildren}} 
+    <button (click)="addChild()" [disabled]="canIncreasePeople">+</button>
+    <button (click)="minusChild()" [disabled]="canDecreaseChildren">-</button>
+</div>
+<div>
+    <button (click)="reserve()">Rezerwuj</button>
+</div>
+</div>
+<div [hidden]="configurationAvailable">
+    Konfiguracji nie znaleziono
+</div>

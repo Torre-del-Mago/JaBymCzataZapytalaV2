@@ -7,11 +7,7 @@ namespace OfferCommand.Consumer
     {
         public async Task Consume(ConsumeContext<ReserveOfferEvent> context)
         {
-            /*
-             Do something
-             */
-
-            await context.Publish(new ReserveOfferEventReply() { });
+            throw new NotImplementedException();
         }
     }
 }

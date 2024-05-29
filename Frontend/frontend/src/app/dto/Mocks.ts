@@ -6,11 +6,30 @@ import { TripsDTO } from './TripsDTO';
 export const rooms: RoomDTO[] = [
   {
     Count: 2,
-    NumberOfPeopleForTheRoom: 3,
+    NumberOfPeopleForTheRoom: 2,
+    PricePerRoom: 200,
+    TypeOfRoom: 'Cowabunga',
+  },
+  {
+    Count: 2,
+    NumberOfPeopleForTheRoom: 1,
     PricePerRoom: 500,
-    TypeOfRoom: '',
+    TypeOfRoom: 'Funky Monkey',
+  },
+  {
+    Count: 2,
+    NumberOfPeopleForTheRoom: 1,
+    PricePerRoom: 300,
+    TypeOfRoom: 'Chilled dog',
   },
 ];
+export const dummyRoom: RoomDTO = 
+  {
+    Count: 0,
+    NumberOfPeopleForTheRoom: 0,
+    PricePerRoom: 500,
+    TypeOfRoom: '',
+  };
 
 export const flights: FlightDTO[] = [
   {
@@ -19,6 +38,12 @@ export const flights: FlightDTO[] = [
     PricePerSeat: 100,
     ReturnTransportId: '',
   },
+  {
+    Departure: 'Kraków',
+    DepartureTransportId: '',
+    PricePerSeat: 80,
+    ReturnTransportId: '',
+  }
 ];
 
 export const trips: TripDTO[] = [

@@ -7,9 +7,9 @@ public class Transport
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public string Id { get; set; }
+    public int Id { get; set; }
     
-    public string ConnectionId { get; set; }
+    public int ConnectionId { get; set; }
     
     public int NumberOfSeats { get; set; }
     

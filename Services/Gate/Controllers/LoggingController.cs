@@ -1,9 +1,7 @@
 ﻿using MassTransit;
 using Microsoft.AspNetCore.Mvc;
-using Models.Gate.Offer.Request;
-using Models.Gate.Offer.Response;
+using Microsoft.Extensions.Logging;
 using Models.Login;
-using Models.Offer;
 
 namespace Gate.Controllers
 {
@@ -11,6 +9,12 @@ namespace Gate.Controllers
     [Route("api/logging/")]
     public class LoggingController : ControllerBase
     {
+        private readonly IPublishEndpoint _publishEndpoint;
+
+        //public LoggingController(IPublishEndpoint publishEndpoint)
+        //{
+        //    _publishEndpoint = publishEndpoint;
+        //}
         private IRequestClient<CheckLoginEvent> _requestClient { get; set; }
 
         public LoggingController(IRequestClient<CheckLoginEvent> requestClient)
@@ -21,8 +25,9 @@ namespace Gate.Controllers
         [HttpGet("check")]
         public async Task<IActionResult> checkLogin(String login)
         {
-            try {
-                var clientResponse = await _requestClient.GetResponse<CheckLoginEventReply> (
+            try
+            {
+                var clientResponse = await _requestClient.GetResponse<CheckLoginEventReply>(
                     new CheckLoginEvent() { Login = login });
                 if (clientResponse.Message.LoggedIn == CheckLoginEventReply.State.LOGGED)
                 {
