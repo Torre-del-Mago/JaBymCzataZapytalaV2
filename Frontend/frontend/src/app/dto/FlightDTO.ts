@@ -1,6 +1,6 @@
 export type FlightDTO = {
-    DepartureTransportId: number|string,
-    ReturnTransportId: number|string,
-    PricePerSeat: number,
-    Departure: string
+    departureTransportId: number|string,
+    returnTransportId: number|string,
+    pricePerSeat: number,
+    departure: string
 }
