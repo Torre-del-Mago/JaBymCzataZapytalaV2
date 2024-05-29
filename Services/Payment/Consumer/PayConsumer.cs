@@ -19,7 +19,7 @@ namespace Payment.Consumer
             bool hasPaymentCompleted = rnd.Next(1, 11) == 1;
             if (!hasPaymentCompleted)
             {
-                await context.Publish(new PayEventReply()
+                await context.RespondAsync(new PayEventReply()
                 {
                     CorrelationId = context.Message.CorrelationId,
                     Answer = PayEventReply.State.REJECTED});
@@ -27,19 +27,19 @@ namespace Payment.Consumer
             bool isPaymentOnTime = _service.canOfferBePaidFor(context.Message.PaymentDateTime, context.Message.OfferId);
             if(!isPaymentOnTime)
             {
-                await context.Publish(new PayEventReply()
+                await context.RespondAsync(new PayEventReply()
                 {
                     CorrelationId = context.Message.CorrelationId,
                     Answer = PayEventReply.State.REJECTED
                 });
             }
             Guid offerCorrelationId = _repository.GetPaymentForOfferId(context.Message.OfferId).CorrelationId;
-            await context.Publish(new PayEventReply()
+            await context.RespondAsync(new PayEventReply()
             {
                 CorrelationId = context.Message.CorrelationId,
                 Answer = PayEventReply.State.PAID
             });
-            await context.Publish(new CheckPaymentEventReply()
+            await context.RespondAsync(new CheckPaymentEventReply()
             {
                 CorrelationId = offerCorrelationId,
                 Answer = CheckPaymentEventReply.State.PAID
