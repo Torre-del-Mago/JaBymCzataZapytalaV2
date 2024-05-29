@@ -16,6 +16,10 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddMassTransit(cfg =>
 {
+
+    cfg.AddConsumer<TransportQueryConsumer>();
+    cfg.AddConsumer<TransportListQueryConsumer>();
+
     cfg.AddDelayedMessageScheduler();
     cfg.UsingRabbitMq((context, rabbitCfg) =>
     {

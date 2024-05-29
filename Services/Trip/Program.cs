@@ -12,6 +12,9 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddMassTransit(cfg =>
 {
+    cfg.AddConsumer<TripListInfoConsumer>();
+    cfg.AddConsumer<TripInfoConsumer>();
+
     cfg.AddDelayedMessageScheduler();
     cfg.UsingRabbitMq((context, rabbitCfg) =>
     {

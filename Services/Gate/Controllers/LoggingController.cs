@@ -11,10 +11,6 @@ namespace Gate.Controllers
     {
         private readonly IPublishEndpoint _publishEndpoint;
 
-        //public LoggingController(IPublishEndpoint publishEndpoint)
-        //{
-        //    _publishEndpoint = publishEndpoint;
-        //}
         private IRequestClient<CheckLoginEvent> _requestClient { get; set; }
 
         public LoggingController(IRequestClient<CheckLoginEvent> requestClient)

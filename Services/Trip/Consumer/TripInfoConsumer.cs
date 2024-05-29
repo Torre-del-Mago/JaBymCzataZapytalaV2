@@ -20,6 +20,7 @@ namespace Trip.Consumer
 
         public async Task Consume(ConsumeContext<GenerateTripEvent> context)
         {
+            var @event = context.Message;
             var hotelRequest = new GetHotelDataForTripEvent() { };
             var transportRequest = new GetTransportDataForTripEvent() { };
             var hotelResponse = await _hotelClient.GetResponse<GetHotelDataForTripEventReply>(hotelRequest);
@@ -42,7 +43,10 @@ namespace Trip.Consumer
                 PossibleFlights = transportDto.PossibleFlights
             };
 
-            await context.Publish(new GenerateTripEventReply() {TripDTO = tripDto});
+            await context.Publish(new GenerateTripEventReply() {
+                Id = @event.Id,
+                CorrelationId = @event.CorrelationId,
+                TripDTO = tripDto});
         }
     }
 }

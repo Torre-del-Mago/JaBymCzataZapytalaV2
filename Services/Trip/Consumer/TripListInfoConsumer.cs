@@ -22,6 +22,7 @@ namespace Trip.Consumer
 
         public async Task Consume(ConsumeContext<GenerateTripsEvent> context)
         {
+            var @event = context.Message;
             var criteria = context.Message.Criteria;
             if (criteria == null)
             {
@@ -100,7 +101,11 @@ namespace Trip.Consumer
             }
 
             var tripsDto = new TripsDTO() {Trips = trips};
-            await context.Publish(new GenerateTripsEventReply() {Trips = tripsDto});
+            await context.Publish(new GenerateTripsEventReply() {
+                Id = @event.Id,
+                CorrelationId = @event.CorrelationId,
+                Trips = tripsDto
+            });
         }
     }
 }
