@@ -21,5 +21,7 @@ public class Reservation
     public int HotelId { get; set; }
 
     public Hotel Hotel { get; set; }
+    
+    public int OfferId { get; set; }
 
 }
