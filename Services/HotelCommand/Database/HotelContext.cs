@@ -18,6 +18,8 @@ namespace HotelCommand.Database
         public DbSet<ReservedRoom> ReservedRooms { get; set; }
 
         public DbSet<RoomType> RoomTypes { get; set; }
+        
+        public DbSet<ReservationEvent> Events { get; set; }
 
         private readonly IConfiguration configuration;
 

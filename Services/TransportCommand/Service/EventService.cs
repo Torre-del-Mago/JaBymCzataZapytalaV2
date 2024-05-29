@@ -82,8 +82,8 @@ namespace TransportCommand.Service
                 NumberOfReservedSeats = dto.NumberOfPeople,
                 TransportId = dto.ReturnTransportId
             };
-            var arrivalTicketId = await _ticketRepository.insertTicket(arrivalTicket);
-            var returnTicketId = await _ticketRepository.insertTicket(returnTicket);
+            var arrivalTicketId = await _ticketRepository.InsertTicket(arrivalTicket);
+            var returnTicketId = await _ticketRepository.InsertTicket(returnTicket);
 
             await _eventRepository.insertReservationEvent(dto.ReturnTransportId, arrivalTicketId);
             await _eventRepository.insertReservationEvent(dto.ReturnTransportId, returnTicketId);

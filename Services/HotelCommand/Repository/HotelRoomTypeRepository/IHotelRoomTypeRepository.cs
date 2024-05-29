@@ -6,5 +6,7 @@ namespace HotelCommand.Repository.HotelRoomTypeRepository
         Task<List<HotelRoomType>> GetAllHotelRoomTypesAsync();
 
         Task<HotelRoomType> GetHotelRoomTypeByIdAsync(int hotelRoomTypeId);
+        
+        Task<HotelRoomType> GetHotelRoomTypeByNameAsync(string hotelRoomTypeName);
     }
 }

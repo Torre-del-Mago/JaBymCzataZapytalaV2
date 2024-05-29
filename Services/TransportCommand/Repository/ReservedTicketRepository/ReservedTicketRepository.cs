@@ -28,7 +28,7 @@ public class ReservedTicketRepository : IReservedTicketRepository
         return Task.FromResult(_context.ReservedTickets.Where(r => r.TransportId == transportId).ToList());
     }
 
-    public async Task<int> insertTicket(ReservedTicket ticket)
+    public async Task<int> InsertTicket(ReservedTicket ticket)
     {
         _context.ReservedTickets.Add(ticket);
         return ticket.Id;

@@ -4,7 +4,6 @@ using HotelCommand.Repository.DietRepository;
 using HotelCommand.Repository.HotelRepository;
 using HotelCommand.Repository.HotelDietRepository;
 using HotelCommand.Repository.HotelRoomTypeRepository;
-using HotelQuery.Consumer;
 using MassTransit;
 using HotelCommand.Repository.ReservationRepository;
 using HotelCommand.Repository.ReservedRoomRepository;

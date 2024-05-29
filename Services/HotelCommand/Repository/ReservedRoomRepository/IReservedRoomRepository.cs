@@ -6,6 +6,6 @@ namespace HotelCommand.Repository.ReservedRoomRepository
     {
         Task<List<ReservedRoom>> GetAllReservedRoomsAsync();
         Task<ReservedRoom> GetReservedRoomByIdAsync(int reservedRoomId);
-
+        void InsertReservedRoom(ReservedRoom room);
     }
 }
