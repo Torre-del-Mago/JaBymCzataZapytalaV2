@@ -27,13 +27,14 @@
     Not all fields of form have been filled
   </div>
 </div>
-<div *ngIf="result.length > 0">
+<div *ngIf="(result$ | async) as list">
   <div>Wyniki wyszukiwania</div>
-  <div *ngFor="let trip of result">
+  <div *ngFor="let trip of result$ | async">
     <span>
-      Hotel: {{ trip.HotelName }}, {{ trip.City }} Miasto wylotu:
-      {{ trip.ChosenFlight.Departure }}
-      Cena {{trip.Price}} zł
+      Hotel: {{ trip.hotelName }}, {{ trip.city }} Miasto wylotu:
+      {{ trip.chosenFlight.departure }}
+      Cena {{trip.price}} zł 
+      Od {{transformDate(trip.beginDate)}} Do {{transformDate(trip.endDate)}}
     </span>
     <button (click)="detail(trip)">Wybierz</button>
   </div>

@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import * as Mocks from '../dto/Mocks';
 import { TripDTO } from '../dto/TripDTO';
 import { RoomDTO } from '../dto/RoomDTO';
+import {Observable} from 'rxjs'
 
 interface RoomSize {
   Size: number;
@@ -17,11 +18,12 @@ export class BackendService {
 
   //Nie wiem czy tu jest http czy https więc zmieńcie jak coś
   //Nie wiem jaki port czy też jak nazwiecie bramę w dockerze
-  private gateUrl = 'http://gate:8080/api';
+  private gateUrl = 'https://localhost:55278/api';
   private loginCheckUrl = '/login/check';
   private tripControllerUrl = '/trip';
   private tripListUrl = '/trip-list-info';
   private tripUrl = '/trip-info';
+  private tripsTestUrl = '/test-get'
 
   private currentTrip?: TripDTO;
   private numOfChildren: number = 0;
@@ -39,24 +41,25 @@ export class BackendService {
   public getInfoForTrips(
     destination: string,
     startCity: string,
-    startDate: Date,
-    endDate: Date,
+    startDate: string,
+    endDate: string,
     numberOfAdults: number,
     numberOfChildren: number
-  ): TripDTO[] {
-    var trips: TripDTO[] = [];
-    const hotels = Mocks.trips.filter(
-      (t) =>
-        t.Country === destination &&
-        t.ChosenFlight.Departure === startCity &&
-        t.BeginDate >= startDate &&
-        t.EndDate <= endDate 
-    );
+  ): Observable<TripDTO[]> {
 
-    for (const hotel of hotels) {
-      console.log(hotel);
+    return this.client.get<TripDTO[]>(this.gateUrl + this.tripControllerUrl + this.tripsTestUrl + "?destination=" + destination 
+    + "&departure=" + startCity + "&numberOfPeople=" + (numberOfAdults+numberOfChildren) + "&startDate=" + startDate + 
+    "&endDate=" + endDate);
+
+    /*
+    /* return this.client.get<TripsDTO>(this.gateUrl + this.tripListUrl + "?body=") */
+  }
+
+  public changeTrips(trips: TripDTO[], startDate: string, endDate: string, numberOfAdults: number, numberOfChildren: number): TripDTO[] {
+    let result: TripDTO[] = []
+    for (const hotel of trips) {
       const roomCombinations = this.calculateRoomCombinations(
-        hotel.Rooms,
+        hotel.rooms,
         numberOfAdults + numberOfChildren,
         true
       );
@@ -66,8 +69,8 @@ export class BackendService {
         ).fill(Mocks.dummyRoom);
         for (const [index, value] of roomCombinations.entries()) {
           if (value > 0) {
-            let foundRoom = hotel.Rooms.find(
-              (r) => r.NumberOfPeopleForTheRoom == index + 1 && r.Count >= value
+            let foundRoom = hotel.rooms.find(
+              (r) => r.numberOfPeopleForTheRoom == index + 1 && r.count >= value
             );
             if (foundRoom !== undefined) {
               defaultRooms[index + 1] = foundRoom;
@@ -75,24 +78,25 @@ export class BackendService {
           }
         }
         let price =
-          hotel.ChosenFlight.PricePerSeat * (numberOfAdults + numberOfChildren);
-        let timediff = endDate.getTime() - startDate.getTime();
+          hotel.chosenFlight.pricePerSeat * (numberOfAdults + numberOfChildren);
+        console.log(hotel.beginDate)
+        console.log(hotel.endDate)
+        let timediff = new Date(hotel.endDate).getTime() - new Date(hotel.beginDate).getTime();
         let days = Math.round(timediff / (1000 * 3600 * 24));
         for (const [index, defroom] of defaultRooms.entries()) {
           if (roomCombinations[index] > 0) {
-            price += defroom.PricePerRoom * days * roomCombinations[index];
+            price += defroom.pricePerRoom * days * roomCombinations[index];
           }
         }
-        trips.push({
+        result.push({
           ...hotel,
-          RoomCombination: roomCombinations,
-          ChosenRooms: defaultRooms,
-          Price: price,
+          roomCombination: roomCombinations,
+          chosenRooms: defaultRooms,
+          price: price,
         });
       }
     }
-    return trips;
-    /* return this.client.get<TripsDTO>(this.gateUrl + this.tripListUrl + "?body=") */
+    return result;
   }
 
   public getInfoForTrip(
@@ -107,11 +111,11 @@ export class BackendService {
     var trip: TripDTO | null = null;
     const hotel = Mocks.trips.find(
       (t) =>
-        t.Country === destination &&
-        t.ChosenFlight.Departure === startCity &&
-        t.BeginDate >= startDate &&
-        t.EndDate <= endDate &&
-        t.HotelName === (selectedHotel ?? t.HotelName)
+        t.country === destination &&
+        t.chosenFlight.departure === startCity &&
+        t.beginDate >= startDate &&
+        t.endDate <= endDate &&
+        t.hotelName === (selectedHotel ?? t.hotelName)
     );
 
     if(hotel === undefined) {
@@ -119,7 +123,7 @@ export class BackendService {
     }
 
     const roomCombinations = this.calculateRoomCombinations(
-      hotel.Rooms,
+      hotel.rooms,
       numberOfAdults + numberOfChildren,
       true
     );
@@ -129,8 +133,8 @@ export class BackendService {
       ).fill(Mocks.dummyRoom);
       for (const [index, value] of roomCombinations.entries()) {
         if (value > 0) {
-          let foundRoom = hotel.Rooms.find(
-            (r) => r.NumberOfPeopleForTheRoom == index + 1 && r.Count >= value
+          let foundRoom = hotel.rooms.find(
+            (r: RoomDTO) => r.numberOfPeopleForTheRoom == index + 1 && r.count >= value
           );
           if (foundRoom !== undefined) {
             defaultRooms[index + 1] = foundRoom;
@@ -138,19 +142,20 @@ export class BackendService {
         }
       }
       let price =
-        hotel.ChosenFlight.PricePerSeat * (numberOfAdults + numberOfChildren);
-      let timediff = endDate.getTime() - startDate.getTime();
+        hotel.chosenFlight.pricePerSeat * (numberOfAdults + numberOfChildren);
+      let timediff = new Date(hotel.endDate).getTime() - new Date(hotel.beginDate).getTime();
       let days = Math.round(timediff / (1000 * 3600 * 24));
+      console.log(days);
       for (const [index, defroom] of defaultRooms.entries()) {
         if (roomCombinations[index] > 0) {
-          price += defroom.PricePerRoom * days * roomCombinations[index];
+          price += defroom.pricePerRoom * days * roomCombinations[index];
         }
       }
       trip = {
         ...hotel,
-        RoomCombination: roomCombinations,
-        ChosenRooms: defaultRooms,
-        Price: price,
+        roomCombination: roomCombinations,
+        chosenRooms: defaultRooms,
+        price: price,
       } as TripDTO;
     }
     return trip;
@@ -207,7 +212,7 @@ export class BackendService {
     // find rooms that exactly match numberOfPeople - only if exactNumberMatch === true
     if (exactNumberMatch) {
       const exactMatchRooms = rooms.find(
-        (r) => r.NumberOfPeopleForTheRoom === numberOfPeople
+        (r) => r.numberOfPeopleForTheRoom === numberOfPeople
       );
       if (exactMatchRooms !== undefined) {
         combinations = Array(numberOfPeople).fill(0);
@@ -247,7 +252,7 @@ export class BackendService {
       for (const [index, value] of numbers.entries()) {
         if (value > 0) {
           const room = rooms.find(
-            (r) => r.NumberOfPeopleForTheRoom == index + 1 && r.Count >= value
+            (r) => r.numberOfPeopleForTheRoom == index + 1 && r.count >= value
           );
           if (room === undefined) {
             areAllFree = false;

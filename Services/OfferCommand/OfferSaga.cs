@@ -16,7 +16,7 @@ namespace OfferCommand
         public Guid CorrelationId { get; set; }
         public string CurrentState { get; set; }
 
-        public int Registration { get; set; }
+        public int OfferId { get; set; }
 
         public OfferDTO Offer { get; set; }
 
@@ -38,7 +38,7 @@ namespace OfferCommand
 
         private IPublishEndpoint _publishEndpoint { get; set; }
 
-        public Event<ReserveOfferEvent> ReserveOfferEvent { get; set; }
+        public Event<CreatedOfferEvent> ReserveOfferEvent { get; set; }
         public Event<CheckPaymentEventReply> PaymentEvent { get; set; }
         public Event<ReserveHotelEventReply> ReserveHotelEvent { get; set; }
         public Event<ReserveTransportEventReply> ReserveTransportEvent { get; set; }

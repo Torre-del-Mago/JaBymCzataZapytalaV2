@@ -2,11 +2,16 @@ import { Component } from '@angular/core';
 import { BackendService } from '../backend/backend.service';
 import { TripDTO } from '../dto/TripDTO';
 import { Router } from '@angular/router';
+import {AsyncPipe} from '@angular/common'
+import {Subscription, of, Observable, pipe, tap, map} from 'rxjs'; 
 
 @Component({
   selector: 'app-search',
   templateUrl: './search.component.html',
   styleUrls: ['./search.component.css'],
+  providers: [
+    AsyncPipe
+  ]
 })
 export class SearchComponent {
   destinations = ['', 'Grecja', 'Włochy', 'Hiszpania', 'Egipt'];
@@ -15,7 +20,7 @@ export class SearchComponent {
   startCity = '';
   startDate = '';
   endDate = '';
-  result: TripDTO[] = [];
+  result$: Observable<TripDTO[]> = of([]);
   notAllValuesPresent = false;
   numberOfAdults: number = 1;
   numberOfChildren: number = 0;
@@ -23,6 +28,8 @@ export class SearchComponent {
   canDecreaseChildren?: boolean = true;
   canDecreaseAdults?: boolean = false;
   canIncreasePeople?: boolean = false;
+
+  subscription: Subscription = new Subscription();
 
 
   constructor(private service: BackendService, private router: Router) {}
@@ -36,6 +43,18 @@ export class SearchComponent {
       this.notAllValuesPresent = false;
     }
     console.log(this.startDate)
+
+    this.result$ = this.service.getInfoForTrips(
+      this.destination,
+      this.startCity,
+      this.startDate,
+      this.endDate,
+      this.numberOfAdults,
+      this.numberOfChildren
+    ).pipe(tap((t: TripDTO[]) => console.log(t)), map((t: TripDTO[]) => {
+      return this.service.changeTrips(t, this.startDate, this.endDate, this.numberOfAdults, this.numberOfChildren)
+    }))
+/*
     this.result = this.service.getInfoForTrips(
       this.destination,
       this.startCity,
@@ -44,6 +63,7 @@ export class SearchComponent {
       this.numberOfAdults,
       this.numberOfChildren
     );
+    */
   }
 
   async detail(trip: TripDTO): Promise<void> {
@@ -54,6 +74,15 @@ export class SearchComponent {
   }
 
   
+  transformDate(notdate: Date): string {
+    const date = new Date(notdate);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const formattedDate = `${year}-${month}-${day}`;
+    return formattedDate;
+  }
+
   addAdult(): void {
     this.numberOfAdults++;
     this.numberOfPeople++;
