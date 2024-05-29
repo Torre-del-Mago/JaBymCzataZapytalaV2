@@ -11,7 +11,7 @@ namespace Payment.Repository
         private MongoClient _client { get; set; }
         private IMongoDatabase _database { get; set; }
 
-        PaymentRepository()
+        public PaymentRepository()
         {
             _client = new MongoClient(connectionUri);
             _database = _client.GetDatabase("payment");

@@ -14,6 +14,11 @@ builder.Services.AddDbContext<OfferContext>();
 
 builder.Services.AddMassTransit(cfg =>
 {
+    cfg.AddConsumer<CreatedOfferConsumer>();
+    cfg.AddConsumer<PaidOfferConsumer>();
+    cfg.AddConsumer<RemoveOfferConsumer>();
+    cfg.AddConsumer<ReservedOfferConsumer>();
+    cfg.AddConsumer<ReserveOfferConsumer>();
     cfg.AddDelayedMessageScheduler();
     cfg.UsingRabbitMq((context, rabbitCfg) =>
     {

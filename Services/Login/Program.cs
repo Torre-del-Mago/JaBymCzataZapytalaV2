@@ -1,4 +1,5 @@
 using Login.Consumer;
+using Login.Service.LoginService;
 using MassTransit;
 using Models.Login;
 
@@ -8,6 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddScoped<ILoginService, LoginService>();
 
 builder.Services.AddMassTransit(cfg =>
 {
