@@ -25,7 +25,7 @@ namespace Gate.Controllers
                 cts.CancelAfter(TimeSpan.FromSeconds(10));
                 var cancellationToken = cts.Token;
                 var clientResponse = await _requestClient.GetResponse<ReserveOfferEventReply>(
-                    new ReserveOfferEvent() { Offer = request.Offer, Registration = request.Registration }, cancellationToken);
+                    new ReserveOfferEvent() { Offer = request.Offer }, cancellationToken);
                 var response = new ReserveOfferResponse();
                 if (clientResponse.Message.Answer == ReserveOfferEventReply.State.RESERVED)
                 {
