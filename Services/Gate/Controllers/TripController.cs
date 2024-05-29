@@ -6,6 +6,7 @@ using Models.Gate.Offer.Response;
 using Models.Gate.Trip.Request;
 using Models.Gate.Trip.Response;
 using Models.Hotel.DTO;
+using Models.Hotel;
 using Models.Offer;
 using Models.Transport.DTO;
 using Models.Trip;
@@ -115,11 +116,20 @@ namespace Gate.Controllers
         {
             try
             {
-                var clientResponse = await _tripRequestClient.GetResponse<GenerateTripEventReply>(
+                var clientResponse = await _tripRequestClient.GetResponse<GenerateTripEventReply, TripNotFoundEvent>(
                     new GenerateTripEvent() { Criteria = request.Criteria });
-                var response = new GenerateTripResponse();
-                response.TripDTO = clientResponse.Message.TripDTO;
-                return Ok(response);
+                
+                if (clientResponse.Is(out Response<TripNotFoundEvent> responseA))
+                {
+                    return BadRequest();
+                }
+                else if (clientResponse.Is(out Response<GenerateTripEventReply> responseB))
+                {
+                    var response = new GenerateTripResponse();
+                    response.TripDTO = responseB.Message.TripDTO;
+                    return Ok(response);
+                }
+                return NotFound();
             }
             catch (Exception ex)
             {
@@ -132,11 +142,19 @@ namespace Gate.Controllers
         {
             try
             {
-                var clientResponse = await _tripRequestClient.GetResponse<GenerateTripsEventReply>(
+                var clientResponse = await _tripListRequestClient.GetResponse<GenerateTripsEventReply, TripsNotFoundEvent>(
                     new GenerateTripsEvent() { Criteria = request.Criteria });
-                var response = new GenerateTripsResponse();
-                response.Trips = clientResponse.Message.Trips;
-                return Ok(response);
+                if (clientResponse.Is(out Response<TripsNotFoundEvent> responseA))
+                {
+                    return BadRequest();
+                }
+                else if (clientResponse.Is(out Response<GenerateTripsEventReply> responseB))
+                {
+                    var response = new GenerateTripsResponse();
+                    response.Trips = responseB.Message.Trips;
+                    return Ok(response);
+                }
+                return NotFound();
             }
             catch (Exception ex)
             {

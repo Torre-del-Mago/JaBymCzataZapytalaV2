@@ -6,7 +6,6 @@ namespace HotelQuery.Database.Entity;
 public class HotelRoomType
 {
     [BsonId]
-    [BsonRepresentation(BsonType.ObjectId)]
     public int Id { get; set; }
     
     [BsonElement("count")]

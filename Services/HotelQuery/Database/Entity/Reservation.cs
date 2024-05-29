@@ -5,7 +5,7 @@ namespace HotelQuery.Database.Entity;
 
 public class Reservation
 {
-    [Key]
+    [BsonId]
     public int Id { get; set; }
     
     [BsonElement("hotelId")]

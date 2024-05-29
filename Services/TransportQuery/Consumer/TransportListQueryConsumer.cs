@@ -17,11 +17,19 @@ namespace TransportQuery.Consumer
         {
             Console.WriteLine("Transport Gets Event");
             var @event = context.Message;
-            var result = _service.GetTransportsForCriteria(context.Message.Criteria);
-            await context.Publish(new GetTransportDataForTripsEventReply() {
-                Id = @event.Id,
-                CorrelationId = @event.CorrelationId,
-                Transports = result});
+            try
+            {
+                var result = _service.GetTransportsForCriteria(context.Message.Criteria);
+                await context.RespondAsync(new GetTransportDataForTripsEventReply()
+                {
+                    CorrelationId = @event.CorrelationId,
+                    Transports = result
+                });
+            }
+            catch (Exception ex)
+            {
+                await context.RespondAsync(new TransportDataForTripsNotFoundEvent { CorrelationId = @event.CorrelationId });
+            }
             Console.WriteLine("Transport Publish Event");
         }
     }

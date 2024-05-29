@@ -15,13 +15,19 @@ namespace HotelQuery.Consumer
         }
         public async Task Consume(ConsumeContext<GetHotelDataForTripsEvent> context)
         {
-            Console.WriteLine("Hotel Gets Event");
+            Console.WriteLine("Hotel Gets Event 2");
             var @event = context.Message;
             var result = _service.GetHotelsForCriteria(context.Message.Criteria);
-            await context.Publish(new GetHotelDataForTripsEventReply() {
-                Id = @event.Id,
-                CorrelationId = @event.CorrelationId,
-                Hotels = result});
+            if (result == null || result.Hotels.Count() == 0) {
+                await context.RespondAsync(new HotelDataForTripsNotFoundEvent { CorrelationId = @event.CorrelationId });
+            }
+            else {
+                await context.RespondAsync(new GetHotelDataForTripsEventReply()
+                {
+                    CorrelationId = @event.CorrelationId,
+                    Hotels = result
+                });
+            }
             Console.WriteLine("Hotel Publish Event");
         }
     }
