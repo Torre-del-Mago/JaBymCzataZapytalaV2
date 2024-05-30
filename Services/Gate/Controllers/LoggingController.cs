@@ -39,5 +39,28 @@ namespace Gate.Controllers
                 return NotFound();
             }
         }
+
+        [HttpGet("test-check")]
+        public async Task<IActionResult> testCheckLogin([FromQuery] String login)
+        {
+            try
+            {
+                bool isLoggedIn = login == "zbysio" ||
+                     login == "kasia" ||
+                     login == "henio";
+                if (isLoggedIn)
+                {
+                    return Ok();
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
+            catch (Exception ex)
+            {
+                return NotFound();
+            }
+        }
     }
 }

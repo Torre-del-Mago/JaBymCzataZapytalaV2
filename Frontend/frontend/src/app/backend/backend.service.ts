@@ -23,13 +23,14 @@ export class BackendService {
   //Nie wiem czy tu jest http czy https więc zmieńcie jak coś
   //Nie wiem jaki port czy też jak nazwiecie bramę w dockerze
   private gateUrl = 'http://localhost:55278/api';
-  private loginCheckUrl = '/login/check';
+  private loginCheckUrl = '/logging/test-check';
   private testPaymentUrl = '/payment/test-check';
   private testReserveUrl = '/offer/test-reserve';
   private tripControllerUrl = '/trip';
   private tripListUrl = '/trip-list-info';
   private tripUrl = '/trip-info';
   private tripsTestUrl = '/test-get';
+  private tripSingleTestUrl = '/test-single-get';
   private loggedInUser: string = '';
 
   private currentTrip?: TripDTO;
@@ -52,7 +53,8 @@ export class BackendService {
     );
   }
 
-  public checkLogin(userName: string): Observable {
+  public checkLogin(userName: string): Observable<Object> {
+    console.log(userName)
     return this.client.get(
       this.gateUrl + this.loginCheckUrl + '?login=' + userName
     );
@@ -121,12 +123,16 @@ export class BackendService {
     startDate: string,
     endDate: string,
     numberOfAdults: number,
-    numberOfChildren: number
+    numberOfChildren: number,
+    isTripSingle: boolean = false
   ): TripDTO[] {
+    console.log(trips)
     let result: TripDTO[] = [];
     for (const hotel of trips) {
+      console.log(hotel)
+      console.log(hotel.rooms)
       const roomCombinations = this.calculateRoomCombinations(
-        hotel.rooms,
+        !isTripSingle ? hotel.rooms: hotel.rooms,
         numberOfAdults + numberOfChildren,
         true
       );
@@ -181,7 +187,7 @@ export class BackendService {
     return this.client.get<TripDTO>(
       this.gateUrl +
         this.tripControllerUrl +
-        this.tripsTestUrl +
+        this.tripSingleTestUrl +
         '?destination=' +
         destination +
         '&departure=' +
