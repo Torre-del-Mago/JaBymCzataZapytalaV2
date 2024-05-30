@@ -16,8 +16,7 @@ namespace TransportQuery.Consumer
 
         public Task Consume(ConsumeContext<ReserveTransportSyncEvent> context)
         {
-            _service.ReserveTransport(context.Message.Reservation);
-            return Task.CompletedTask;
+            return _service.ReserveTransport(context.Message.Reservation, context.Message.ArrivalTicketId, context.Message.ReturnTicketId);
         }
     }
 }

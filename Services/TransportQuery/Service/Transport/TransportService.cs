@@ -1,5 +1,6 @@
 ﻿using Models.Transport.DTO;
 using TransportQuery.Model;
+using TransportQuery.Repository.Ticket;
 using TransportQuery.Repository.Transport;
 
 namespace TransportQuery.Service.Transport
@@ -7,8 +8,11 @@ namespace TransportQuery.Service.Transport
     public class TransportService : ITransportService
     {
         private readonly ITransportRepository _transportRepository;
-        public TransportService(ITransportRepository repository) {
-            _transportRepository = repository;
+
+        private readonly IReservedTicketRepository _reservedTicketRepository;
+        public TransportService(ITransportRepository transportRepository, IReservedTicketRepository reservedTicketRepository) {
+            _transportRepository = transportRepository;
+            _reservedTicketRepository = reservedTicketRepository;
         }
         
         public TransportDTO GetTransportForCriteria(CriteriaForTransport criteria)
@@ -181,14 +185,15 @@ namespace TransportQuery.Service.Transport
             return transportConnections;
         }
 
-        public Task<bool> ReserveTransport(TransportReservationDTO dto)
+        public Task<bool> ReserveTransport(TransportReservationDTO dto, int ArrivalTicketId, int ReturnTicketId)
         {
-            return Task.FromResult(false);
+            return _reservedTicketRepository.ReserveTicketsAsync(dto.ArrivalTransportId, dto.ReturnTransportId, dto.NumberOfPeople,
+                dto.OfferId, ArrivalTicketId, ReturnTicketId);
         }
 
         public Task CancelTransport(int offerId)
         {
-            return Task.CompletedTask;
+            return _reservedTicketRepository.CancelTickets(offerId);
         }
     }
 }
