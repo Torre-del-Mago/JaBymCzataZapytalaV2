@@ -17,7 +17,7 @@ namespace Gate.Controllers
         }
 
         [HttpPost("reserve")]
-        public async Task<IActionResult> Reserve([FromQuery] ReserveOfferRequest request)
+        public async Task<IActionResult> Reserve([FromBody] ReserveOfferRequest request)
         {
             try
             {
@@ -38,6 +38,46 @@ namespace Gate.Controllers
                 response.OfferId = clientResponse.Message.OfferId;
                 response.Error = clientResponse.Message.Error;
                 response.Registration = clientResponse.Message.Registration;
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return NotFound();
+            }
+        }
+
+        [HttpPost("test-reserve")]
+        public async Task<IActionResult> TestReserve([FromBody] ReserveOfferRequest request)
+        {
+            try
+            {
+                Console.WriteLine(request.ToString());
+                Console.WriteLine(request.Offer.HotelId);
+                foreach(var room in request.Offer.Rooms)
+                {
+                    Console.WriteLine(room.Count);
+                    Console.WriteLine(room.NumberOfPeopleForTheRoom);
+                    Console.WriteLine(room.TypeOfRoom);
+                }
+                Console.WriteLine(request.Offer.BeginDate);
+                Console.WriteLine(request.Offer.EndDate);
+                Console.WriteLine(request.Offer.Flight.ReturnTransportId);
+                Console.WriteLine(request.Offer.Flight.DepartureTransportId);
+                Random rnd = new Random();
+                bool hasPaymentNotCompleted = rnd.Next(1, 11) == 1;
+                var response = new ReserveOfferResponse();
+                if (!hasPaymentNotCompleted)
+                {
+                    response.Answer = ReserveOfferResponse.State.RESERVED;
+                    response.Error = "";
+                }
+                else
+                {
+                    response.Answer = ReserveOfferResponse.State.NOT_RESERVED;
+                    response.Error = "Poludniowa Samba";
+                }
+                response.OfferId = 1;
+                response.Registration = 0;
                 return Ok(response);
             }
             catch (Exception ex)

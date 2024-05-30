@@ -23,7 +23,10 @@
     <div>
     Czas do zapłacenia {{this.display}}
     </div>
-    <button>Zapłać</button>
+    <button (click)="tryPaying()">Zapłać</button>
+    <div *ngIf="this.result$ | async">
+        {{this.result$ | async}}
+    </div>
 </div>
 <div [hidden]="canPay">
     Skończył się czas rezerwacji. Przekierowujemy do ekranu głównego

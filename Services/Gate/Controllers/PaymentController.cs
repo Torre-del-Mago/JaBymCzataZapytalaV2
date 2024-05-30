@@ -46,5 +46,30 @@ namespace Gate.Controllers
                 return NotFound();
             }
         }
+
+        [HttpPost("test-check")]
+        public async Task<IActionResult> TestCheckPayment([FromQuery] int OfferId, [FromQuery] int Amount)
+        {
+            try
+            {
+                Random rnd = new Random();
+                bool hasPaymentNotCompleted = rnd.Next(1, 11) == 1;
+                var response = new PayResponse();
+                response.OfferId = OfferId;
+                if (!hasPaymentNotCompleted)
+                {
+                    response.Answer = PayResponse.State.PAID;
+                }
+                if (hasPaymentNotCompleted)
+                {
+                    response.Answer = PayResponse.State.REJECTED;
+                }
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return NotFound();
+            }
+        }
     }
 }
