@@ -1,6 +1,7 @@
 using MassTransit;
 using OfferCommand.Consumer;
 using OfferCommand.Database;
+using OfferCommand.Repository.EventRepository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,13 +12,12 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<OfferContext>();
+builder.Services.AddScoped<IEventRepository, EventRepository>();
 
 builder.Services.AddMassTransit(cfg =>
 {
-    cfg.AddConsumer<CreatedOfferConsumer>();
     cfg.AddConsumer<PaidOfferConsumer>();
     cfg.AddConsumer<RemoveOfferConsumer>();
-    cfg.AddConsumer<ReservedOfferConsumer>();
     cfg.AddConsumer<ReserveOfferConsumer>();
     cfg.AddDelayedMessageScheduler();
     cfg.UsingRabbitMq((context, rabbitCfg) =>

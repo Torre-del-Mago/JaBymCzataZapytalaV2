@@ -27,10 +27,6 @@ namespace OfferCommand.Repository.EventRepository
         {
             insertEvent(offerId, EventTypes.Paid);
         }
-        public void insertNotPaidInTimeEvent(int offerId)
-        {
-            insertEvent(offerId, EventTypes.NotPaidInTime);
-        }
 
         public void insertRemovedEvent(int offerId)
         {

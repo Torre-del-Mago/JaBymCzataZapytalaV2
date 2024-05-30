@@ -27,7 +27,7 @@ namespace TransportCommand.Consumer
                 CorrelationId = context.Message.CorrelationId
             });
 
-            await context.RespondAsync(new ReserveTransportSyncEvent()
+            await context.Publish(new ReserveTransportSyncEvent()
             {
                 Reservation = context.Message.Reservation
             });
