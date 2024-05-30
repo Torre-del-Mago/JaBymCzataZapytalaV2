@@ -6,7 +6,7 @@ namespace TransportQuery.Service.Transport
     {
         TransportsDTO GetTransportsForCriteria(CriteriaForTransports criteria);
         TransportDTO GetTransportForCriteria(CriteriaForTransport criteria);
-        Task<bool> ReserveTransport(TransportReservationDTO dto);
+        Task<bool> ReserveTransport(TransportReservationDTO dto, int ArrivalTicketId, int ReturnTicketId);
         Task CancelTransport(int offerId);
     }
 }

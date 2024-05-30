@@ -42,6 +42,15 @@ namespace TransportQuery.Repository.Ticket
             return await ticketStatus.Find(filter).AnyAsync();
         }
 
+        public async Task<bool> FindTicketStatusAsync(int OfferId)
+        {
+            var ticketStatus = Database.GetCollection<ReservedTicketStatus>("reserved_ticket_statuses");
+            var filter = Builders<ReservedTicketStatus>.Filter.And(
+                Builders<ReservedTicketStatus>.Filter.Eq(t => t.OfferId, OfferId)
+            );
+            return await ticketStatus.Find(filter).AnyAsync();
+        }
+
         public async Task<bool> ReserveTicketsAsync(int ArrivalTransportId, int ReturnTransportId, int NumberOfPeople, int OfferId,
             int ArrivalTicketId, int ReturnTicketId)
         {
@@ -52,14 +61,14 @@ namespace TransportQuery.Repository.Ticket
                 {
                     if (FindIfTicketsAreCanceledAsync(OfferId).Result)
                     {
-                        throw new Exception();
+                        throw new Exception("Tickets are canceled.");
                     }
 
                     var transports = Database.GetCollection<Database.Entity.Transport>("transports").AsQueryable();
                     var arrivalTransport = transports.First(t => t.Id == ArrivalTransportId);
                     if (arrivalTransport.NumberOfSeats - TransportRepository.GetNumberOfTakenSeatsForTransport(ArrivalTransportId) < NumberOfPeople)
                     {
-                        throw new Exception("Tickets are canceled.");
+                        throw new Exception("Not enough seats available on arrival transport.");
                     }
 
                     var returnTransport = transports.First(t => t.Id == ReturnTransportId);
@@ -104,12 +113,50 @@ namespace TransportQuery.Repository.Ticket
                     return false;
                 }
             }
-            
+
         }
 
-        public void CancelTickets(int OfferId)
+        public async Task CancelTickets(int OfferId)
         {
+            using (var session = await Client.StartSessionAsync())
+            {
+                session.StartTransaction();
+                try
+                {
+                    var newStatus = new ReservedTicketStatus()
+                    {
+                        Id = OfferId,
+                        OfferId = OfferId,
+                        TicketStatus = "CANCELED",
+                    };
+                    if (FindTicketStatusAsync(OfferId).Result)
+                    {
+                        var tickets = Database.GetCollection<ReservedTicket>("reserved_tickets");
+                        var ticketStatus = Database.GetCollection<ReservedTicketStatus>("reserved_ticket_statuses");
+                        var filterStatus = Builders<ReservedTicketStatus>.Filter.And(
+                            Builders<ReservedTicketStatus>.Filter.Eq(t => t.OfferId, OfferId)
+                        );
+                        await ticketStatus.FindOneAndReplaceAsync(session, filterStatus, newStatus);
+                        var filterTickets = Builders<ReservedTicket>.Filter.And(
+                            Builders<ReservedTicket>.Filter.Eq(t => t.OfferId, OfferId)
+                        );
 
+                        await tickets.DeleteManyAsync(session, filterTickets);
+                    }
+                    else
+                    {
+                        await AddNewTicketStatusAsync(session,newStatus);
+                    }
+
+                    await session.CommitTransactionAsync();
+
+                }
+                catch (Exception e)
+                {
+                    await session.AbortTransactionAsync();
+
+                }
+            }
         }
     }
 }
