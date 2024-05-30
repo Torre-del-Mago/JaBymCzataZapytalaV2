@@ -74,7 +74,7 @@ namespace Gate.Controllers
                 Random rnd = new Random();
                 bool hasPaymentNotCompleted = rnd.Next(1, 11) == 1;
                 var response = new ReserveOfferResponse();
-                if (!hasPaymentNotCompleted)
+                if (hasPaymentNotCompleted)
                 {
                     response.Answer = ReserveOfferResponse.State.RESERVED;
                     response.Error = "";

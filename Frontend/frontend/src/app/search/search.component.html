@@ -27,7 +27,7 @@
     Not all fields of form have been filled
   </div>
 </div>
-<div *ngIf="(result$ | async) as list">
+<div [hidden]="noMatchesFound">
   <div>Wyniki wyszukiwania</div>
   <div *ngFor="let trip of result$ | async">
     <span>
@@ -38,5 +38,8 @@
     </span>
     <button (click)="detail(trip)">Wybierz</button>
   </div>
+</div>
+<div [hidden]="!noMatchesFound">
+  Nie znaleziono wyników dla podanych parametrów
 </div>
 

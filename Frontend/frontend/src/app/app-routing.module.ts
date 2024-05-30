@@ -9,7 +9,8 @@ const routes: Routes = [
   {path: '', component: SearchComponent},
   {path: 'login', component: LoginComponent},
   {path: 'detail', component: DetailComponent},
-  {path: 'reserve', component: ReserveComponent}
+  {path: 'reserve', component: ReserveComponent},
+  {path: '**', redirectTo: ''}
 ];
 
 @NgModule({

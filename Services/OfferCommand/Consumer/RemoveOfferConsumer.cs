@@ -22,6 +22,7 @@ namespace OfferCommand.Consumer
         }
         public async Task Consume(ConsumeContext<RemoveOfferEvent> context)
         {
+            Console.Out.WriteLine($"Started removing offer with id {context.Message.OfferId}");
             var offer = _offerRepository.UpdateStatus(context.Message.OfferId, EventTypes.Removed);
             if(offer == null)
             {

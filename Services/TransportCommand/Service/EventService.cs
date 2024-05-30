@@ -54,10 +54,14 @@ namespace TransportCommand.Service
 
             var arrivalTicketsSum = arrivalTickets.Where(t => activeArrivalTickets.Contains(t.Id)).Select(t => t.NumberOfReservedSeats).Sum();
 
+            Console.Out.WriteLine($"Sum for arrival tickets for offer with id {dto.OfferId} is {arrivalTicketsSum}");
+
             var returnTickets = await returnTicketsTask;
             var activeReturnTickets = await activeArrivalTicketsTask;
 
             var returnTicketsSum = returnTickets.Where(t => activeReturnTickets.Contains(t.Id)).Select(t => t.NumberOfReservedSeats).Sum();
+
+            Console.Out.WriteLine($"Sum for arrival tickets for offer with id {dto.OfferId} is {returnTicketsSum}");
 
             var arrivalTransport = await arrivalTransportTask;
             var returnTransport = await returnTransportTask;
@@ -66,6 +70,8 @@ namespace TransportCommand.Service
             var canBoardReturnTransport = returnTicketsSum + dto.NumberOfPeople <= returnTransport.NumberOfSeats;
 
             var canReserveTransport = canBoardArrivalTransport && canBoardReturnTransport;
+
+            Console.Out.WriteLine($"Reservation for offer id {dto.OfferId} arrival: {canBoardArrivalTransport} return: {canBoardReturnTransport}");
 
             if(!canReserveTransport)
             {
