@@ -11,7 +11,7 @@ namespace Trip.Consumer
     public class TripListInfoConsumer : IConsumer<GenerateTripsEvent>
     {
         private IRequestClient<GetHotelDataForTripsEvent> _hotelClient { get; set; }
-        IRequestClient<GetTransportDataForTripsEvent> _transportClient { get; set; }
+        private IRequestClient<GetTransportDataForTripsEvent> _transportClient { get; set; }
 
         public TripListInfoConsumer(IRequestClient<GetHotelDataForTripsEvent> hotelClient,
             IRequestClient<GetTransportDataForTripsEvent> transportClient)
@@ -89,7 +89,7 @@ namespace Trip.Consumer
 
             List<TransportDTO> transportsDto = new List<TransportDTO>();
 
-            var transportResponse = await _hotelClient.GetResponse<GetTransportDataForTripsEventReply, TransportDataForTripsNotFoundEvent>(transportRequest);
+            var transportResponse = await _transportClient.GetResponse<GetTransportDataForTripsEventReply, TransportDataForTripsNotFoundEvent>(transportRequest);
 
             if (transportResponse.Is(out Response<TransportDataForTripsNotFoundEvent> responseC))
             {

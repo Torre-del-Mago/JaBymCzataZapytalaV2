@@ -56,7 +56,7 @@ namespace Trip.Consumer
 
             TransportDTO transportDto = new TransportDTO();
 
-            var transportResponse = await _hotelClient.GetResponse<GetTransportDataForTripEventReply, TransportDataForTripNotFoundEvent>(transportRequest);
+            var transportResponse = await _transportClient.GetResponse<GetTransportDataForTripEventReply, TransportDataForTripNotFoundEvent>(transportRequest);
 
             if (transportResponse.Is(out Response<TransportDataForTripNotFoundEvent> responseC))
             {
