@@ -81,6 +81,36 @@ export class BackendService {
         '&endDate=' +
         endDate
     );
+    
+
+    /*
+    /* return this.client.get<TripsDTO>(this.gateUrl + this.tripListUrl + "?body=") */
+  }
+
+  public getInfoForTrip(
+    destination: string,
+    startCity: string,
+    startDate: string,
+    endDate: string,
+    numberOfAdults: number,
+    numberOfChildren: number
+  ): Observable<TripDTO[]> {
+    return this.client.get<TripDTO[]>(
+      this.gateUrl +
+        this.tripControllerUrl +
+        this.tripsTestUrl +
+        '?destination=' +
+        destination +
+        '&departure=' +
+        startCity +
+        '&numberOfPeople=' +
+        (numberOfAdults + numberOfChildren) +
+        '&startDate=' +
+        startDate +
+        '&endDate=' +
+        endDate
+    );
+    
 
     /*
     /* return this.client.get<TripsDTO>(this.gateUrl + this.tripListUrl + "?body=") */
@@ -138,68 +168,33 @@ export class BackendService {
     return result;
   }
 
-  public getInfoForTrip(
+  public getInfoForTripNew(
     destination: string,
     startCity: string,
     startDate: Date,
     endDate: Date,
     numberOfAdults: number,
     numberOfChildren: number,
-    selectedHotel: string | undefined = undefined
-  ): TripDTO | null {
-    var trip: TripDTO | null = null;
-    const hotel = Mocks.trips.find(
-      (t) =>
-        t.country === destination &&
-        t.chosenFlight.departure === startCity &&
-        t.beginDate >= startDate &&
-        t.endDate <= endDate &&
-        t.hotelName === (selectedHotel ?? t.hotelName)
-    );
+    selectedHotelId: number 
+  ): Observable<TripDTO> {
 
-    if (hotel === undefined) {
-      return null;
-    }
-
-    const roomCombinations = this.calculateRoomCombinations(
-      hotel.rooms,
-      numberOfAdults + numberOfChildren,
-      true
+    return this.client.get<TripDTO>(
+      this.gateUrl +
+        this.tripControllerUrl +
+        this.tripsTestUrl +
+        '?destination=' +
+        destination +
+        '&departure=' +
+        startCity +
+        '&numberOfPeople=' +
+        (numberOfAdults + numberOfChildren) +
+        '&startDate=' +
+        startDate +
+        '&endDate=' +
+        endDate +
+        "&hotelId=" +
+        selectedHotelId
     );
-    if (roomCombinations.length > 0) {
-      let defaultRooms: RoomDTO[] = Array(
-        numberOfChildren + numberOfAdults
-      ).fill(Mocks.dummyRoom);
-      for (const [index, value] of roomCombinations.entries()) {
-        if (value > 0) {
-          let foundRoom = hotel.rooms.find(
-            (r: RoomDTO) =>
-              r.numberOfPeopleForTheRoom == index + 1 && r.count >= value
-          );
-          if (foundRoom !== undefined) {
-            defaultRooms[index + 1] = foundRoom;
-          }
-        }
-      }
-      let price =
-        hotel.chosenFlight.pricePerSeat * (numberOfAdults + numberOfChildren);
-      let timediff =
-        new Date(hotel.endDate).getTime() - new Date(hotel.beginDate).getTime();
-      let days = Math.round(timediff / (1000 * 3600 * 24));
-      console.log(days);
-      for (const [index, defroom] of defaultRooms.entries()) {
-        if (roomCombinations[index] > 0) {
-          price += defroom.pricePerRoom * days * roomCombinations[index];
-        }
-      }
-      trip = {
-        ...hotel,
-        roomCombination: roomCombinations,
-        chosenRooms: defaultRooms,
-        price: price,
-      } as TripDTO;
-    }
-    return trip;
   }
 
   public reserveOffer(
