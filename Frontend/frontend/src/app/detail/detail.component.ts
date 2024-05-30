@@ -5,7 +5,7 @@ import { ReserveOfferResponse } from '../dto/ReserveOfferResponse';
 import { BackendService } from '../backend/backend.service';
 import { ActivatedRoute } from '@angular/router';
 import { FlightDTO } from '../dto/FlightDTO';
-import { Subscription, of, Observable, pipe, map, catchError, tap } from 'rxjs';
+import { Subscription, of, Observable, pipe, map, catchError, tap, firstValueFrom } from 'rxjs';
 import { Router } from '@angular/router';
 
 @Component({
@@ -46,7 +46,6 @@ export class DetailComponent implements OnInit {
   ) {}
 
   displayPrice() {}
-
   getFormattedDate(date: Date) {
     return date.toISOString().slice(0, 10);
   }
@@ -67,7 +66,7 @@ export class DetailComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.refreshTrip();
+    this.getTrip();
     this.pricePerPerson = Math.random() * 500 + 500;
     this.numberOfAdults = this.service.getNumbers()[0];
     this.numberOfChildren = this.service.getNumbers()[1];
@@ -92,7 +91,7 @@ export class DetailComponent implements OnInit {
     this.backup[1] = this.numberOfChildren;
   }
 
-  addAdult(): void {
+  async addAdult(): Promise<void> {
     this.createBackup();
     this.numberOfAdults++;
     this.numberOfPeople++;
@@ -100,12 +99,10 @@ export class DetailComponent implements OnInit {
       this.canIncreasePeople = true;
     }
     this.canDecreaseAdults = false;
-    this.refreshTrip();
-    this.pricePerPerson -= Math.random() * 40 + 40;
-    this.displayPrice();
+    await this.startChange()
   }
 
-  minusAdult(): void {
+  async minusAdult(): Promise<void> {
     this.createBackup();
     this.numberOfAdults--;
     this.numberOfPeople--;
@@ -113,12 +110,10 @@ export class DetailComponent implements OnInit {
       this.canDecreaseAdults = true;
     }
     this.canIncreasePeople = false;
-    this.refreshTrip();
-    this.pricePerPerson += Math.random() * 40 + 40;
-    this.displayPrice();
+    await this.startChange()
   }
 
-  addChild(): void {
+  async addChild(): Promise<void> {
     this.createBackup();
     this.numberOfChildren++;
     this.numberOfPeople++;
@@ -126,12 +121,10 @@ export class DetailComponent implements OnInit {
       this.canIncreasePeople = true;
     }
     this.canDecreaseChildren = false;
-    this.refreshTrip();
-    this.pricePerPerson -= Math.random() * 20 + 20;
-    this.displayPrice();
+    await this.startChange()
   }
 
-  minusChild(): void {
+  async minusChild(): Promise<void> {
     this.createBackup()
     this.numberOfChildren--;
     this.numberOfPeople--;
@@ -139,9 +132,7 @@ export class DetailComponent implements OnInit {
       this.canDecreaseChildren = true;
     }
     this.canIncreasePeople = false;
-    this.refreshTrip();
-    this.pricePerPerson += Math.random() * 20 + 20;
-    this.displayPrice();
+    await this.startChange()
   }
 
   getRoomsFor(numberOfPeople: number, numberOfRooms: number): RoomDTO[] {
@@ -197,6 +188,19 @@ export class DetailComponent implements OnInit {
     );
   }
 
+  async startChange(): Promise<void> {
+    await this.refreshTrip().then((value: TripDTO) => {
+      console.log(value)
+      let tripsForChangedCriteria = this.service.changeTrips([value], this.beginDate, this.endDate, this.numberOfAdults, this.numberOfChildren);
+      this.trip = tripsForChangedCriteria[0];
+      this.service.setCurrentTrip(this.trip!);
+      this.setTrips();
+      }).catch((error: any) => {
+        console.log(error);
+        this.configurationAvailable = false;
+      });;
+  }
+
   async reserve(): Promise<void> {
     this.trip!.chosenMeal = this.mealType;
     this.reserveError$ = this.service.reserveOffer(
@@ -216,33 +220,42 @@ export class DetailComponent implements OnInit {
     await this.router.navigateByUrl('reserve');
   }
 
-  private refreshTrip(): void {
-    if (this.trip) {
-      const tripsForChangedCriteria = this.service.getInfoForTrip(
-        this.country ?? '',
-        this.trip.chosenFlight.departure,
-        new Date(this.beginDate),
-        new Date(this.endDate),
-        this.numberOfAdults,
-        this.numberOfChildren,
-        this.hotelName
-      );
-      if(tripsForChangedCriteria == null) {
-        this.configurationAvailable = false;
-        return;
-      }
-      this.trip = tripsForChangedCriteria;
-      this.service.setCurrentTrip(this.trip!);
-    } else {
-      this.trip = this.service.getCurrentTrip();
-    }
-    this.country = this.trip?.country;
-    this.hotelName = this.trip?.hotelName;
-    this.destinationName = this.trip?.city;
-    this.mealTypes = this.trip?.typesOfMeals || [];
-    this.flights = this.trip?.possibleFlights || [];
-    this.mealType = this.trip?.typesOfMeals[0];
-    this.trip!.chosenFlight = this.trip?.possibleFlights.find((f: FlightDTO) => f.departure == this.trip?.chosenFlight.departure) || this.trip!.chosenFlight
-    console.log(this.trip?.chosenFlight)
+  private async refreshTrip(): Promise<TripDTO> {
+    const value = await firstValueFrom(this.service.getInfoForTripNew(this.trip!.country, this.trip!.chosenFlight.departure, this.trip!.beginDate, this.trip!.endDate,
+      this.numberOfAdults, this.numberOfChildren, this.trip!.hotelId)
+    )
+    console.log(value)
+    return value
   }
+
+  private getTrip(): void {
+    this.trip = this.service.getCurrentTrip();
+    this.setTrips();
+  }
+
+  setTrips() {
+
+      this.country = this.trip?.country;
+
+      this.hotelName = this.trip?.hotelName;
+
+      this.destinationName = this.trip?.city;
+
+      this.mealTypes = this.trip?.typesOfMeals || [];
+
+      this.flights = this.trip?.possibleFlights || [];
+
+      this.mealType = this.trip?.typesOfMeals[0];
+
+      console.log(this.trip!.chosenFlight)
+      console.log(this.trip!.possibleFlights)
+      let flight = this.trip!.possibleFlights.find((f: FlightDTO) => f.departure == this.trip!.chosenFlight.departure)
+      if(flight !== undefined) {
+        this.trip!.chosenFlight = flight
+        console.log("Found in possible flights")
+      }
+      console.log(this.trip!.chosenFlight);
+      this.displayPrice();
+  }
+  
 }

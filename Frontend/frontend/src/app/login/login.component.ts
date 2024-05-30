@@ -18,7 +18,7 @@ export class LoginComponent {
   constructor(private service: BackendService, private router: Router) {
   }
 
-  async checkLogin(): void {
+  async checkLogin(): Promise<void> {
     this.service.checkLogin(this.username).subscribe(
       {
         next: (x: any) => {this.service.setUser(this.username);
