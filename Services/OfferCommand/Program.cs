@@ -1,11 +1,19 @@
 using MassTransit;
+using Microsoft.EntityFrameworkCore;
 using OfferCommand.Consumer;
 using OfferCommand.Database;
 using OfferCommand.Repository.EventRepository;
 using OfferCommand.Repository.OfferRepository;
 
 var builder = WebApplication.CreateBuilder(args);
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
+builder.Services.AddDbContext<OfferContext>(
+    DbContextOptions => DbContextOptions.UseNpgsql(connectionString)
+        .LogTo(Console.Write, LogLevel.Information)
+        .EnableSensitiveDataLogging()
+        .EnableDetailedErrors()
+);
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -35,7 +43,12 @@ builder.Services.AddMassTransit(cfg =>
 });
 
 var app = builder.Build();
-
+using (var contScope = app.Services.CreateScope())
+using (var context = contScope.ServiceProvider.GetRequiredService<OfferContext>())
+{
+    context.Database.EnsureCreated();
+    context.SaveChanges();
+}
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

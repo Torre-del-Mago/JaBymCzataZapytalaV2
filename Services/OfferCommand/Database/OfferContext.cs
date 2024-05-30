@@ -12,13 +12,14 @@ public class OfferContext : DbContext
 
     public DbSet<OfferRoom> Rooms { get; set; }
 
-    private readonly IConfiguration configuration;
-    public OfferContext(IConfiguration configuration)
+    public OfferContext(DbContextOptions<OfferContext> options) : base(options) {}
+    
+    public OfferContext() : base() {}
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        this.configuration = configuration;
+        modelBuilder.Entity<Offer>().ToTable("Offer");
+        modelBuilder.Entity<OfferEvent>().ToTable("OfferEvent");
+        modelBuilder.Entity<OfferRoom>().ToTable("OfferRoom");
     }
-
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    => optionsBuilder.UseNpgsql(configuration.GetConnectionString("DbPath"));
-
 }
