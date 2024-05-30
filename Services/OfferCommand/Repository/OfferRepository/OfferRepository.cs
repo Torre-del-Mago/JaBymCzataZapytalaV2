@@ -1,6 +1,6 @@
 ﻿using Models.Offer.DTO;
 using OfferCommand.Database;
-using OfferQuery.Database.Entity;
+using OfferCommand.Database.Tables;
 
 namespace OfferCommand.Repository.OfferRepository
 {
@@ -10,7 +10,7 @@ namespace OfferCommand.Repository.OfferRepository
         public OfferRepository(OfferContext context) {
             _context = context;
         }
-        public Offer insertOffer(OfferDTO dto)
+        public Offer InsertOffer(OfferDTO dto)
         {
             Offer offer = new Offer()
             {

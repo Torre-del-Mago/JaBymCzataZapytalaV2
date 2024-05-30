@@ -23,7 +23,7 @@ namespace OfferCommand.Consumer
         public async Task Consume(ConsumeContext<RemoveOfferEvent> context)
         {
             _offerRepository.UpdateStatus(context.Message.OfferId, EventTypes.Removed);
-            _eventRepository.insertRemovedEvent(context.Message.OfferId);
+            _eventRepository.InsertRemovedEvent(context.Message.OfferId);
             await _publishEndpoint.Publish(new RemoveOfferSyncEvent()
             {
                 OfferId = context.Message.OfferId

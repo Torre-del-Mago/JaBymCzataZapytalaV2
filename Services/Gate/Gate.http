@@ -1,6 +1,0 @@
-@Gate_HostAddress = http://localhost:5208
-
-GET {{Gate_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
