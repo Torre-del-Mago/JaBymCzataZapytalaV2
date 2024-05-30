@@ -1,5 +1,6 @@
 using MassTransit;
 using TransportQuery.Consumer;
+using TransportQuery.Repository.Ticket;
 using TransportQuery.Repository.Transport;
 using TransportQuery.Service.Transport;
 
@@ -16,6 +17,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<ITransportService, TransportService>();
 builder.Services.AddScoped<ITransportRepository, TransportRepository>();
+builder.Services.AddScoped<IReservedTicketRepository, ReservedTicketRepository>();
 
 builder.Services.AddMassTransit(cfg =>
 {

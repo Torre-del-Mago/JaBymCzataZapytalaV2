@@ -1,5 +1,6 @@
 using MassTransit;
 using OfferQuery.Consumer;
+using OfferQuery.Repository;
 using OfferQuery.Service;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +12,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IOfferService, OfferService>();
+builder.Services.AddScoped<IOfferRepository, OfferRepository>();
 
 builder.Services.AddMassTransit(cfg =>
 {
