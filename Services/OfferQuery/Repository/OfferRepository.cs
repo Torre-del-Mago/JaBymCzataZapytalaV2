@@ -4,7 +4,7 @@ using OfferQuery.Database.Entity;
 
 namespace OfferQuery.Repository
 {
-    public class OfferRepository
+    public class OfferRepository : IOfferRepository
     {
         const string ConnectionString = "mongodb://root:example@mongo:27017/";
         private MongoClient Client { get; set; }

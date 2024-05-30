@@ -76,7 +76,14 @@ void initDB()
         context.Database.EnsureCreated();
         if (!context.Diets.Any())
         {
-            string[] names = ["wegetarianska", "azjatycka", "srodziemnomorska", "klasyczna", "keto", "weganska"];
+            string[] names = {
+                "wegetarianska",
+                "azjatycka",
+                "srodziemnomorska",
+                "klasyczna",
+                "keto",
+                "weganska"
+            };
             foreach (var name in names)
             {
                 context.Diets.Add(new Diet { HotelDiets = new List<HotelDiet>(), Name=name});
@@ -85,8 +92,8 @@ void initDB()
         }
         if (!context.RoomTypes.Any())
         {
-            string[] names = ["Pokój typu business", "Pokój dla niepal¹cych", "Pokój typu loft", "Pokój typu studio", "Pokój typu suite", "Pokój typu deluxe",
-            "Pokój typu superior", "Pokój z tarasem", "Pokój z balkonem", "Pokój typu penthouse"];
+            string[] names = {"Pokï¿½j typu business", "Pokï¿½j dla niepalï¿½cych", "Pokï¿½j typu loft", "Pokï¿½j typu studio", "Pokï¿½j typu suite", "Pokï¿½j typu deluxe",
+            "Pokï¿½j typu superior", "Pokï¿½j z tarasem", "Pokï¿½j z balkonem", "Pokï¿½j typu penthouse"};
             for (int i = 1; i < 6; i++)
             {
                 foreach (var name in names)
