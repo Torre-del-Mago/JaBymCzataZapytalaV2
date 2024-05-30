@@ -97,4 +97,14 @@ public class HotelService : IHotelService
             }).ToList()
         };
     }
+
+    public Task<bool> ReserveHotel(HotelReservationDTO dto)
+    {
+        return Task.FromResult(false);
+    }
+
+    public Task CancelHotel(int offerId)
+    {
+        return Task.CompletedTask;
+    }
 }
