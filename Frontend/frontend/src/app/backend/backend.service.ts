@@ -3,11 +3,13 @@ import { HttpClient } from '@angular/common/http';
 import * as Mocks from '../dto/Mocks';
 import { TripDTO } from '../dto/TripDTO';
 import { RoomDTO } from '../dto/RoomDTO';
+import { GenerateTripResponse } from '../dto/GenerateTripResponse';
+import { GenerateTripsResponse } from '../dto/GenerateTripsResponse';
 import { PayResponse } from '../dto/PayResponse';
 import { ReserveOfferResponse } from '../dto/ReserveOfferResponse';
 import { ReserveOfferRequest } from '../dto/ReserveOfferRequest';
 import { OfferDTO } from '../dto/OfferDTO';
-import { Observable } from 'rxjs';
+import { Observable, pipe, map } from 'rxjs';
 
 interface RoomSize {
   Size: number;
@@ -68,7 +70,7 @@ export class BackendService {
     numberOfAdults: number,
     numberOfChildren: number
   ): Observable<TripDTO[]> {
-    return this.client.get<TripDTO[]>(
+    return this.client.get<GenerateTripsResponse>(
       this.gateUrl +
         this.tripControllerUrl +
         this.tripsTestUrl +
@@ -78,11 +80,13 @@ export class BackendService {
         startCity +
         '&numberOfPeople=' +
         (numberOfAdults + numberOfChildren) +
-        '&startDate=' +
+        '&beginDate=' +
         startDate +
         '&endDate=' +
         endDate
-    );
+    ).pipe(map((r: GenerateTripsResponse) => {
+      return r.trips.trips;
+    }));
     
 
     /*
@@ -182,9 +186,9 @@ export class BackendService {
     numberOfAdults: number,
     numberOfChildren: number,
     selectedHotelId: number 
-  ): Observable<TripDTO> {
+  ): Observable<GenerateTripResponse> {
 
-    return this.client.get<TripDTO>(
+    return this.client.get<GenerateTripResponse>(
       this.gateUrl +
         this.tripControllerUrl +
         this.tripSingleTestUrl +
@@ -194,7 +198,7 @@ export class BackendService {
         startCity +
         '&numberOfPeople=' +
         (numberOfAdults + numberOfChildren) +
-        '&startDate=' +
+        '&beginDate=' +
         startDate +
         '&endDate=' +
         endDate +
