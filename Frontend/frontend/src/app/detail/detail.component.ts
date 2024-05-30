@@ -67,6 +67,9 @@ export class DetailComponent implements OnInit {
   }
 
   ngOnInit() {
+    if(this.service.getCurrentTrip() === undefined || this.service.getUser() === '') {
+      this.router.navigateByUrl('');
+    }
     this.getTrip();
     this.pricePerPerson = Math.random() * 500 + 500;
     this.numberOfAdults = this.service.getNumbers()[0];
@@ -203,16 +206,19 @@ export class DetailComponent implements OnInit {
   }
 
   async reserve(): Promise<void> {
+    let offerReserved = 0;
     this.trip!.chosenMeal = this.mealType;
     this.reserveError$ = this.service.reserveOffer(
       this.trip!,
       this.numberOfAdults,
       this.numberOfChildren
     ).pipe(tap((result: ReserveOfferResponse) => {
-      this.service.setOfferInfo(result);
-      this.goToPayment()
+      if(result.answer === offerReserved) {
+        this.service.setOfferInfo(result);
+        this.goToPayment()
+      }
     }), map((result: ReserveOfferResponse) => {
-      return result.answer == 0 ? "Rezerwacja się nie powiodła. Przyczyna: " + result.error : '';
+      return result.answer !== offerReserved ? "Rezerwacja się nie powiodła. Przyczyna: " + result.error : '';
     }),
     catchError((err: any) => {return "Rezerwacja się nie powiodła"}));
   }

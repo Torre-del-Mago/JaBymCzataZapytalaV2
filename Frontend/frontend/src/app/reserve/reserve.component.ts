@@ -26,6 +26,9 @@ export class ReserveComponent {
   }
 
   ngOnInit() {
+    if(this.service.getReservedOffer() === undefined || this.service.getUser() === '') {
+      this.router.navigateByUrl('');
+    }
     this.trip = this.service.getReservedOffer();
     let numbers = this.service.getNumbers();
     this.numberOfAdults = numbers[0];

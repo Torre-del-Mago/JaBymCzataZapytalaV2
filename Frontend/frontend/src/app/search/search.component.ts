@@ -3,7 +3,7 @@ import { BackendService } from '../backend/backend.service';
 import { TripDTO } from '../dto/TripDTO';
 import { Router } from '@angular/router';
 import {AsyncPipe} from '@angular/common'
-import {Subscription, of, Observable, pipe, tap, map} from 'rxjs'; 
+import {Subscription, of, Observable, pipe, tap, map, catchError} from 'rxjs'; 
 
 @Component({
   selector: 'app-search',
@@ -28,6 +28,7 @@ export class SearchComponent {
   canDecreaseChildren?: boolean = true;
   canDecreaseAdults?: boolean = false;
   canIncreasePeople?: boolean = false;
+  noMatchesFound: boolean = false;
 
   subscription: Subscription = new Subscription();
 
@@ -51,9 +52,9 @@ export class SearchComponent {
       this.endDate,
       this.numberOfAdults,
       this.numberOfChildren
-    ).pipe(tap((t: TripDTO[]) => console.log(t)), map((t: TripDTO[]) => {
+    ).pipe(tap((t: TripDTO[]) => {console.log(t); this.noMatchesFound = false}), map((t: TripDTO[]) => {
       return this.service.changeTrips(t, this.startDate, this.endDate, this.numberOfAdults, this.numberOfChildren)
-    }))
+    }), catchError((err:any) => {this.noMatchesFound = true; return of([])}))
 /*
     this.result = this.service.getInfoForTrips(
       this.destination,
