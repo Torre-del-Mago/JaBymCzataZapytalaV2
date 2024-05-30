@@ -1,6 +1,0 @@
-@OfferQuery_HostAddress = http://localhost:5081
-
-GET {{OfferQuery_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###

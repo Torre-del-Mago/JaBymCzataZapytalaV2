@@ -10,9 +10,15 @@ services:
     container_name: 'gate'
     depends_on:
         - rabbitmq 
-        - postgres 
-    # ports:
-    #     - 8010:80 
+        - postgres
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 2
+        window: 140s
+    ports:
+         - 55278:80 
     environment:
         ASPNETCORE_ENVIRONMENT: Development
     networks:
@@ -28,9 +34,15 @@ services:
     container_name: 'hotelcommand'
     depends_on:
         - rabbitmq 
-        - postgres 
-    # ports:
-    #     - 8020:80 
+        - postgres
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 2
+        window: 140s
+    ports:
+         - 8020:80 
     networks:
         - backend
 
@@ -43,9 +55,15 @@ services:
     container_name: 'hotelquery'
     depends_on:
         - rabbitmq 
-        - postgres 
-    # ports:
-    #     - 8030:80 
+        - postgres
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 2
+        window: 140s
+    ports:
+         - 8030:80 
     networks:
         - backend
 
@@ -58,9 +76,15 @@ services:
     container_name: 'login'
     depends_on:
         - rabbitmq 
-        - postgres 
-    # ports:
-    #     - 8040:80 
+        - postgres
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 2
+        window: 140s
+    ports:
+         - 8040:80 
     networks:
         - backend
 
@@ -73,9 +97,15 @@ services:
     container_name: 'offercommand'
     depends_on:
         - rabbitmq 
-        - postgres 
-    # ports:
-    #     - 8050:80 
+        - postgres
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 2
+        window: 140s
+    ports:
+         - 8050:80 
     networks:
         - backend
 
@@ -88,9 +118,15 @@ services:
     container_name: 'offerquery'
     depends_on:
         - rabbitmq 
-        - postgres 
-    # ports:
-    #     - 8060:80 
+        - postgres
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 2
+        window: 140s
+    ports:
+         - 8060:80 
     networks:
         - backend
 
@@ -103,9 +139,15 @@ services:
     container_name: 'payment'
     depends_on:
         - rabbitmq 
-        - postgres 
-    # ports:
-    #     - 8070:80 
+        - postgres
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 2
+        window: 140s
+    ports:
+         - 8070:80 
     networks:
         - backend
 
@@ -118,9 +160,15 @@ services:
     container_name: 'transportcommand'
     depends_on:
         - rabbitmq 
-        - postgres 
-    # ports:
-    #     - 8090:80 
+        - postgres
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 2
+        window: 140s
+    ports:
+         - 8090:80 
     networks:
         - backend
 
@@ -133,9 +181,15 @@ services:
     container_name: 'transportquery'
     depends_on:
         - rabbitmq 
-        - postgres 
-    # ports:
-    #     - 8100:80 
+        - postgres
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 2
+        window: 140s
+    ports:
+         - 8100:80 
     networks:
         - backend
 
@@ -148,9 +202,15 @@ services:
     container_name: 'trip'
     depends_on:
         - rabbitmq 
-        - postgres 
-    # ports:
-    #     - 8110:80 
+        - postgres
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 2
+        window: 140s
+    ports:
+         - 8110:80 
     networks:
         - backend
 
@@ -159,6 +219,12 @@ services:
     restart: always
     hostname: 'postgres'
     container_name: 'postgres'
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 2
+        window: 140s
     ports:
       - 5432:5432
     environment:
@@ -177,11 +243,17 @@ services:
     restart: always
     hostname: 'pgadmin'
     container_name: 'pgadmin'
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 2
+        window: 140s
     environment:
       PGADMIN_DEFAULT_EMAIL: test@example.com
       PGADMIN_DEFAULT_PASSWORD: admin
     ports:
-      - "5050:80"
+      - 5050:80
     depends_on:
       - postgres
     networks:
@@ -190,7 +262,13 @@ services:
   rabbitmq:
     image: heidiks/rabbitmq-delayed-message-exchange:latest 
     hostname: 'rabbitmq'
-    container_name: 'rabbitmq' 
+    container_name: 'rabbitmq'
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 2
+        window: 140s
     ports: 
         - 5672:5672  
         - 15672:15672 
@@ -206,6 +284,12 @@ services:
     restart: always
     hostname: 'mongo'
     container_name: 'mongo'
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 2
+        window: 140s
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
@@ -218,6 +302,12 @@ services:
     restart: always
     hostname: 'mongo-express'
     container_name: 'mongo-express'
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 2
+        window: 140s
     ports:
       - 8081:8081
     environment:

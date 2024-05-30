@@ -1,6 +1,0 @@
-@OfferCommand_HostAddress = http://localhost:5100
-
-GET {{OfferCommand_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
