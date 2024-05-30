@@ -47,6 +47,7 @@ namespace OfferCommand
 
         private void cancelReservations(OfferReservation reservation)
         {
+            Console.Out.WriteLine($"Cancelling reservations for saga {reservation.OfferId}");
             if(reservation.TransportReservationId != 0)
             {
                 _publishEndpoint.Publish(new CancelReservationTransportEvent()
@@ -95,6 +96,7 @@ namespace OfferCommand
                 When(CreatedOfferEvent).
                 Then(ctx => ctx.Saga.OfferId = ctx.Message.OfferId).
                 Then(ctx => ctx.Saga.Offer = ctx.Message.Offer).
+                ThenAsync(ctx => Console.Out.WriteLineAsync($"Created Saga with id {ctx.Saga.OfferId}")).
                 Publish(ctx => new ReserveHotelEvent()
                 {
                     CorrelationId = ctx.Saga.CorrelationId,
@@ -113,7 +115,8 @@ namespace OfferCommand
                 When(ReserveHotelEvent).
                 Then(ctx => processHotel(ctx.Message, ctx.Saga)).
                 IfElse(ctx => ctx.Saga.MadeHotelReservation,
-                valid => valid.Publish(ctx => new ReserveTransportEvent() { 
+                valid => valid.ThenAsync(ctx => Console.Out.WriteLineAsync($"ReservedHotel for Saga with id {ctx.Saga.OfferId}")).
+                Publish(ctx => new ReserveTransportEvent() { 
                     CorrelationId = ctx.Saga.CorrelationId,
                     Reservation = new Models.Transport.DTO.TransportReservationDTO()
                     {
@@ -123,7 +126,8 @@ namespace OfferCommand
                         ctx.Saga.Offer.NumberOfTeenagers + ctx.Saga.Offer.NumberOfToddlers
                     }
                 }).TransitionTo(ReservedOffer),
-                invalid => invalid.Then(ctx => cancelReservations(ctx.Saga)).Respond(ctx => new ReserveOfferEventReply()
+                invalid => invalid.ThenAsync(ctx => Console.Out.WriteLineAsync($"Unable to reserve hotel for Saga with id {ctx.Saga.OfferId}")).
+                Then(ctx => cancelReservations(ctx.Saga)).Respond(ctx => new ReserveOfferEventReply()
                 {
                     Answer = ReserveOfferEventReply.State.NOT_RESERVED,
                     CorrelationId = ctx.Saga.CorrelationId,
@@ -135,7 +139,8 @@ namespace OfferCommand
                 When(ReserveTransportEvent).
                 Then(ctx => processTransport(ctx.Message, ctx.Saga)).
                 IfElse(ctx => ctx.Saga.MadeTransportReservation,
-                valid => valid.Respond(ctx => new ReserveOfferEventReply()
+                valid => valid.ThenAsync(ctx => Console.Out.WriteLineAsync($"Reserved Transport for Saga with id {ctx.Saga.OfferId}")).
+                Respond(ctx => new ReserveOfferEventReply()
                                 {
                                     Answer = ReserveOfferEventReply.State.RESERVED,
                                     CorrelationId = ctx.Saga.CorrelationId
@@ -149,7 +154,8 @@ namespace OfferCommand
                                 })
                                 .Schedule(PaymentNotSentTimeout, context => context.Init<PaymentTimeout>(new PaymentTimeout (){ CorrelationId = context.Saga.CorrelationId}))
                                 .TransitionTo(ReservedOffer),
-                invalid => invalid.Then(ctx => cancelReservations(ctx.Saga))
+                invalid => invalid.ThenAsync(ctx => Console.Out.WriteLineAsync($"Unable to reserve transport for Saga with id {ctx.Saga.OfferId}"))
+                        .Then(ctx => cancelReservations(ctx.Saga))
                                       .Respond(ctx => new ReserveOfferEventReply()
                                     {
                                         Answer = ReserveOfferEventReply.State.NOT_RESERVED,
@@ -160,6 +166,7 @@ namespace OfferCommand
 
             During(ReservedOffer,
                 When(PaymentNotSentTimeout.Received).
+                ThenAsync(ctx => Console.Out.WriteLineAsync($"Timeout for Saga with id {ctx.Saga.OfferId}")).
                 Publish(ctx => new RemoveOfferEvent()
                 {
                     OfferId = ctx.Saga.OfferId

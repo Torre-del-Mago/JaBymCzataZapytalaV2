@@ -22,6 +22,7 @@ namespace OfferCommand.Consumer
         }
         public async Task Consume(ConsumeContext<PaidOfferEvent> context)
         {
+            Console.Out.WriteLine($"offer with id {context.Message.OfferId} was paid for");
             var offer = _offerRepository.UpdateStatus(context.Message.OfferId, EventTypes.Paid);
             if(offer == null)
             {

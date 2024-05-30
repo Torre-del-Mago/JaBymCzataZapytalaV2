@@ -25,7 +25,9 @@ namespace OfferCommand.Consumer
         }
         public async Task Consume(ConsumeContext<ReserveOfferEvent> context)
         {
+            Console.Out.WriteLine($"Started creating offer for hotel {context.Message.Offer.HotelId}");
             Offer offer = _offerRepository.InsertOffer(context.Message.Offer);
+            Console.Out.WriteLine($"Created offer with id {offer.Id}");
             _eventRepository.InsertCreatedEvent(offer.Id);
             var rooms = _offerRepository.getOfferRoomsByOfferId(offer.Id);
             await _publishEndpoint.Publish(new ReserveOfferSyncEvent()
@@ -39,9 +41,11 @@ namespace OfferCommand.Consumer
                 Offer = context.Message.Offer,
                 OfferId = offer.Id,
             });
+            Console.Out.WriteLine($"Got reserving response for offer with id {offer.Id}");
 
-            if(response.Message.Answer == CreatedOfferEventReply.State.NOT_RESERVED)
+            if (response.Message.Answer == CreatedOfferEventReply.State.NOT_RESERVED)
             {
+                Console.Out.WriteLine($"offer with id {offer.Id} was not reserved");
                 _eventRepository.InsertNotReservedEvent(offer.Id);
                 _offerRepository.UpdateStatus(offer.Id, EventTypes.NotReserved);
                 await _publishEndpoint.Publish(new ReservedOfferSyncEvent()
@@ -59,6 +63,7 @@ namespace OfferCommand.Consumer
                 return;
             }
 
+            Console.Out.WriteLine($"offer with id {offer.Id} was reserved");
             _eventRepository.InsertReservedEvent(offer.Id);
             _offerRepository.UpdateStatus(offer.Id, EventTypes.Reserved);
             await _publishEndpoint.Publish(new ReservedOfferSyncEvent()

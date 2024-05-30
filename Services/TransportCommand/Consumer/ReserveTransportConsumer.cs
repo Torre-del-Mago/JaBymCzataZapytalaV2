@@ -13,14 +13,17 @@ namespace TransportCommand.Consumer
         }
         public async Task Consume(ConsumeContext<ReserveTransportEvent> context)
         {
+            Console.Out.WriteLine($"Started reserving transport for offer with id {context.Message.Reservation.OfferId}");
             bool hasReservedTransport = await _eventService.ReserveTransport(context.Message.Reservation);
             if (!hasReservedTransport) {
+                Console.Out.WriteLine($"Could not reserve transport for offer with id {context.Message.Reservation.OfferId}");
                 await context.RespondAsync(new ReserveTransportEventReply()
                 {
                     Answer = ReserveTransportEventReply.State.NOT_RESERVED,
                     CorrelationId = context.Message.CorrelationId
                 });            
             }
+            Console.Out.WriteLine($"Reserved transport for offer with id {context.Message.Reservation.OfferId}");
             await context.RespondAsync(new ReserveTransportEventReply()
             {
                 Answer = ReserveTransportEventReply.State.RESERVED,
