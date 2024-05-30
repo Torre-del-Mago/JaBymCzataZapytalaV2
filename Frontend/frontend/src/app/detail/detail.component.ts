@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { TripDTO } from '../dto/TripDTO';
 import { RoomDTO } from '../dto/RoomDTO';
+import { GenerateTripResponse } from '../dto/GenerateTripResponse';
 import { ReserveOfferResponse } from '../dto/ReserveOfferResponse';
 import { BackendService } from '../backend/backend.service';
 import { ActivatedRoute } from '@angular/router';
@@ -189,9 +190,9 @@ export class DetailComponent implements OnInit {
   }
 
   async startChange(): Promise<void> {
-    await this.refreshTrip().then((value: TripDTO) => {
+    await this.refreshTrip().then((value: GenerateTripResponse) => {
       console.log(value)
-      let tripsForChangedCriteria = this.service.changeTrips([value], this.beginDate, this.endDate, this.numberOfAdults, this.numberOfChildren);
+      let tripsForChangedCriteria = this.service.changeTrips([value.tripDTO], this.beginDate, this.endDate, this.numberOfAdults, this.numberOfChildren);
       this.trip = tripsForChangedCriteria[0];
       this.service.setCurrentTrip(this.trip!);
       this.setTrips();
@@ -220,7 +221,7 @@ export class DetailComponent implements OnInit {
     await this.router.navigateByUrl('reserve');
   }
 
-  private async refreshTrip(): Promise<TripDTO> {
+  private async refreshTrip(): Promise<GenerateTripResponse> {
     const value = await firstValueFrom(this.service.getInfoForTripNew(this.trip!.country, this.trip!.chosenFlight.departure, this.trip!.beginDate, this.trip!.endDate,
       this.numberOfAdults, this.numberOfChildren, this.trip!.hotelId)
     )

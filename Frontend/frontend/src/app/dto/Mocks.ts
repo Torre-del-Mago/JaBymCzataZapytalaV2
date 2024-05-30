@@ -75,4 +75,4 @@ export const trips: TripDTO[] = [
   },
 ];
 
-export const tripslists: TripsDTO[] = [{ Trips: trips }];
+export const tripslists: TripsDTO[] = [{ trips: trips }];

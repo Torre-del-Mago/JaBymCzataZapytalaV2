@@ -11,6 +11,7 @@ using Models.Offer;
 using Models.Transport.DTO;
 using Models.Trip;
 using Models.Trip.DTO;
+using System.Globalization;
 
 
 namespace Gate.Controllers
@@ -105,12 +106,18 @@ namespace Gate.Controllers
                     HotelId = 2
                 }
             };
-            return Ok(trips.Where(t =>
+            var seltrips = trips.Where(t =>
                 t.Country == destination &&
                 t.ChosenFlight.Departure == departure &&
                 t.BeginDate >= beginDate &&
                 t.EndDate <= endDate
-            ).ToList());
+            ).ToList();
+            var response = new GenerateTripsResponse()
+            {
+                Trips = new TripsDTO() {
+                    Trips = seltrips }
+            };
+            return Ok(response);
         }
 
         [HttpGet("test-single-get")]
@@ -191,13 +198,18 @@ namespace Gate.Controllers
                     HotelId = 2
                 }
             };
-            return Ok(trips.Where(t =>
+            var trip = trips.Where(t =>
                 t.Country == destination &&
                 t.ChosenFlight.Departure == departure &&
                 t.BeginDate >= beginDate &&
                 t.EndDate <= endDate &&
                 t.HotelId == hotelId
-            ).FirstOrDefault());
+            ).FirstOrDefault();
+            var response = new GenerateTripResponse()
+            {
+                TripDTO = trip
+            };
+            return Ok(response);
         }
 
         [HttpGet("trip-info")]

@@ -64,14 +64,15 @@ export class ReserveComponent {
 
   async tryPaying() {
     //TODO: Dodaj catchError()
+    const offerPaidFor = 0;
     this.result$ = this.service.tryPaying(this.offerInfo!.offerId, this.trip!.price!).pipe(
       tap((r: PayResponse) => {
-        if(r.answer === 1) {
+        if(r.answer === offerPaidFor) {
           clearInterval(this.timerRef! as number)
           this.router.navigateByUrl('');
         }
       }),
       map((r: PayResponse) => { 
-        return r.answer === 1 ? "Zapłacono za ofertę" : "Płatność się nie powiodła"}));
+        return r.answer === offerPaidFor ? "Zapłacono za ofertę" : "Płatność się nie powiodła"}));
   }
 }

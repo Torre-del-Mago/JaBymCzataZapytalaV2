@@ -1,4 +1,4 @@
 import {TripDTO} from './TripDTO'
 export type TripsDTO = {
-    Trips: TripDTO[]
+    trips: TripDTO[]
 }
