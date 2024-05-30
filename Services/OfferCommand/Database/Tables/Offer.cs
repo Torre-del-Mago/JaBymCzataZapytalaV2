@@ -14,15 +14,15 @@ public class Offer
     
     public string ArrivalTicketId { get; set; }
     
-    public string DepartureTransportId { get; set; }
+    public int DepartureTransportId { get; set; }
     
-    public string ArrivalTransportId { get; set; }
+    public int ArrivalTransportId { get; set; }
     
     public DateTime DateFrom { get; set; }
     
     public DateTime DateTo { get; set; }
     
-    public string HotelId { get; set; }
+    public int HotelId { get; set; }
     
     public int NumberOfAdults { get; set; }
     
@@ -35,8 +35,4 @@ public class Offer
     public string UserLogin { get; set; }
     
     public string OfferStatus { get; set; }
-
-    public List<OfferRoom> Rooms { get; set; }
-
-    public List<OfferEvent> Events { get; set; }
 }
