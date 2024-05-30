@@ -128,9 +128,10 @@ namespace Trip.Consumer
                 var trip = new TripDTO
                 {
                     HotelName = hotelDto.HotelName,
+                    HotelId = hotelDto.HotelId,
                     Country = hotelDto.Country,
                     City = hotelDto.City,
-                    BeginDate = hotelDto.BeginDate,
+                    BeginDate = hotelDto.BeginDate, 
                     EndDate = hotelDto.EndDate,
                     TypesOfMeals = hotelDto.TypesOfMeals,
                     Rooms = hotelDto.Rooms,

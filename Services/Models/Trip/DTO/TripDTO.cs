@@ -24,5 +24,7 @@ namespace Models.Trip.DTO
         public List<FlightDTO> PossibleFlights { get; set; }
 
         public float Discount { get; set; }
+        
+        public int HotelId { get; set; }
     }
 }

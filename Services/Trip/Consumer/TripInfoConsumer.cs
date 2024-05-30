@@ -73,6 +73,7 @@ namespace Trip.Consumer
             var tripDto = new TripDTO
             {
                 HotelName = hotelDto.HotelName,
+                HotelId = hotelDto.HotelId,
                 Country = hotelDto.Country,
                 City = hotelDto.City,
                 BeginDate = hotelDto.BeginDate,

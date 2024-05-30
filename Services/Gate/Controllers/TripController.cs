@@ -87,7 +87,8 @@ namespace Gate.Controllers
                     HotelName = "Hilton",
                     PossibleFlights = flights,
                     Rooms = rooms,
-                    TypesOfMeals = new List<string> { "all inclusive" }
+                    TypesOfMeals = new List<string> { "all inclusive" },
+                    HotelId = 1
                 },
                 new TripDTO
                 {
@@ -100,7 +101,8 @@ namespace Gate.Controllers
                     HotelName = "Sheraton",
                     PossibleFlights = flights,
                     Rooms = rooms,
-                    TypesOfMeals = new List<string> { "all inclusive" }
+                    TypesOfMeals = new List<string> { "all inclusive" },
+                    HotelId = 2
                 }
             };
             return Ok(trips.Where(t =>
