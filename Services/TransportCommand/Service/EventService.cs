@@ -23,7 +23,7 @@ namespace TransportCommand.Service
         private async Task<List<int>> getAllActiveTicketsForTransportId(int transportId)
         {
             var result = new List<int>();
-            var events = await _eventRepository.getAllTicketEventsForTransportId(transportId);
+            var events = await _eventRepository.GetAllTicketEventsForTransportId(transportId);
             foreach(Event e in events)
             {
                 if(e.EventType == EventType.Created)
@@ -38,7 +38,7 @@ namespace TransportCommand.Service
             return result;
         }
 
-        public async Task<bool> reserveTransport(TransportReservationDTO dto)
+        public async Task<bool> ReserveTransport(TransportReservationDTO dto)
         {
             var activeArrivalTicketsTask = getAllActiveTicketsForTransportId(dto.ArrivalTransportId);
             var activeReturnTicketsTask = getAllActiveTicketsForTransportId(dto.ReturnTransportId);
@@ -87,19 +87,19 @@ namespace TransportCommand.Service
             await _ticketRepository.InsertTicket(arrivalTicket);
             await _ticketRepository.InsertTicket(returnTicket);
 
-            await _eventRepository.insertReservationEvent(arrivalTicket);
-            await _eventRepository.insertReservationEvent(returnTicket);
+            await _eventRepository.InsertReservationEvent(arrivalTicket);
+            await _eventRepository.InsertReservationEvent(returnTicket);
 
             return true;
             
         }
 
-        public async Task cancelTransport(int offerId)
+        public async Task CancelTransport(int offerId)
         {
 
             var tickets = await _ticketRepository.GetReservedTicketsByOfferId(offerId);
 
-            await _eventRepository.insertCancellationEventForTickets(tickets);
+            await _eventRepository.InsertCancellationEventForTickets(tickets);
         }
     }
 }

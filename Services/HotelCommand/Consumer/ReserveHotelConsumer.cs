@@ -10,7 +10,7 @@ namespace HotelCommand.Consumer
     {
         public async Task Consume(ConsumeContext<ReserveHotelEvent> context)
         {
-            var hasReservedHotel= await eventService.reserveHotel(context.Message.Reservation);
+            var hasReservedHotel= await eventService.ReserveHotel(context.Message.Reservation);
             if (!hasReservedHotel) {
                 await publishEndpoint.Publish(new ReserveHotelEventReply()
                 {

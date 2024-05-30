@@ -11,7 +11,7 @@ namespace TransportCommand.Repository.EventRepository
         {
             _context = context;
         }
-        public Task<List<Event>> getAllTicketEventsForTransportId(int transportId)
+        public Task<List<Event>> GetAllTicketEventsForTransportId(int transportId)
         {
             return Task.FromResult(_context.Events.Where(e => e.TransportId == transportId).OrderBy(e => e.Id).ToList());
         }
@@ -28,7 +28,7 @@ namespace TransportCommand.Repository.EventRepository
             _context.Events.Add(reservation);
         }
 
-        public async Task insertCancellationEventForTickets(List<ReservedTicket> tickets)
+        public async Task InsertCancellationEventForTickets(List<ReservedTicket> tickets)
         {
             List<Event> events = new List<Event>();
             foreach(ReservedTicket ticket in tickets)
@@ -48,7 +48,7 @@ namespace TransportCommand.Repository.EventRepository
             }
         }
 
-        public async Task insertReservationEvent(ReservedTicket ticket)
+        public async Task InsertReservationEvent(ReservedTicket ticket)
         {
             var reservation = new Event()
             {

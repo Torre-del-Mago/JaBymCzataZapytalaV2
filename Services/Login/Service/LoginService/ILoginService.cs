@@ -2,6 +2,6 @@
 {
     public interface ILoginService
     {
-        public bool isUsernameCorrect(string username);
+        bool IsUsernameCorrect(string username);
     }
 }

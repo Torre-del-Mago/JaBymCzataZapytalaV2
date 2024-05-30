@@ -8,7 +8,7 @@ namespace HotelCommand.Consumer
     {
         public async Task Consume(ConsumeContext<CancelReservationHotelEvent> context)
         {
-            await eventService.cancelHotel(context.Message.OfferId);
+            await eventService.CancelHotel(context.Message.OfferId);
 
             await context.RespondAsync(new CancelReservationHotelSyncEvent()
             {

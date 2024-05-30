@@ -4,11 +4,9 @@ namespace TransportQuery.Service.Transport
 {
     public interface ITransportService
     {
-        public TransportsDTO GetTransportsForCriteria(CriteriaForTransports criteria);
-        public TransportDTO GetTransportForCriteria(CriteriaForTransport criteria);
-
-        public Task<bool> ReserveTransport(TransportReservationDTO dto);
-
-        public Task CancelTransport(int offerId);
+        TransportsDTO GetTransportsForCriteria(CriteriaForTransports criteria);
+        TransportDTO GetTransportForCriteria(CriteriaForTransport criteria);
+        Task<bool> ReserveTransport(TransportReservationDTO dto);
+        Task CancelTransport(int offerId);
     }
 }

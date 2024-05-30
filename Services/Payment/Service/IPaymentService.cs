@@ -4,8 +4,8 @@ namespace Payment.Service
 {
     public interface IPaymentService
     {
-        bool canOfferBePaidFor(DateTime stamp, int offerId);
+        bool CanOfferBePaidFor(DateTime stamp, int offerId);
 
-        void insertPayment(CheckPaymentEvent paymentEvent);
+        void InsertPayment(CheckPaymentEvent paymentEvent);
     }
 }

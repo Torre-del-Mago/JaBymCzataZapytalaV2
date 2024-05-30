@@ -4,8 +4,8 @@ namespace HotelCommand.Repository.HotelRepository
 {
     public interface IHotelRepository
     {
-        public Task<List<Hotel>> GetAllHotelsAsync();
+        Task<List<Hotel>> GetAllHotelsAsync();
 
-        public Task<Hotel> GetHotelByIdAsync(int hotelId);
+        Task<Hotel> GetHotelByIdAsync(int hotelId);
     }
 }

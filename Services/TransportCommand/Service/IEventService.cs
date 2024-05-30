@@ -4,8 +4,8 @@ namespace TransportCommand.Service
 {
     public interface IEventService
     {
-        public Task<bool> reserveTransport(TransportReservationDTO dto);
+        Task<bool> ReserveTransport(TransportReservationDTO dto);
 
-        public Task cancelTransport(int offerId);
+        Task CancelTransport(int offerId);
     }
 }

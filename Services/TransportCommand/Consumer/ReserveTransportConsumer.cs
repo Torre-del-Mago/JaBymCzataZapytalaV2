@@ -13,7 +13,7 @@ namespace TransportCommand.Consumer
         }
         public async Task Consume(ConsumeContext<ReserveTransportEvent> context)
         {
-            bool hasReservedTransport = await _eventService.reserveTransport(context.Message.Reservation);
+            bool hasReservedTransport = await _eventService.ReserveTransport(context.Message.Reservation);
             if (!hasReservedTransport) {
                 await context.RespondAsync(new ReserveTransportEventReply()
                 {

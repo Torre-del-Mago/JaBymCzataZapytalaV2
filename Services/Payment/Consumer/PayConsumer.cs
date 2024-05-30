@@ -24,7 +24,7 @@ namespace Payment.Consumer
                     CorrelationId = context.Message.CorrelationId,
                     Answer = PayEventReply.State.REJECTED});
             }
-            bool isPaymentOnTime = _service.canOfferBePaidFor(context.Message.PaymentDateTime, context.Message.OfferId);
+            bool isPaymentOnTime = _service.CanOfferBePaidFor(context.Message.PaymentDateTime, context.Message.OfferId);
             if(!isPaymentOnTime)
             {
                 await context.RespondAsync(new PayEventReply()

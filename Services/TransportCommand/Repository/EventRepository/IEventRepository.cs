@@ -4,10 +4,10 @@ namespace TransportCommand.Repository.EventRepository
 {
     public interface IEventRepository
     {
-        public Task<List<Event>> getAllTicketEventsForTransportId(int transportId);
+        Task<List<Event>> GetAllTicketEventsForTransportId(int transportId);
 
-        public Task insertReservationEvent(ReservedTicket ticket);
+        Task InsertReservationEvent(ReservedTicket ticket);
 
-        public Task insertCancellationEventForTickets(List<ReservedTicket> tickets);
+        Task InsertCancellationEventForTickets(List<ReservedTicket> tickets);
     }
 }
