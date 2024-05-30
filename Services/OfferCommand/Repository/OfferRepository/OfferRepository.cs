@@ -10,6 +10,12 @@ namespace OfferCommand.Repository.OfferRepository
         public OfferRepository(OfferContext context) {
             _context = context;
         }
+
+        public List<OfferRoom> getOfferRoomsByOfferId(int offerId)
+        {
+            return _context.Rooms.Where(r => r.OfferId == offerId).ToList();
+        }
+
         public Offer InsertOffer(OfferDTO dto)
         {
             Offer offer = new Offer()
@@ -41,15 +47,16 @@ namespace OfferCommand.Repository.OfferRepository
             return offer;
         }
 
-        public void UpdateStatus(int offerId, string status)
+        public Offer UpdateStatus(int offerId, string status)
         {
             Offer offer = _context.Offers.FirstOrDefault(o => o.Id == offerId);
             if (offer == null)
             {
-                return;
+                return null;
             }
             offer.OfferStatus = status;
             _context.SaveChanges();
+            return offer;
         }
     }
 }

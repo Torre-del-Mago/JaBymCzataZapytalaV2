@@ -27,9 +27,12 @@ namespace OfferCommand.Consumer
         {
             Offer offer = _offerRepository.InsertOffer(context.Message.Offer);
             _eventRepository.InsertCreatedEvent(offer.Id);
+            var rooms = _offerRepository.getOfferRoomsByOfferId(offer.Id);
             await _publishEndpoint.Publish(new ReserveOfferSyncEvent()
             {
-                Offer = context.Message.Offer
+                Offer = context.Message.Offer,
+                OfferSync = ClassConverter.convert(offer),
+                RoomSyncs = ClassConverter.convert(rooms)
             });
 
             var response = await _requestClient.GetResponse<CreatedOfferEventReply>(new CreatedOfferEvent()
@@ -45,13 +48,15 @@ namespace OfferCommand.Consumer
                 await _publishEndpoint.Publish(new ReservedOfferSyncEvent()
                 {
                     OfferId = offer.Id,
-                    Answer = ReservedOfferSyncEvent.State.NOT_RESERVED
+                    Answer = ReservedOfferSyncEvent.State.NOT_RESERVED,
+                    OfferSync = ClassConverter.convert(offer),
+                    RoomSyncs = ClassConverter.convert(rooms)
                 });
                 await context.RespondAsync(new ReserveOfferEventReply()
                 {
                     Answer = ReserveOfferEventReply.State.NOT_RESERVED,
                     CorrelationId = context.Message.CorrelationId,
-                    Error = response.Message.Error
+                    Error = response.Message.Error,
                 });
                 return;
             }
@@ -61,7 +66,9 @@ namespace OfferCommand.Consumer
             await _publishEndpoint.Publish(new ReservedOfferSyncEvent()
             {
                 OfferId = offer.Id,
-                Answer = ReservedOfferSyncEvent.State.RESERVED
+                Answer = ReservedOfferSyncEvent.State.RESERVED,
+                OfferSync = ClassConverter.convert(offer),
+                RoomSyncs = ClassConverter.convert(rooms)
             });
             await context.RespondAsync(new ReserveOfferEventReply()
             {

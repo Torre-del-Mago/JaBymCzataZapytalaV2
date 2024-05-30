@@ -7,6 +7,8 @@ namespace OfferCommand.Repository.OfferRepository
     public interface IOfferRepository
     {
         Offer InsertOffer(OfferDTO dto);
-        void UpdateStatus(int offerId, string status);
+        Offer UpdateStatus(int offerId, string status);
+
+        List<OfferRoom> getOfferRoomsByOfferId(int offerId);
     }
 }
