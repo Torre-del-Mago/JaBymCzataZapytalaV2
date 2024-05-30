@@ -181,7 +181,7 @@ namespace TransportQuery.Service.Transport
             return transportConnections;
         }
 
-        public Task<bool> ReserveTransport(TransportReservationDTO dto)
+        public Task<bool> ReserveTransport(TransportReservationDTO dto, int ArrivalTicketId, int ReturnTicketId)
         {
             return Task.FromResult(false);
         }

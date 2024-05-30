@@ -13,4 +13,7 @@ public class ReservedTicket
     
     [BsonElement("numberOfReservedSeats")]
     public int NumberOfReservedSeats { get; set; }
+
+    [BsonElement("offerId")]
+    public int OfferId { get; set; }
 }
