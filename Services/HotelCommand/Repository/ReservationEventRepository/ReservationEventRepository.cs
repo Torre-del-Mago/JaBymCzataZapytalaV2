@@ -1,17 +1,18 @@
 ﻿using HotelCommand.Database;
 using HotelCommand.Database.Tables;
+using HotelCommand.Repository.ReservationRepository;
 
 namespace HotelCommand.Repository.ReservationEventRepository;
 
 public class ReservationEventRepository : IReservationEventRepository
 {
     private readonly HotelContext _context;
-    private ReservationRepository.ReservationRepository _reservationRepository;
+    private readonly IReservationRepository _reservationRepository;
 
-    public ReservationEventRepository(HotelContext context, ReservationRepository.ReservationRepository repository)
+    public ReservationEventRepository(HotelContext context, IReservationRepository reservationRepository)
     {
         _context = context;
-        _reservationRepository = repository;
+        _reservationRepository = reservationRepository;
     }
     
     public Task<List<ReservationEvent>> GetAllHotelEventsForReservationId(int reservationId)
