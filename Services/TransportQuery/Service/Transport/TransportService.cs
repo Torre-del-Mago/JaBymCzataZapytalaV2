@@ -180,5 +180,15 @@ namespace TransportQuery.Service.Transport
 
             return transportConnections;
         }
+
+        public Task<bool> ReserveTransport(TransportReservationDTO dto)
+        {
+            return Task.FromResult(false);
+        }
+
+        public Task CancelTransport(int offerId)
+        {
+            return Task.CompletedTask;
+        }
     }
 }

@@ -6,5 +6,9 @@ namespace TransportQuery.Service.Transport
     {
         public TransportsDTO GetTransportsForCriteria(CriteriaForTransports criteria);
         public TransportDTO GetTransportForCriteria(CriteriaForTransport criteria);
+
+        public Task<bool> ReserveTransport(TransportReservationDTO dto);
+
+        public Task CancelTransport(int offerId);
     }
 }

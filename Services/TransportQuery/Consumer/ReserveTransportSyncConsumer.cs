@@ -1,4 +1,5 @@
 ﻿using MassTransit;
+using MassTransit.Transports;
 using Models.Transport;
 using TransportQuery.Service.Transport;
 
@@ -15,6 +16,7 @@ namespace TransportQuery.Consumer
 
         public Task Consume(ConsumeContext<ReserveTransportSyncEvent> context)
         {
+            _service.ReserveTransport(context.Message.Reservation);
             throw new NotImplementedException();
         }
     }
