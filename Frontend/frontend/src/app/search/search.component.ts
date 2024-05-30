@@ -67,10 +67,16 @@ export class SearchComponent {
   }
 
   async detail(trip: TripDTO): Promise<void> {
-    this.service.setCurrentTrip(trip);
-    this.service.setNumbers(this.numberOfChildren, this.numberOfAdults)
-    this.service.setDates(this.startDate, this.endDate)
-    await this.router.navigateByUrl('detail');
+    if(this.service.getUser() === '')
+    {
+      alert("Żeby móc przejrzeć ofertę należy być zalogowanym")
+    }
+    else {
+      this.service.setCurrentTrip(trip);
+      this.service.setNumbers(this.numberOfChildren, this.numberOfAdults)
+      this.service.setDates(this.startDate, this.endDate)
+      await this.router.navigateByUrl('detail');
+    }
   }
 
   

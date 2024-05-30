@@ -19,7 +19,7 @@ namespace Gate.Controllers
         }
 
         [HttpGet("check")]
-        public async Task<IActionResult> checkLogin(String login)
+        public async Task<IActionResult> checkLogin([FromQuery] String login)
         {
             try
             {

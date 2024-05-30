@@ -18,11 +18,14 @@ export class LoginComponent {
   constructor(private service: BackendService, private router: Router) {
   }
 
-  checkLogin(): void {
-    if(this.service.checkLogin(this.username)) {
-      this.router.navigate(['']);
-    } else {
-      this.errorMessageHidden = false;
-    }
+  async checkLogin(): void {
+    this.service.checkLogin(this.username).subscribe(
+      {
+        next: (x: any) => {this.service.setUser(this.username);
+          this.router.navigate(['']);
+        }, 
+        error: (x: any) => {this.errorMessageHidden = false}
+      }
+    )
   }
 }
