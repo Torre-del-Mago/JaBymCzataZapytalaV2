@@ -6,20 +6,13 @@ namespace OfferQuery.Database.Entity;
 public class Offer
 {
     [BsonId]
-    [BsonRepresentation(BsonType.ObjectId)]
     public int Id { get; set; }
 
-    [BsonElement("departureTicketId")]
-    public string DepartureTicketId { get; set; }
-
-    [BsonElement("arrivalTicketId")]
-    public string ArrivalTicketId { get; set; }
-
     [BsonElement("departureTransportId")]
-    public string DepartureTransportId { get; set; }
+    public int DepartureTransportId { get; set; }
 
     [BsonElement("arrivalTransportId")]
-    public string ArrivalTransportId { get; set; }
+    public int ArrivalTransportId { get; set; }
 
     [BsonElement("dateFrom")]
     public DateTime DateFrom { get; set; }
@@ -28,7 +21,7 @@ public class Offer
     public DateTime DateTo { get; set; }
 
     [BsonElement("hotelId")]
-    public string HotelId { get; set; }
+    public int HotelId { get; set; }
 
     [BsonElement("numberOfAdults")]
     public int NumberOfAdults { get; set; }
