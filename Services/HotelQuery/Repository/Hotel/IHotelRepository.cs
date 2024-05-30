@@ -13,9 +13,9 @@ public interface IHotelRepository
     List<Diet> GetDiets();
     Diet GetDiet (int dietId);
     
-    List<Reservation> GetReservations();
-    Reservation GetReservation(int reservationId);
-    List<Reservation> GetReservationWithin(DateTime from, DateTime to);
+    List<Database.Entity.Reservation> GetReservations();
+    Database.Entity.Reservation GetReservation(int reservationId);
+    List<Database.Entity.Reservation> GetReservationWithin(DateTime from, DateTime to);
     
     List<ReservedRoom> GetReservedRooms();
     ReservedRoom GetReservedRoom(int reservedRoomId);
