@@ -22,11 +22,18 @@ namespace OfferCommand.Consumer
         }
         public async Task Consume(ConsumeContext<RemoveOfferEvent> context)
         {
-            _offerRepository.UpdateStatus(context.Message.OfferId, EventTypes.Removed);
+            var offer = _offerRepository.UpdateStatus(context.Message.OfferId, EventTypes.Removed);
+            if(offer == null)
+            {
+                return;
+            }
+            var rooms = _offerRepository.getOfferRoomsByOfferId(context.Message.OfferId);
             _eventRepository.InsertRemovedEvent(context.Message.OfferId);
             await _publishEndpoint.Publish(new RemoveOfferSyncEvent()
             {
-                OfferId = context.Message.OfferId
+                OfferId = context.Message.OfferId,
+                OfferSync = ClassConverter.convert(offer),
+                RoomSyncs = ClassConverter.convert(rooms)
             });
         }
     }
