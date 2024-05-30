@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { TripDTO } from '../dto/TripDTO';
 import { RoomDTO } from '../dto/RoomDTO';
+import { ReserveOfferResponse } from '../dto/ReserveOfferResponse';
 import { BackendService } from '../backend/backend.service';
 import { ActivatedRoute } from '@angular/router';
 import { FlightDTO } from '../dto/FlightDTO';
-import { Subscription } from 'rxjs';
+import { Subscription, of, Observable, pipe, map, catchError, tap } from 'rxjs';
 import { Router } from '@angular/router';
 
 @Component({
@@ -35,6 +36,7 @@ export class DetailComponent implements OnInit {
   public numOfDays = 0;
   public backup: number[] = [0, 0]
   private days = 0;
+  reserveError$: Observable<string> = of('');
   
 
   constructor(
@@ -197,11 +199,20 @@ export class DetailComponent implements OnInit {
 
   async reserve(): Promise<void> {
     this.trip!.chosenMeal = this.mealType;
-    this.service.reserveOffer(
+    this.reserveError$ = this.service.reserveOffer(
       this.trip!,
       this.numberOfAdults,
       this.numberOfChildren
-    );
+    ).pipe(tap((result: ReserveOfferResponse) => {
+      this.service.setOfferInfo(result);
+      this.goToPayment()
+    }), map((result: ReserveOfferResponse) => {
+      return result.answer == 0 ? "Rezerwacja się nie powiodła. Przyczyna: " + result.error : '';
+    }),
+    catchError((err: any) => {return "Rezerwacja się nie powiodła"}));
+  }
+
+  async goToPayment() {
     await this.router.navigateByUrl('reserve');
   }
 

@@ -3,6 +3,10 @@ import { HttpClient } from '@angular/common/http';
 import * as Mocks from '../dto/Mocks';
 import { TripDTO } from '../dto/TripDTO';
 import { RoomDTO } from '../dto/RoomDTO';
+import { PayResponse } from '../dto/PayResponse';
+import { ReserveOfferResponse } from '../dto/ReserveOfferResponse';
+import { ReserveOfferRequest } from '../dto/ReserveOfferRequest';
+import { OfferDTO } from '../dto/OfferDTO';
 import {Observable} from 'rxjs'
 
 interface RoomSize {
@@ -18,8 +22,10 @@ export class BackendService {
 
   //Nie wiem czy tu jest http czy https więc zmieńcie jak coś
   //Nie wiem jaki port czy też jak nazwiecie bramę w dockerze
-  private gateUrl = 'https://localhost:55278/api';
+  private gateUrl = 'http://localhost:55278/api';
   private loginCheckUrl = '/login/check';
+  private testPaymentUrl = '/payment/test-check'
+  private testReserveUrl = '/offer/test-reserve'
   private tripControllerUrl = '/trip';
   private tripListUrl = '/trip-list-info';
   private tripUrl = '/trip-info';
@@ -29,8 +35,13 @@ export class BackendService {
   private numOfChildren: number = 0;
   private numOfAdults: number = 0;
   private tripToReserve?: TripDTO;
+  private offerInfo?: ReserveOfferResponse
 
   private dates: string[] = [];
+
+  public tryPaying(offerId: number, amount: number): Observable<PayResponse>{
+    return this.client.post<PayResponse>(this.gateUrl+this.testPaymentUrl+"?offerId="+offerId+"&amount="+amount, {});
+  }
 
   public checkLogin(userName: string): boolean {
     return ['jasio', 'kasia', 'zbysio'].includes(userName.trim())
@@ -165,17 +176,63 @@ export class BackendService {
     trip: TripDTO,
     numOfAdults: number,
     numOfChildren: number
-  ) {
+  ): Observable<ReserveOfferResponse> {
     this.tripToReserve = trip;
     this.numOfAdults = numOfAdults;
     this.numOfChildren = numOfChildren;
+    let transformedRooms: RoomDTO[] = [];
+    for(const [index, value] of trip.roomCombination!.entries()) {
+      if(value > 0) {
+        console.log(trip.roomCombination)
+        console.log(trip.chosenRooms)
+        const count = transformedRooms.push(trip.chosenRooms![index+1]);
+        transformedRooms[count-1].count = value;
+      }
+    }
+    console.log({
+      hotelId : trip.hotelId,
+        country : trip.country,
+        city : trip.city,
+        beginDate : trip.beginDate,
+        endDate : trip.endDate,
+        flight : trip.chosenFlight,
+        typeOfMeal : trip.chosenMeal,
+        rooms : transformedRooms,
+        numberOfAdults : numOfAdults,
+        numberOfNewborns : 0,
+        numberOfToddlers : 0,
+        numberOfTeenagers : numOfChildren
+    })
+    return this.client.post<ReserveOfferResponse>(this.gateUrl + this.testReserveUrl, {
+      registration: 0,
+      offer: {
+        hotelId : trip.hotelId,
+        country : trip.country,
+        city : trip.city,
+        beginDate : trip.beginDate,
+        endDate : trip.endDate,
+        flight : trip.chosenFlight,
+        typeOfMeal : trip.chosenMeal,
+        rooms : transformedRooms,
+        numberOfAdults : numOfAdults,
+        numberOfNewborns : 0,
+        numberOfToddlers : 0,
+        numberOfTeenagers : numOfChildren 
+      } as OfferDTO
+    } as ReserveOfferRequest)
   }
 
   public getReservedOffer(): TripDTO {
     return this.tripToReserve!;
   }
 
-  public payOffer() {}
+  public getOfferInfo(): ReserveOfferResponse {
+    return this.offerInfo!;
+  }
+
+  public setOfferInfo(offerInfo: ReserveOfferResponse): void {
+    this.offerInfo = offerInfo;
+  }
 
   public setCurrentTrip(trip: TripDTO): void {
     this.currentTrip = trip;

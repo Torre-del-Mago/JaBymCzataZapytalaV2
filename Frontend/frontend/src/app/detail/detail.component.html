@@ -31,6 +31,9 @@
 </div>
 <div>
     <button (click)="reserve()">Rezerwuj</button>
+    <div *ngIf="reserveError$ | async">
+        {{reserveError$ | async}}
+    </div>
 </div>
 </div>
 <div [hidden]="configurationAvailable">
