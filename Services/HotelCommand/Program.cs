@@ -13,9 +13,17 @@ using HotelCommand.Service;
 using HotelCommand.Database.Tables;
 using System;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
+builder.Services.AddDbContext<HotelContext>(
+    DbContextOptions => DbContextOptions.UseNpgsql(connectionString)
+        .LogTo(Console.Write, LogLevel.Information)
+        .EnableSensitiveDataLogging()
+        .EnableDetailedErrors()
+);
 // Add services to the container.
 
 builder.Services.AddControllers(); 

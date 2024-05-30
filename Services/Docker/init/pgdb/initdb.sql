@@ -2,7 +2,7 @@ DROP USER IF EXISTS transport;
 CREATE USER transport WITH PASSWORD 'transport';
 DROP DATABASE IF EXISTS transport;
 CREATE DATABASE transport;
-GRANT ALL PRIVILEGES ON SCHEMA transport to transport;
+GRANT ALL PRIVILEGES ON DATABASE transport to transport;
 
 DROP USER IF EXISTS offer;
 CREATE USER offer WITH PASSWORD 'offer';

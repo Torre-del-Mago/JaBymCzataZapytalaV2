@@ -68,7 +68,7 @@ void initDB()
     using (var context = contScope.ServiceProvider.GetRequiredService<TransportContext>())
     {
         context.Database.EnsureCreated();
-        if (!context.Transports.Any())
+        if (!context.FlightConnections.Any())
         {
             string csvPath = @"InitData/transports.csv";
             using (var reader = new StreamReader(csvPath))
