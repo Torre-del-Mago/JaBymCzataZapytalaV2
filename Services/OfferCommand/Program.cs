@@ -2,6 +2,7 @@ using MassTransit;
 using OfferCommand.Consumer;
 using OfferCommand.Database;
 using OfferCommand.Repository.EventRepository;
+using OfferCommand.Repository.OfferRepository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +14,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<OfferContext>();
 builder.Services.AddScoped<IEventRepository, EventRepository>();
+builder.Services.AddScoped<IOfferRepository, OfferRepository>();
 
 builder.Services.AddMassTransit(cfg =>
 {
