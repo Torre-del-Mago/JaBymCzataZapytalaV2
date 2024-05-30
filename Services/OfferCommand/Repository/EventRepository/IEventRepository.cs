@@ -4,11 +4,10 @@ namespace OfferCommand.Repository.EventRepository
 {
     public interface IEventRepository
     {
-        public void insertCreatedEvent(int offerId);
-
-        public void insertReservedEvent(int offerId);
-        public void insertNotReservedEvent(int offerId);
-        public void insertRemovedEvent(int offerId);
-        public void insertPaidEvent(int offerId);
+        void InsertCreatedEvent(int offerId);
+        void InsertReservedEvent(int offerId);
+        void InsertNotReservedEvent(int offerId);
+        void InsertRemovedEvent(int offerId);
+        void InsertPaidEvent(int offerId);
     }
 }

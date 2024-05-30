@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using System;
-using OfferQuery.Database.Entity;
 
 namespace OfferCommand.Database.Tables
 {

@@ -9,26 +9,26 @@ namespace OfferCommand.Repository.EventRepository
         {
             _context = context;
         }
-        public void insertCreatedEvent(int offerId)
+        public void InsertCreatedEvent(int offerId)
         {
             insertEvent(offerId, EventTypes.Created);
         }
 
-        public void insertReservedEvent(int offerId)
+        public void InsertReservedEvent(int offerId)
         {
             insertEvent(offerId, EventTypes.Reserved);
         }
-        public void insertNotReservedEvent(int offerId)
+        public void InsertNotReservedEvent(int offerId)
         {
             insertEvent(offerId, EventTypes.NotReserved);   
         }
 
-        public void insertPaidEvent(int offerId)
+        public void InsertPaidEvent(int offerId)
         {
             insertEvent(offerId, EventTypes.Paid);
         }
 
-        public void insertRemovedEvent(int offerId)
+        public void InsertRemovedEvent(int offerId)
         {
             insertEvent(offerId, EventTypes.Removed);
         }

@@ -1,9 +1,9 @@
 ﻿using MassTransit;
 using Models.Offer;
+using OfferCommand.Database.Tables;
 using OfferCommand.Repository;
 using OfferCommand.Repository.EventRepository;
 using OfferCommand.Repository.OfferRepository;
-using OfferQuery.Database.Entity;
 
 namespace OfferCommand.Consumer
 {
@@ -25,8 +25,8 @@ namespace OfferCommand.Consumer
         }
         public async Task Consume(ConsumeContext<ReserveOfferEvent> context)
         {
-            Offer offer = _offerRepository.insertOffer(context.Message.Offer);
-            _eventRepository.insertCreatedEvent(offer.Id);
+            Offer offer = _offerRepository.InsertOffer(context.Message.Offer);
+            _eventRepository.InsertCreatedEvent(offer.Id);
             await _publishEndpoint.Publish(new ReserveOfferSyncEvent()
             {
                 Offer = context.Message.Offer
@@ -40,7 +40,7 @@ namespace OfferCommand.Consumer
 
             if(response.Message.Answer == CreatedOfferEventReply.State.NOT_RESERVED)
             {
-                _eventRepository.insertNotReservedEvent(offer.Id);
+                _eventRepository.InsertNotReservedEvent(offer.Id);
                 _offerRepository.UpdateStatus(offer.Id, EventTypes.NotReserved);
                 await _publishEndpoint.Publish(new ReservedOfferSyncEvent()
                 {
@@ -56,7 +56,7 @@ namespace OfferCommand.Consumer
                 return;
             }
 
-            _eventRepository.insertReservedEvent(offer.Id);
+            _eventRepository.InsertReservedEvent(offer.Id);
             _offerRepository.UpdateStatus(offer.Id, EventTypes.Reserved);
             await _publishEndpoint.Publish(new ReservedOfferSyncEvent()
             {

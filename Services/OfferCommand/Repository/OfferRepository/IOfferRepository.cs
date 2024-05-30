@@ -1,13 +1,12 @@
 ﻿using Models.Offer.DTO;
-using OfferQuery.Database.Entity;
 using System.Data;
+using OfferCommand.Database.Tables;
 
 namespace OfferCommand.Repository.OfferRepository
 {
     public interface IOfferRepository
     {
-        public Offer insertOffer(OfferDTO dto);
-
-        public void UpdateStatus(int offerId, string status);
+        Offer InsertOffer(OfferDTO dto);
+        void UpdateStatus(int offerId, string status);
     }
 }
