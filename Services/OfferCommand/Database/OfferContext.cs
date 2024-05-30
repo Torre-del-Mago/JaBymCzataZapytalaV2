@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OfferCommand.Database.Tables;
-using OfferQuery.Database.Entity;
 
 namespace OfferCommand.Database;
 

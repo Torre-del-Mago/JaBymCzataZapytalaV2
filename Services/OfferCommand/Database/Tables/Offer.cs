@@ -1,8 +1,7 @@
-﻿using OfferCommand.Database.Tables;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace OfferQuery.Database.Entity;
+namespace OfferCommand.Database.Tables;
 
 public class Offer
 {
