@@ -16,7 +16,7 @@ namespace TransportCommand.Consumer
 
         public async Task Consume(ConsumeContext<CancelReservationTransportEvent> context)
         {
-            await _eventService.cancelTransport(context.Message.OfferId);
+            await _eventService.CancelTransport(context.Message.OfferId);
 
             await _publishEndpoint.Publish(new CancelReservationTransportSyncEvent()
             {

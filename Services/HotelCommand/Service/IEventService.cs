@@ -4,7 +4,7 @@ namespace HotelCommand.Service;
 
 public interface IEventService
 {
-    public Task<bool> reserveHotel(HotelReservationDTO dto);
+    Task<bool> ReserveHotel(HotelReservationDTO dto);
 
-    public Task cancelHotel(int offerId);
+    Task CancelHotel(int offerId);
 }

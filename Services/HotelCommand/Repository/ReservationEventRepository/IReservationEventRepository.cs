@@ -4,9 +4,9 @@ namespace HotelCommand.Repository.ReservationEventRepository;
 
 public interface IReservationEventRepository
 {
-    public Task<List<ReservationEvent>> GetAllHotelEventsForReservationId(int reservationId);
+    Task<List<ReservationEvent>> GetAllHotelEventsForReservationId(int reservationId);
 
-    public Task InsertReservationEvent(int reservationId);
+    Task InsertReservationEvent(int reservationId);
 
-    public Task InsertCancellationEvent(int offerId);
+    Task InsertCancellationEvent(int offerId);
 }

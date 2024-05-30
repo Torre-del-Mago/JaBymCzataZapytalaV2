@@ -25,7 +25,7 @@ public class EventService : IEventService
         _hotelRoomTypeRepository = hotelRoomTypeRepository;
     }
     
-    public async Task<bool> reserveHotel(HotelReservationDTO dto)
+    public async Task<bool> ReserveHotel(HotelReservationDTO dto)
     {
         // wtedy tworzxysz reverdromm i towrzxysz reservation i reservation event
         var hotelById = _hotelRepository.GetHotelByIdAsync(dto.HotelId);
@@ -102,7 +102,7 @@ public class EventService : IEventService
         return true;
     }
 
-    public async Task cancelHotel(int offerId)
+    public async Task CancelHotel(int offerId)
     {
         await _eventRepository.InsertCancellationEvent(offerId);
     }

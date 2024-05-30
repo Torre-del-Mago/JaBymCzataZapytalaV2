@@ -16,7 +16,7 @@ namespace Login.Consumer
         public async Task Consume(ConsumeContext<CheckLoginEvent> context)
         {
             var @event = context.Message;
-            var userLoggedIn = _service.isUsernameCorrect(context.Message.Login);
+            var userLoggedIn = _service.IsUsernameCorrect(context.Message.Login);
             await context.RespondAsync(new CheckLoginEventReply()
             {
                 CorrelationId = @event.CorrelationId,

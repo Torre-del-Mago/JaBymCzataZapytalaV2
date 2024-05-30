@@ -16,7 +16,7 @@ namespace Login.Service.LoginService
             _database = _client.GetDatabase("login");
         }
 
-        public bool isUsernameCorrect(string username)
+        public bool IsUsernameCorrect(string username)
         {
             var userCollection = _database.GetCollection<User>("login").AsQueryable();
 

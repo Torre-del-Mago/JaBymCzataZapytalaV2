@@ -16,7 +16,7 @@ namespace TransportQuery.Consumer
         public Task Consume(ConsumeContext<CancelReservationTransportSyncEvent> context)
         {
             _service.CancelTransport(context.Message.OfferId);
-            throw new NotImplementedException();
+            return Task.CompletedTask;
         }
     }
 }

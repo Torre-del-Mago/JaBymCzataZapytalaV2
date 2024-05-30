@@ -10,7 +10,7 @@ namespace Payment.Service
         public PaymentService(IPaymentRepository repository) {
             _repository = repository;
         }
-        public bool canOfferBePaidFor(DateTime stamp, int offerId)
+        public bool CanOfferBePaidFor(DateTime stamp, int offerId)
         {
             var payment = _repository.GetPaymentForOfferId(offerId);
             if(payment == null)
@@ -21,7 +21,7 @@ namespace Payment.Service
             return (stamp - payment.StartTimeOfPayment).TotalSeconds <= 60;
         }
 
-        public void insertPayment(CheckPaymentEvent paymentEvent)
+        public void InsertPayment(CheckPaymentEvent paymentEvent)
         {
             _repository.InsertPayment(paymentEvent);
         }

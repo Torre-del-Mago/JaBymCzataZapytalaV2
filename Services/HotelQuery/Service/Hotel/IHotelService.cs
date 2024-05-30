@@ -4,7 +4,7 @@ namespace HotelQuery.Service.Hotel;
 
 public interface IHotelService
 {
-    public HotelsDTO GetHotelsForCriteria(CriteriaForHotels criteria);
+    HotelsDTO GetHotelsForCriteria(CriteriaForHotels criteria);
     
-    public HotelDTO GetHotelForCriteria(CriteriaForHotel criteria);
+    HotelDTO GetHotelForCriteria(CriteriaForHotel criteria);
 }
