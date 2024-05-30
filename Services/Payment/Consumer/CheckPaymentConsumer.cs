@@ -12,7 +12,7 @@ namespace Payment.Consumer
         }
         public async Task Consume(ConsumeContext<CheckPaymentEvent> context)
         {
-            _service.insertPayment(context.Message.TimeForPayment, context.Message.OfferId);
+            _service.insertPayment(context.Message);
         }
     }
 }

@@ -9,9 +9,9 @@ public class OfferContext : DbContext
 
     public DbSet<Offer> Offers { get; set; }
 
-    public DbSet<OfferEvent> ReservedRooms { get; set; }
+    public DbSet<OfferEvent> Events { get; set; }
 
-    public DbSet<OfferRoom> OfferRooms { get; set; }
+    public DbSet<OfferRoom> Rooms { get; set; }
 
     private readonly IConfiguration configuration;
     public OfferContext(IConfiguration configuration)

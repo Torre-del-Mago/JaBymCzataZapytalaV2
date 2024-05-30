@@ -14,8 +14,6 @@ namespace OfferCommand.Database.Tables
         [Required]
         public int OfferId { get; set; }
 
-        public Offer Offer { get; set; }
-
         [Required]
         public string EventType { get; set; }
 
