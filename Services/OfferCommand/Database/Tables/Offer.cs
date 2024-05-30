@@ -9,10 +9,6 @@ public class Offer
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
     
-    public string DepartureTicketId { get; set; }
-    
-    public string ArrivalTicketId { get; set; }
-    
     public int DepartureTransportId { get; set; }
     
     public int ArrivalTransportId { get; set; }

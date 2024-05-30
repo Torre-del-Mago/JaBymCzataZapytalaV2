@@ -1,7 +1,10 @@
 import { Component } from '@angular/core';
 import { TripDTO } from '../dto/TripDTO';
 import { BackendService } from '../backend/backend.service';
+import { PayResponse } from '../dto/PayResponse';
+import { ReserveOfferResponse } from '../dto/ReserveOfferResponse';
 import { Router } from '@angular/router';
+import {map, Observable, of} from 'rxjs';
 
 @Component({
   selector: 'app-reserve',
@@ -14,7 +17,8 @@ export class ReserveComponent {
   numberOfChildren: number = 0;
   display?: string
   canPay = true
-
+  offerInfo?: ReserveOfferResponse 
+  result$: Observable<string> = of('')
 
   constructor(private service: BackendService, private router: Router ) {
 
@@ -26,6 +30,7 @@ export class ReserveComponent {
     this.numberOfAdults = numbers[0];
     this.numberOfChildren = numbers[1];
     this.timer(1);
+    this.offerInfo = this.service.getOfferInfo();
   }
 
   timer(minute: number): void {
@@ -53,5 +58,11 @@ export class ReserveComponent {
         this.router.navigateByUrl('');
       }
     }, 1000);
+  }
+
+  async tryPaying() {
+    //TODO: Dodaj catchError()
+    this.result$ = this.service.tryPaying(this.offerInfo!.offerId, this.trip!.price!).pipe(
+      map((r: PayResponse) => { return r.answer === 1 ? "Zapłacono za ofertę" : "Płatność się nie powiodła"}));
   }
 }

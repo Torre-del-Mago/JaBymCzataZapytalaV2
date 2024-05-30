@@ -16,8 +16,8 @@ namespace Payment.Consumer
         public async Task Consume(ConsumeContext<PayEvent> context)
         {
             Random rnd = new Random();
-            bool hasPaymentCompleted = rnd.Next(1, 11) == 1;
-            if (!hasPaymentCompleted)
+            bool hasPaymentNotCompleted = rnd.Next(1, 11) == 1;
+            if (hasPaymentNotCompleted)
             {
                 await context.RespondAsync(new PayEventReply()
                 {
