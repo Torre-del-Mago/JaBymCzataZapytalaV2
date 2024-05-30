@@ -5,7 +5,6 @@ namespace Models.Offer
 {
     public class PaidOfferSyncEvent : EventModel
     {
-        public int OfferId { get; set; }
 
         public OfferSyncDTO OfferSync { get; set; }
 

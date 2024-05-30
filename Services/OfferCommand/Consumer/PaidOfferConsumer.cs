@@ -31,7 +31,6 @@ namespace OfferCommand.Consumer
             _eventRepository.InsertPaidEvent(context.Message.OfferId);
             await _publishEndpoint.Publish(new PaidOfferSyncEvent()
             {
-                OfferId = context.Message.OfferId,
                 OfferSync = ClassConverter.convert(offer),
                 RoomSyncs = ClassConverter.convert(rooms)
             });
