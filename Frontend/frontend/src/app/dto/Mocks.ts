@@ -48,6 +48,7 @@ export const flights: FlightDTO[] = [
 
 export const trips: TripDTO[] = [
   {
+    hotelId: 1,
     beginDate: new Date('2024-05-20'),
     endDate: new Date('2024-05-27'),
     chosenFlight: flights[0],
@@ -60,6 +61,7 @@ export const trips: TripDTO[] = [
     typesOfMeals: ['all inclusive'],
   },
   {
+    hotelId: 2,
     beginDate: new Date('2024-05-22'),
     endDate: new Date('2024-05-29'),
     chosenFlight: flights[0],
