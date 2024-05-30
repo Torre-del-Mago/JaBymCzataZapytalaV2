@@ -1,5 +1,6 @@
 ﻿using HotelQuery.Database.Entity;
 using HotelQuery.Repository.Hotel;
+using HotelQuery.Repository.Reservation;
 using Models.Hotel.DTO;
 
 namespace HotelQuery.Service.Hotel;
@@ -7,10 +8,12 @@ namespace HotelQuery.Service.Hotel;
 public class HotelService : IHotelService
 {
     private readonly IHotelRepository _hotelRepository;
+    private readonly IReservationRepository _reservationRepository;
 
-    public HotelService(IHotelRepository repository)
+    public HotelService(IHotelRepository repository, IReservationRepository reservationRepository)
     {
         _hotelRepository = repository;
+        _reservationRepository = reservationRepository;
     }
     
     public HotelsDTO GetHotelsForCriteria(CriteriaForHotels criteria)
@@ -100,11 +103,11 @@ public class HotelService : IHotelService
 
     public Task<bool> ReserveHotel(HotelReservationDTO dto)
     {
-        return Task.FromResult(false);
+        return _reservationRepository.ReserveAsync(dto.HotelId, dto.BeginDate, dto.EndDate, dto.Rooms, dto.OfferId);
     }
 
     public Task CancelHotel(int offerId)
     {
-        return Task.CompletedTask;
+        return _reservationRepository.CancelReservation(offerId);
     }
 }

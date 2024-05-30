@@ -9,5 +9,7 @@
         public DateTime EndDate { get; set; }
 
         public List<RoomDTO> Rooms { get; set; }
+        
+        public int OfferId { get; set; }
     }
 }

@@ -14,8 +14,7 @@ namespace HotelQuery.Consumer
 
         public Task Consume(ConsumeContext<CancelReservationHotelSyncEvent> context)
         {
-            _service.CancelHotel(context.Message.OfferId);
-            return Task.CompletedTask;
+            return _service.CancelHotel(context.Message.OfferId);
         }
     }
 }
