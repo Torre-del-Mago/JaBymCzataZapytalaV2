@@ -63,6 +63,14 @@ namespace Gate.Controllers
                 Console.WriteLine(request.Offer.EndDate);
                 Console.WriteLine(request.Offer.Flight.ReturnTransportId);
                 Console.WriteLine(request.Offer.Flight.DepartureTransportId);
+                Console.WriteLine(request.Offer.Flight.Departure);
+                Console.WriteLine(request.Offer.Country);
+                Console.WriteLine(request.Offer.City);
+                Console.WriteLine(request.Offer.NumberOfAdults);
+                Console.WriteLine(request.Offer.NumberOfTeenagers);
+                Console.WriteLine(request.Offer.NumberOfNewborns);
+                Console.WriteLine(request.Offer.HotelId);
+                Console.WriteLine(request.Offer.TypeOfMeal);
                 Random rnd = new Random();
                 bool hasPaymentNotCompleted = rnd.Next(1, 11) == 1;
                 var response = new ReserveOfferResponse();
