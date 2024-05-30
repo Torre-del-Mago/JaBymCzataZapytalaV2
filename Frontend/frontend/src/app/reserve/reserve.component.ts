@@ -4,7 +4,7 @@ import { BackendService } from '../backend/backend.service';
 import { PayResponse } from '../dto/PayResponse';
 import { ReserveOfferResponse } from '../dto/ReserveOfferResponse';
 import { Router } from '@angular/router';
-import {map, Observable, of} from 'rxjs';
+import {map, Observable, of, tap} from 'rxjs';
 
 @Component({
   selector: 'app-reserve',
@@ -19,6 +19,7 @@ export class ReserveComponent {
   canPay = true
   offerInfo?: ReserveOfferResponse 
   result$: Observable<string> = of('')
+  timerRef?: Object
 
   constructor(private service: BackendService, private router: Router ) {
 
@@ -29,11 +30,11 @@ export class ReserveComponent {
     let numbers = this.service.getNumbers();
     this.numberOfAdults = numbers[0];
     this.numberOfChildren = numbers[1];
-    this.timer(1);
+    this.timerRef = this.timer(1);
     this.offerInfo = this.service.getOfferInfo();
   }
 
-  timer(minute: number): void {
+  timer(minute: number) {
     // let minute = 1;
     let seconds: number = minute * 60;
     let textSec: any = "0";
@@ -58,11 +59,19 @@ export class ReserveComponent {
         this.router.navigateByUrl('');
       }
     }, 1000);
+    return timer;
   }
 
   async tryPaying() {
     //TODO: Dodaj catchError()
     this.result$ = this.service.tryPaying(this.offerInfo!.offerId, this.trip!.price!).pipe(
-      map((r: PayResponse) => { return r.answer === 1 ? "Zapłacono za ofertę" : "Płatność się nie powiodła"}));
+      tap((r: PayResponse) => {
+        if(r.answer === 1) {
+          clearInterval(this.timerRef! as number)
+          this.router.navigateByUrl('');
+        }
+      }),
+      map((r: PayResponse) => { 
+        return r.answer === 1 ? "Zapłacono za ofertę" : "Płatność się nie powiodła"}));
   }
 }

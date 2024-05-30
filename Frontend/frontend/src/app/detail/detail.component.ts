@@ -194,6 +194,7 @@ export class DetailComponent implements OnInit {
       let tripsForChangedCriteria = this.service.changeTrips([value], this.beginDate, this.endDate, this.numberOfAdults, this.numberOfChildren);
       this.trip = tripsForChangedCriteria[0];
       this.service.setCurrentTrip(this.trip!);
+      this.setTrips();
       }).catch((error: any) => {
         console.log(error);
         this.configurationAvailable = false;
@@ -251,6 +252,7 @@ export class DetailComponent implements OnInit {
       let flight = this.trip!.possibleFlights.find((f: FlightDTO) => f.departure == this.trip!.chosenFlight.departure)
       if(flight !== undefined) {
         this.trip!.chosenFlight = flight
+        console.log("Found in possible flights")
       }
       console.log(this.trip!.chosenFlight);
       this.displayPrice();
