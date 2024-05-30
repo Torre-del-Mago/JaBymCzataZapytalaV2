@@ -21,14 +21,20 @@ namespace HotelCommand.Database
         
         public DbSet<ReservationEvent> Events { get; set; }
 
-        private readonly IConfiguration configuration;
+       public HotelContext(DbContextOptions<HotelContext> options) : base(options) {}
+       
+       public HotelContext() : base() {}
 
-        public HotelContext(IConfiguration configuration)
-        {
-            this.configuration = configuration;
-        }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseNpgsql(configuration.GetConnectionString("DbPath"));
+       protected override void OnModelCreating(ModelBuilder modelBuilder)
+       {
+           modelBuilder.Entity<Diet>().ToTable("Diet");
+           modelBuilder.Entity<Hotel>().ToTable("Hotel");
+           modelBuilder.Entity<HotelDiet>().ToTable("HotelDiet");
+           modelBuilder.Entity<HotelRoomType>().ToTable("HotelRoomType");
+           modelBuilder.Entity<Reservation>().ToTable("Reservation");
+           modelBuilder.Entity<ReservedRoom>().ToTable("ReservedRoom");
+           modelBuilder.Entity<RoomType>().ToTable("RoomType");
+           modelBuilder.Entity<ReservationEvent>().ToTable("ReservationEvent");
+       }
     }
 }

@@ -215,7 +215,7 @@ services:
         - backend
 
   postgres:
-    image: postgres:latest
+    image: postgres:14.2
     restart: always
     hostname: 'postgres'
     container_name: 'postgres'
@@ -232,6 +232,7 @@ services:
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=root 
     volumes:
+      - ./Docker/init/pgdb:/docker-entrypoint-initdb.d
       - postgres_data:/var/lib/postgresql/data
     networks:
       backend:

@@ -68,13 +68,13 @@ void initDB()
     using (var context = contScope.ServiceProvider.GetRequiredService<TransportContext>())
     {
         context.Database.EnsureCreated();
-        if (!context.Transports.Any())
+        if (!context.FlightConnections.Any())
         {
             string csvPath = @"InitData/transports.csv";
             using (var reader = new StreamReader(csvPath))
             {
                 reader.ReadLine(); //Reading headers
-                var random = new Random();
+                var random = new Random(123);
                 int maxNumOfSeats = 20;
                 int numberOfTransports = 90;
                 double maxFlightPrice = 2500;
@@ -101,13 +101,13 @@ void initDB()
                         Transport transport1 = new Transport();
                         transport1.ConnectionId = flightConnectionEntry1.Entity.Id;
                         transport1.NumberOfSeats = random.Next(1, maxNumOfSeats);
-                        transport1.DepartureDate = DateTime.Now.AddDays(Convert.ToDouble(days));
+                        transport1.DepartureDate = DateTime.SpecifyKind(DateTime.Now.AddDays(Convert.ToDouble(days)), DateTimeKind.Utc);
                         transport1.PricePerSeat = Convert.ToDecimal(Math.Round(random.NextDouble()*maxFlightPrice, 2));
 
                         Transport transport2 = new Transport();
                         transport2.ConnectionId = flightConnectionEntry2.Entity.Id;
                         transport2.NumberOfSeats = random.Next(1, maxNumOfSeats);
-                        transport2.DepartureDate = DateTime.Now.AddDays(Convert.ToDouble(days));
+                        transport2.DepartureDate = DateTime.SpecifyKind(DateTime.Now.AddDays(Convert.ToDouble(days)), DateTimeKind.Utc);
                         transport2.PricePerSeat = Convert.ToDecimal(Math.Round(random.NextDouble()*maxFlightPrice, 2));
 
                         context.Transports.Add(transport1);

@@ -13,9 +13,17 @@ using HotelCommand.Service;
 using HotelCommand.Database.Tables;
 using System;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
+builder.Services.AddDbContext<HotelContext>(
+    DbContextOptions => DbContextOptions.UseNpgsql(connectionString)
+        .LogTo(Console.Write, LogLevel.Information)
+        .EnableSensitiveDataLogging()
+        .EnableDetailedErrors()
+);
 // Add services to the container.
 
 builder.Services.AddControllers(); 
@@ -92,8 +100,8 @@ void initDB()
         }
         if (!context.RoomTypes.Any())
         {
-            string[] names = {"Pok�j typu business", "Pok�j dla niepal�cych", "Pok�j typu loft", "Pok�j typu studio", "Pok�j typu suite", "Pok�j typu deluxe",
-            "Pok�j typu superior", "Pok�j z tarasem", "Pok�j z balkonem", "Pok�j typu penthouse"};
+            string[] names = {"Pokój typu business", "Pokój dla niepalócych", "Pokój typu loft", "Pokój typu studio", "Pokój typu suite", "Pokój typu deluxe",
+            "Pokój typu superior", "Pokój z tarasem", "Pokój z balkonem", "Pokój typu penthouse"};
             for (int i = 1; i < 6; i++)
             {
                 foreach (var name in names)
@@ -104,6 +112,8 @@ void initDB()
             context.SaveChanges();
         }
         if (!context.Hotels.Any()){
+            List<Diet> diets = context.Diets.ToList();
+            List<RoomType> roomTypes = context.RoomTypes.ToList();
             string csvPath = @"InitData/hotels.csv";
             using (var reader = new StreamReader(csvPath))
             {
@@ -124,8 +134,8 @@ void initDB()
                     };
 
                     List<HotelDiet> HotelDiets = new List<HotelDiet>();
-                    List<Diet> diets = context.Diets.OrderBy(e => random.Next()).Take(random.Next(3, 6)).ToList();
-                    foreach (Diet diet in diets)
+                    List<Diet> diets_shuffeled = diets.OrderBy(_ => random.Next()).Take(random.Next(3, 6)).ToList();
+                    foreach (Diet diet in diets_shuffeled)
                     {
                         HotelDiet hotelDiet = new HotelDiet { Diet = diet, DietId = diet.Id, Hotel = hotel, HotelId = hotel.Id, };
                         context.HotelDiets.Add(hotelDiet);
@@ -135,8 +145,8 @@ void initDB()
                     }
 
                     List<HotelRoomType> HotelRoomTypes = new List<HotelRoomType>();
-                    List<RoomType> roomTypes = context.RoomTypes.OrderBy(e => random.Next()).Take(random.Next(3, 6)).ToList();
-                    foreach (RoomType roomType in roomTypes)
+                    List<RoomType> roomTypes_shuffeled = roomTypes.OrderBy(_ => random.Next()).Take(random.Next(3, 6)).ToList();
+                    foreach (RoomType roomType in roomTypes_shuffeled)
                     {
                         HotelRoomType hotelRoomType = new HotelRoomType { Hotel = hotel, HotelId = hotel.Id, RoomTypeId=roomType.Id,
                             RoomType=roomType, ReservedRooms=new List<ReservedRoom>(), PricePerNight=random.Next(50, 120), NumberOfRooms= random.Next(1, 5)
