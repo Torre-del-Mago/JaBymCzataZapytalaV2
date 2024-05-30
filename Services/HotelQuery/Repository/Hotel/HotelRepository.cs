@@ -57,23 +57,23 @@ public class HotelRepository : IHotelRepository
         return diet;
     }
 
-    public List<Reservation> GetReservations()
+    public List<Database.Entity.Reservation> GetReservations()
     {
-        var reservationCollection = Database.GetCollection<Reservation>("reservations").AsQueryable();
+        var reservationCollection = Database.GetCollection<Database.Entity.Reservation>("reservations").AsQueryable();
         var result = reservationCollection.ToList();
         return result;
     }
 
-    public Reservation GetReservation(int reservationId)
+    public Database.Entity.Reservation GetReservation(int reservationId)
     {
-        var reservationCollection = Database.GetCollection<Reservation>("reservations");
+        var reservationCollection = Database.GetCollection<Database.Entity.Reservation>("reservations");
         var reservation = reservationCollection.Find(r => r.Id == reservationId).FirstOrDefault();
         return reservation;
     }
 
-    public List<Reservation> GetReservationWithin(DateTime from, DateTime to)
+    public List<Database.Entity.Reservation> GetReservationWithin(DateTime from, DateTime to)
     {
-        var reservationCollection = Database.GetCollection<Reservation>("reservations");
+        var reservationCollection = Database.GetCollection<Database.Entity.Reservation>("reservations");
         var reservations = reservationCollection.Find(r => r.From >= from && r.To <= to).ToList();
         return reservations;
     }

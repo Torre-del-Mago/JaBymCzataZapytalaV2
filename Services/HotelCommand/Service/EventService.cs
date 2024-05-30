@@ -36,11 +36,6 @@ public class EventService : IEventService
         var overlappingReservations = await _reservationRepository
             .GetReservationByHotelIdDatesAndNotDeleted(hotelById.Id, dto.BeginDate, dto.EndDate);
 
-        if (overlappingReservations.Any())
-        {
-            return false;
-        }
-
         var reservedRoomsCount = new Dictionary<int, int>();
         
         foreach (var reservation in overlappingReservations)

@@ -13,13 +13,15 @@ public class TransportContext : DbContext
 
     public DbSet<Event> Events { get; set; }
 
-    private readonly IConfiguration configuration;
+    public TransportContext(DbContextOptions<TransportContext> options) : base(options) {}
 
-    public TransportContext(IConfiguration configuration)
+    public TransportContext() : base() {}
+    
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        this.configuration = configuration;
+        modelBuilder.Entity<FlightConnection>().ToTable("FlightConnection");
+        modelBuilder.Entity<ReservedTicket>().ToTable("ReservedTicket");
+        modelBuilder.Entity<Transport>().ToTable("Transport");
+        modelBuilder.Entity<Event>().ToTable("Event");
     }
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseNpgsql(configuration.GetConnectionString("DbPath"));
-
 }

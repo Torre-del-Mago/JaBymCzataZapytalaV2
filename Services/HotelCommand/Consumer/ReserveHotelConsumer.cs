@@ -12,13 +12,13 @@ namespace HotelCommand.Consumer
         {
             var hasReservedHotel= await eventService.ReserveHotel(context.Message.Reservation);
             if (!hasReservedHotel) {
-                await publishEndpoint.Publish(new ReserveHotelEventReply()
+                await context.RespondAsync(new ReserveHotelEventReply()
                 {
                     Answer = ReserveHotelEventReply.State.NOT_RESERVED,
                     CorrelationId = context.Message.CorrelationId
                 });            
             }
-            await publishEndpoint.Publish(new ReserveHotelEventReply()
+            await context.RespondAsync(new ReserveHotelEventReply()
             {
                 Answer = ReserveHotelEventReply.State.RESERVED,
                 CorrelationId = context.Message.CorrelationId

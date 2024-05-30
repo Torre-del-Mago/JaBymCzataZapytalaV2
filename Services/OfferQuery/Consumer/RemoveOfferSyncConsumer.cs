@@ -13,7 +13,7 @@ namespace OfferQuery.Consumer
         }
         public Task Consume(ConsumeContext<RemoveOfferSyncEvent> context)
         {
-            throw new NotImplementedException();
+            return _service.SynchroniseContent(context.Message.OfferSync, context.Message.RoomSyncs);
         }
     }
 }

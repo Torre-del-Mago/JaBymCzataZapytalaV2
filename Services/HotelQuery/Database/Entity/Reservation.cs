@@ -19,4 +19,7 @@ public class Reservation
 
     [BsonElement("rooms")] 
     public List<ReservedRoom> Rooms { get; set; }
+    
+    [BsonElement("offerId")]
+    public int OfferId { get; set; }
 }

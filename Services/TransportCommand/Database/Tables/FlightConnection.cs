@@ -12,4 +12,6 @@ public class FlightConnection
     public string DepartureLocation { get; set; }
     
     public string ArrivalLocation { get; set; }
+
+    public string ArrivalCountry { get; set; }
 }
