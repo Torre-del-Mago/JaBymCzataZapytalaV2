@@ -30,7 +30,6 @@ namespace OfferCommand.Consumer
             var rooms = _offerRepository.getOfferRoomsByOfferId(offer.Id);
             await _publishEndpoint.Publish(new ReserveOfferSyncEvent()
             {
-                Offer = context.Message.Offer,
                 OfferSync = ClassConverter.convert(offer),
                 RoomSyncs = ClassConverter.convert(rooms)
             });
@@ -47,7 +46,6 @@ namespace OfferCommand.Consumer
                 _offerRepository.UpdateStatus(offer.Id, EventTypes.NotReserved);
                 await _publishEndpoint.Publish(new ReservedOfferSyncEvent()
                 {
-                    OfferId = offer.Id,
                     Answer = ReservedOfferSyncEvent.State.NOT_RESERVED,
                     OfferSync = ClassConverter.convert(offer),
                     RoomSyncs = ClassConverter.convert(rooms)
@@ -65,7 +63,6 @@ namespace OfferCommand.Consumer
             _offerRepository.UpdateStatus(offer.Id, EventTypes.Reserved);
             await _publishEndpoint.Publish(new ReservedOfferSyncEvent()
             {
-                OfferId = offer.Id,
                 Answer = ReservedOfferSyncEvent.State.RESERVED,
                 OfferSync = ClassConverter.convert(offer),
                 RoomSyncs = ClassConverter.convert(rooms)
