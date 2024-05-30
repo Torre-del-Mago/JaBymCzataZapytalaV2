@@ -1,5 +1,6 @@
 using HotelQuery.Consumer;
 using HotelQuery.Repository.Hotel;
+using HotelQuery.Repository.Reservation;
 using HotelQuery.Service.Hotel;
 using MassTransit;
 
@@ -15,6 +16,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IHotelService, HotelService>();
 builder.Services.AddScoped<IHotelRepository, HotelRepository>();
+builder.Services.AddScoped<IReservationRepository, ReservationRespository>();
 
 builder.Services.AddMassTransit(cfg =>
 {
