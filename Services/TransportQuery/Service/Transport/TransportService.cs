@@ -18,26 +18,46 @@ namespace TransportQuery.Service.Transport
         
         public TransportDTO GetTransportForCriteria(CriteriaForTransport criteria)
         {
-            var transportConnections = GenerateTransportConnections(criteria);
-
-            List<FlightDTO> flights = transportConnections
-                .Where(pair => pair.Value.ArrivalId != null && pair.Value.DepartureId != null)
-                .Select(pair => new FlightDTO
-                {
-                    Departure = pair.Key,
-                    DepartureTransportId = pair.Value.DepartureId.Value,
-                    ReturnTransportId = pair.Value.ArrivalId.Value,
-                    PricePerSeat = pair.Value.Price
-                })
-                .ToList();
-
-            var transportDto = new TransportDTO
+            var transports = new List<TransportDTO>();
+            var transportConnections = GenerateTransportsConnections(new CriteriaForTransports()
             {
-                Destination = criteria.Departure,
-                ChosenFlight = flights.ElementAt(0),
-                PossibleFlights = flights
-            };
-            return transportDto;
+                BeginDate = criteria.BeginDate,
+                EndDate = criteria.EndDate,
+                NumberOfPeople = criteria.NumberOfPeople,
+                Country = criteria.Country,
+                Departure = criteria.Departure
+            });
+
+            var criteriaDestinationTransportConnections =
+                transportConnections.Where(tc => tc.DepratureLocation != null && tc.DepratureLocation == criteria.Departure).ToList();
+            var notCriteriaDestinationTransportConnections =
+                transportConnections.Where(tc => tc.DepratureLocation != null && tc.DepratureLocation != criteria.Departure).ToList();
+            var destinations = transportConnections.Where(tc => tc.ArrivalLocation ==  criteria.Destination)
+                .Select(tc => tc.ArrivalLocation).Distinct().ToList();
+            foreach (var destination in destinations)
+            {
+                var transport = new TransportDTO();
+                int index = criteriaDestinationTransportConnections.FindIndex(tc => tc.ArrivalLocation == destination);
+                transport.Destination = destination;
+                transport.ChosenFlight = new FlightDTO
+                {
+                    DepartureTransportId = criteriaDestinationTransportConnections[index].DepartureId.Value,
+                    ReturnTransportId = criteriaDestinationTransportConnections[index].ArrivalId.Value,
+                    PricePerSeat = criteriaDestinationTransportConnections[index].Price,
+                    Departure = criteriaDestinationTransportConnections[index].DepratureLocation
+                };
+                transport.PossibleFlights = notCriteriaDestinationTransportConnections
+                    .Where(tc => tc.ArrivalLocation == destination)
+                    .Select(tc => new FlightDTO()
+                    {
+                        DepartureTransportId = tc.DepartureId.Value,
+                        ReturnTransportId = tc.ArrivalId.Value,
+                        PricePerSeat = tc.Price,
+                        Departure = tc.DepratureLocation
+                    }).ToList();
+                transports.Add(transport);
+            }
+            return transports.Count >0 ? transports[0] : new TransportDTO();
         }
 
         public TransportsDTO GetTransportsForCriteria(CriteriaForTransports criteria)
