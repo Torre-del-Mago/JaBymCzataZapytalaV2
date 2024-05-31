@@ -105,7 +105,8 @@ namespace OfferCommand
                         HotelId = ctx.Saga.Offer.HotelId,
                         BeginDate = ctx.Saga.Offer.BeginDate,
                         EndDate = ctx.Saga.Offer.EndDate,
-                        Rooms = ctx.Saga.Offer.Rooms
+                        Rooms = ctx.Saga.Offer.Rooms,
+                        OfferId = ctx.Saga.OfferId
                     }
                 }).
                 TransitionTo(WaitingForHotel)
@@ -123,9 +124,10 @@ namespace OfferCommand
                         ArrivalTransportId = ctx.Saga.Offer.Flight.DepartureTransportId,
                         ReturnTransportId = ctx.Saga.Offer.Flight.ReturnTransportId,
                         NumberOfPeople = ctx.Saga.Offer.NumberOfAdults + ctx.Saga.Offer.NumberOfNewborns + 
-                        ctx.Saga.Offer.NumberOfTeenagers + ctx.Saga.Offer.NumberOfToddlers
+                        ctx.Saga.Offer.NumberOfTeenagers + ctx.Saga.Offer.NumberOfToddlers,
+                        OfferId = ctx.Saga.OfferId
                     }
-                }).TransitionTo(ReservedOffer),
+                }).TransitionTo(WaitingForTransport),
                 invalid => invalid.ThenAsync(ctx => Console.Out.WriteLineAsync($"Unable to reserve hotel for Saga with id {ctx.Saga.OfferId}")).
                 Then(ctx => cancelReservations(ctx.Saga)).Respond(ctx => new CreatedOfferEventReply()
                 {

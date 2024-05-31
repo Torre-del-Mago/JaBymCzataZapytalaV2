@@ -15,34 +15,35 @@ namespace HotelCommand.Repository.ReservationRepository
 
         public async Task<List<Reservation>> GetAllReservationsAsync()
         {
-            return _context.Reservations.ToList();
+            return await _context.Reservations.ToListAsync();
         }
 
         public async Task<Reservation> GetReservationByIdAsync(int reservationId)
         {
-            return  _context.Reservations.Find(reservationId);
+            return await _context.Reservations.FindAsync(reservationId);
         }
 
         public async Task<Reservation> GetReservationByOfferIdAsync(int offerId)
         {
-            return _context.Reservations
+            return await _context.Reservations
                 .Include(r => r.Rooms)
                 .Include(r => r.Hotel)
-                .FirstOrDefault(r => r.OfferId == offerId);
+                .FirstOrDefaultAsync(r => r.OfferId == offerId);
         }
 
         public async Task<List<Reservation>> GetReservationByHotelIdDatesAndNotDeleted(int hotelId, DateOnly beginDate, DateOnly endDate)
         {
-            var reservations =  _context.Reservations
+            var reservations = await _context.Reservations
                 .Where(r => r.HotelId == hotelId && r.From < endDate && r.To > beginDate)
-                .ToList();
+                .Include(r => r.Rooms)
+                .ToListAsync();
 
             var validReservations = new List<Reservation>();
 
             foreach (var reservation in reservations)
             {
-                var deletedEvent =  _context.Events
-                    .Any(e => e.ReservationId == reservation.Id && e.EventType == "DELETED");
+                var deletedEvent = await _context.Events
+                    .AnyAsync(e => e.ReservationId == reservation.Id && e.EventType == "DELETED");
 
                 if (!deletedEvent)
                 {

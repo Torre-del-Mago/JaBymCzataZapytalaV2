@@ -40,32 +40,23 @@ namespace TransportCommand.Service
 
         public async Task<bool> ReserveTransport(TransportReservationDTO dto)
         {
-            var activeArrivalTicketsTask = getAllActiveTicketsForTransportId(dto.ArrivalTransportId);
-            var activeReturnTicketsTask = getAllActiveTicketsForTransportId(dto.ReturnTransportId);
+            var activeArrivalTickets  = await getAllActiveTicketsForTransportId(dto.ArrivalTransportId);
+            var activeReturnTickets = await getAllActiveTicketsForTransportId(dto.ReturnTransportId);
 
-            var arrivalTransportTask = _transportRepository.GetTransportByIdAsync(dto.ArrivalTransportId);
+            var arrivalTransport = await _transportRepository.GetTransportByIdAsync(dto.ArrivalTransportId);
 
-            var returnTransportTask = _transportRepository.GetTransportByIdAsync(dto.ReturnTransportId);
-            var arrivalTicketsTask = _ticketRepository.GetReservedTicketsByTransportId(dto.ArrivalTransportId);
-            var returnTicketsTask = _ticketRepository.GetReservedTicketsByTransportId(dto.ReturnTransportId);
-
-            var arrivalTickets = await arrivalTicketsTask;
-            var activeArrivalTickets = await activeArrivalTicketsTask;
-
+            var returnTransport = await _transportRepository.GetTransportByIdAsync(dto.ReturnTransportId);
+            var arrivalTickets = await _ticketRepository.GetReservedTicketsByTransportId(dto.ArrivalTransportId);
+            var returnTickets = await _ticketRepository.GetReservedTicketsByTransportId(dto.ReturnTransportId);
+            
             var arrivalTicketsSum = arrivalTickets.Where(t => activeArrivalTickets.Contains(t.Id)).Select(t => t.NumberOfReservedSeats).Sum();
 
             Console.Out.WriteLine($"Sum for arrival tickets for offer with id {dto.OfferId} is {arrivalTicketsSum}");
-
-            var returnTickets = await returnTicketsTask;
-            var activeReturnTickets = await activeArrivalTicketsTask;
-
+            
             var returnTicketsSum = returnTickets.Where(t => activeReturnTickets.Contains(t.Id)).Select(t => t.NumberOfReservedSeats).Sum();
 
             Console.Out.WriteLine($"Sum for arrival tickets for offer with id {dto.OfferId} is {returnTicketsSum}");
-
-            var arrivalTransport = await arrivalTransportTask;
-            var returnTransport = await returnTransportTask;
-
+            
             var canBoardArrivalTransport = arrivalTicketsSum + dto.NumberOfPeople <= arrivalTransport.NumberOfSeats;
             var canBoardReturnTransport = returnTicketsSum + dto.NumberOfPeople <= returnTransport.NumberOfSeats;
 

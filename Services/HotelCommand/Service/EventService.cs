@@ -27,7 +27,7 @@ public class EventService : IEventService
     
     public async Task<bool> ReserveHotel(HotelReservationDTO dto)
     {
-        var hotelById = _hotelRepository.GetHotelByIdAsync(dto.HotelId);
+        var hotelById = await _hotelRepository.GetHotelByIdAsync(dto.HotelId);
         if (hotelById == null)
         {
             return false;
