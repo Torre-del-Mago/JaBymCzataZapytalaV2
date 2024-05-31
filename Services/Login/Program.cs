@@ -1,7 +1,9 @@
 using Login.Consumer;
+using Login.Database.Entity;
 using Login.Service.LoginService;
 using MassTransit;
 using Models.Login;
+using MongoDB.Driver;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,6 +35,8 @@ builder.Services.AddMassTransit(cfg =>
 
 var app = builder.Build();
 
+initDB(app.Services);
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -45,3 +49,38 @@ if (app.Environment.IsDevelopment())
 //app.MapControllers();
 
 app.Run();
+
+void initDB(IServiceProvider services)
+{
+    using var scope = services.CreateScope();
+    const string ConnectionString = "mongodb://root:example@mongo:27017/";
+    var mongoClient = new MongoClient(ConnectionString);
+    var database = mongoClient.GetDatabase("login");
+
+    var userCollection = database.GetCollection<User>("users");
+
+
+    if (!userCollection.AsQueryable().Any())
+    {
+        User user1 = new User() { 
+            Login="Agatka"
+        };
+        User user2 = new User()
+        {
+            Login = "Mareczek"
+        };
+        User user3 = new User()
+        {
+            Login = "Kubuœ"
+        };
+        User user4 = new User()
+        {
+            Login = "Krzysiu"
+        };
+
+        userCollection.InsertOne(user1);
+        userCollection.InsertOne(user2);
+        userCollection.InsertOne(user3);
+        userCollection.InsertOne(user4);
+    }
+}
