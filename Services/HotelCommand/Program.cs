@@ -77,14 +77,7 @@ app.Run();
 
 void initDB()
 {
-    using (var contScope = app.Services.CreateScope())
-    using (var context = contScope.ServiceProvider.GetRequiredService<HotelContext>())
-    {
-        var random = new Random(123);
-        context.Database.EnsureCreated();
-        if (!context.Diets.Any())
-        {
-            string[] names = {
+    string[] names = {
                 "wegetarianska",
                 "azjatycka",
                 "srodziemnomorska",
@@ -92,6 +85,22 @@ void initDB()
                 "keto",
                 "weganska"
             };
+    int[] typesId = {
+        1,2,3,4,5,6,7,8,9,10,
+        11,12,13,14,15,16,17,18,19,20,
+        21,22,23,24,25,26,27,28,29,30,
+        31,32,33,34,35,36,37,38,39,40,
+        41,42,43,44,45,46,47,48,49,50,
+        51,52,53,54,55,56,57,58,59,60,
+    };
+    using (var contScope = app.Services.CreateScope())
+    using (var context = contScope.ServiceProvider.GetRequiredService<HotelContext>())
+    {
+        var random = new Random(123);
+        context.Database.EnsureCreated();
+        if (!context.Diets.Any())
+        {
+            
             foreach (var name in names)
             {
                 context.Diets.Add(new Diet { HotelDiets = new List<HotelDiet>(), Name=name});
@@ -100,11 +109,11 @@ void initDB()
         }
         if (!context.RoomTypes.Any())
         {
-            string[] names = {"Pokój typu business", "Pokój dla niepalócych", "Pokój typu loft", "Pokój typu studio", "Pokój typu suite", "Pokój typu deluxe",
+            string[] namesTypes = {"Pokój typu business", "Pokój dla niepalócych", "Pokój typu loft", "Pokój typu studio", "Pokój typu suite", "Pokój typu deluxe",
             "Pokój typu superior", "Pokój z tarasem", "Pokój z balkonem", "Pokój typu penthouse"};
             for (int i = 1; i < 6; i++)
             {
-                foreach (var name in names)
+                foreach (var name in namesTypes)
                 {
                     context.RoomTypes.Add(new RoomType { Name = name, RoomTypes = new List<HotelRoomType>(), NumberOfPeople = i });
                 }
@@ -133,8 +142,10 @@ void initDB()
                         Discount = Discount,
                     };
 
+                    var selectedNames = names.OrderBy(_ => random.Next()).Take(random.Next(3, 6)).ToList();
+
                     List<HotelDiet> HotelDiets = new List<HotelDiet>();
-                    List<Diet> diets_shuffeled = diets.OrderBy(_ => random.Next()).Take(random.Next(3, 6)).ToList();
+                    List<Diet> diets_shuffeled = diets.Where(d => selectedNames.Contains(d.Name)).ToList();
                     foreach (Diet diet in diets_shuffeled)
                     {
                         HotelDiet hotelDiet = new HotelDiet { Diet = diet, DietId = diet.Id, Hotel = hotel, HotelId = hotel.Id, };
@@ -144,8 +155,10 @@ void initDB()
                         context.Diets.Update(diet);
                     }
 
+                    var selectedIds = typesId.OrderBy(_ => random.Next()).Take(random.Next(3, 6)).ToList();
+
                     List<HotelRoomType> HotelRoomTypes = new List<HotelRoomType>();
-                    List<RoomType> roomTypes_shuffeled = roomTypes.OrderBy(_ => random.Next()).Take(random.Next(3, 6)).ToList();
+                    List<RoomType> roomTypes_shuffeled = roomTypes.Where(rt => selectedIds.Contains(rt.Id)).ToList();
                     foreach (RoomType roomType in roomTypes_shuffeled)
                     {
                         HotelRoomType hotelRoomType = new HotelRoomType { Hotel = hotel, HotelId = hotel.Id, RoomTypeId=roomType.Id,
