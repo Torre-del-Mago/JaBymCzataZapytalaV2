@@ -196,7 +196,7 @@ export class BackendService {
         '?destination=' +
         destination +
         '?country=' +
-        destination +
+        country +
         '&departure=' +
         startCity +
         '&numberOfPeople=' +
