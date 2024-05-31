@@ -39,7 +39,7 @@ namespace OfferCommand.Repository.EventRepository
             {
                 OfferId = offerId,
                 EventType = eventType,
-                TimeStamp = DateTime.Now
+                TimeStamp = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Utc)
             });
             _context.SaveChanges();
         }
