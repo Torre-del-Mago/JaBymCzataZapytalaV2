@@ -42,5 +42,12 @@ namespace TransportQuery.Repository.Transport
             var result = flightConnectionCollection.Where(c => c.ArrivalLocation == arrival).ToList();
             return result;
         }
+
+        public List<FlightConnection> GetFlightList(string country)
+        {
+            var flightConnectionCollection = Database.GetCollection<FlightConnection>("flight_connections").AsQueryable();
+            var result = flightConnectionCollection.Where(c => c.ArrivalCountry == country).ToList();
+            return result;
+        }
     }
 }
