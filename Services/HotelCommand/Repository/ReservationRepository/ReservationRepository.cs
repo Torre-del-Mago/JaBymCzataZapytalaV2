@@ -54,8 +54,10 @@ namespace HotelCommand.Repository.ReservationRepository
 
         public void InsertReservation(Reservation reservation)
         {
+            Console.WriteLine("Key of Reservation1: " + reservation.Id);
             _context.Reservations.Add(reservation);
             _context.SaveChanges();
+            Console.WriteLine("Key of Reservation2: " + reservation.Id);
         }
 
         // HERE YOU SHOULD ADD QUERY ABOUT RESERVATION_EVENT
