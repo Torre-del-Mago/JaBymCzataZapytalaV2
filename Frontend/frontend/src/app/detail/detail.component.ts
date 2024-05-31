@@ -228,7 +228,7 @@ export class DetailComponent implements OnInit {
   }
 
   private async refreshTrip(): Promise<GenerateTripResponse> {
-    const value = await firstValueFrom(this.service.getInfoForTripNew(this.trip!.country, this.trip!.chosenFlight.departure, this.trip!.beginDate, this.trip!.endDate,
+    const value = await firstValueFrom(this.service.getInfoForTripNew(this.trip!.city, this.trip!.country, this.trip!.chosenFlight.departure, this.trip!.beginDate, this.trip!.endDate,
       this.numberOfAdults, this.numberOfChildren, this.trip!.hotelId)
     )
     console.log(value)

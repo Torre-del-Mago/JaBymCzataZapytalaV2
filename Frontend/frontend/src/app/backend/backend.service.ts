@@ -180,12 +180,13 @@ export class BackendService {
 
   public getInfoForTripNew(
     destination: string,
+    country: string,
     startCity: string,
     startDate: Date,
     endDate: Date,
     numberOfAdults: number,
     numberOfChildren: number,
-    selectedHotelId: number 
+    selectedHotelId: number
   ): Observable<GenerateTripResponse> {
 
     return this.client.get<GenerateTripResponse>(
@@ -193,6 +194,8 @@ export class BackendService {
         this.tripControllerUrl +
         this.tripSingleTestUrl +
         '?destination=' +
+        destination +
+        '?country=' +
         destination +
         '&departure=' +
         startCity +
