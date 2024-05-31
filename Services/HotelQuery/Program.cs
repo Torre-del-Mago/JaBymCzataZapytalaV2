@@ -60,7 +60,7 @@ app.Run();
 void initDB(IServiceProvider services)
 {
     using var scope = services.CreateScope();
-    const string ConnectionString = "mongodb://root:student@student-swarm01.maas:27017/";
+    const string ConnectionString = "mongodb://root:example@mongo:27017/";
     //Client = new MongoClient(ConnectionString);
     //Database = Client.GetDatabase("hotel_query");
     //var mongoClient = scope.ServiceProvider.GetRequiredService<IMongoClient>();

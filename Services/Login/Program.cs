@@ -53,7 +53,7 @@ app.Run();
 void initDB(IServiceProvider services)
 {
     using var scope = services.CreateScope();
-    const string ConnectionString = "mongodb://root:student@student-swarm01.maas:27017/";
+    const string ConnectionString = "mongodb://root:example@mongo:27017/";
     var mongoClient = new MongoClient(ConnectionString);
     var database = mongoClient.GetDatabase("login");
 

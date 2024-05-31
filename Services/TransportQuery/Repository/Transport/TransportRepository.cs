@@ -5,7 +5,7 @@ namespace TransportQuery.Repository.Transport
 {
     public class TransportRepository : ITransportRepository
     {
-        const string ConnectionString = "mongodb://root:student@student-swarm01.maas:27017/";
+        const string ConnectionString = "mongodb://root:example@mongo:27017/";
         private MongoClient Client { get; set; }
         private IMongoDatabase Database { get; set; }
 
