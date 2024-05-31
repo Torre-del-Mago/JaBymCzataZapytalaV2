@@ -63,18 +63,22 @@ void initDB(IServiceProvider services)
     if (!userCollection.AsQueryable().Any())
     {
         User user1 = new User() { 
+            Id = 1,
             Login="Agatka"
         };
         User user2 = new User()
         {
+            Id = 2,
             Login = "Mareczek"
         };
         User user3 = new User()
         {
-            Login = "Kubuœ"
+            Id = 3,
+            Login = "Kubuï¿½"
         };
         User user4 = new User()
         {
+            Id = 4,
             Login = "Krzysiu"
         };
 
