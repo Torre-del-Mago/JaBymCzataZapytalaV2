@@ -56,7 +56,7 @@ void initDB(IServiceProvider services)
     using var scope = services.CreateScope();
     const string ConnectionString = "mongodb://root:example@mongo:27017/";
     var mongoClient = new MongoClient(ConnectionString);
-    var database = mongoClient.GetDatabase("transport_query");
+    var database = mongoClient.GetDatabase("offer_query");
 
     var offerCollection = database.GetCollection<Offer>("offers");
     var offerRoomCollection = database.GetCollection<OfferRoom>("offer_rooms");
