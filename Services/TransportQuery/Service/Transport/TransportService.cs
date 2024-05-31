@@ -1,4 +1,5 @@
 ﻿using Models.Transport.DTO;
+using MongoDB.Driver.Linq;
 using TransportQuery.Model;
 using TransportQuery.Repository.Ticket;
 using TransportQuery.Repository.Transport;
@@ -128,11 +129,12 @@ namespace TransportQuery.Service.Transport
             return transportConnections;
         }
         
-        private Dictionary<string, DepartureAndArrivalModel> GenerateTransportsConnections(CriteriaForTransports criteria)
+        private List<DepartureAndArrivalModel> GenerateTransportsConnections(CriteriaForTransports criteria)
         {
-            Dictionary<string, DepartureAndArrivalModel> transportConnections = new Dictionary<string, DepartureAndArrivalModel>();
+            List<DepartureAndArrivalModel> transportConnections = new List<DepartureAndArrivalModel>();
 
-            var destinationFlights = _transportRepository.GetFlightList(criteria.Country);
+            var destinationFlights = _transportRepository.GetDepartureFlightConnections(criteria.Departure)
+                .Where(df => df.ArrivalCountry==criteria.Country);
             foreach (var destinationFlight in destinationFlights)
             {
                 var transportsDF = _transportRepository.GetTransportsById(destinationFlight.Id);
