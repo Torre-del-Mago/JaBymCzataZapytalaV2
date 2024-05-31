@@ -15,7 +15,7 @@ public interface IHotelRepository
     
     List<Database.Entity.Reservation> GetReservations();
     Database.Entity.Reservation GetReservation(int reservationId);
-    List<Database.Entity.Reservation> GetReservationWithin(DateTime from, DateTime to);
+    List<Database.Entity.Reservation> GetReservationWithin(DateOnly from, DateOnly to);
     
     List<ReservedRoom> GetReservedRooms();
     ReservedRoom GetReservedRoom(int reservedRoomId);

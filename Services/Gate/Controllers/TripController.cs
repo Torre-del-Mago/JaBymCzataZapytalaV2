@@ -30,7 +30,7 @@ namespace Gate.Controllers
 
         [HttpGet("test-get")]
         public async Task<IActionResult> getTestInfo([FromQuery] string destination, [FromQuery] int numberOfPeople,
-            [FromQuery] string departure, [FromQuery] DateTime beginDate, [FromQuery] DateTime endDate )
+            [FromQuery] string departure, [FromQuery] DateOnly beginDate, [FromQuery] DateOnly endDate )
         {
             Console.Out.WriteLine(beginDate);
             Console.Out.WriteLine(endDate);
@@ -79,8 +79,8 @@ namespace Gate.Controllers
             {
                 new TripDTO
                 {
-                    BeginDate = new DateTime(2024, 5, 20),
-                    EndDate = new DateTime(2024, 5, 27),
+                    BeginDate = new DateOnly(2024, 5, 20),
+                    EndDate = new DateOnly(2024, 5, 27),
                     ChosenFlight = flights[0],
                     City = "Ateny",
                     Country = "Grecja",
@@ -93,8 +93,8 @@ namespace Gate.Controllers
                 },
                 new TripDTO
                 {
-                    BeginDate = new DateTime(2024, 5, 22),
-                    EndDate = new DateTime(2024, 5, 29),
+                    BeginDate = new DateOnly(2024, 5, 22),
+                    EndDate = new DateOnly(2024, 5, 29),
                     ChosenFlight = flights[0],
                     City = "Ateny",
                     Country = "Grecja",
@@ -122,7 +122,7 @@ namespace Gate.Controllers
 
         [HttpGet("test-single-get")]
         public async Task<IActionResult> getTestInfo([FromQuery] string destination, [FromQuery] int numberOfPeople,
-            [FromQuery] string departure, [FromQuery] DateTime beginDate, [FromQuery] DateTime endDate, [FromQuery] int hotelId )
+            [FromQuery] string departure, [FromQuery] DateOnly beginDate, [FromQuery] DateOnly endDate, [FromQuery] int hotelId )
         {
             Console.Out.WriteLine(beginDate);
             Console.Out.WriteLine(endDate);
@@ -171,8 +171,8 @@ namespace Gate.Controllers
             {
                 new TripDTO
                 {
-                    BeginDate = new DateTime(2024, 5, 20),
-                    EndDate = new DateTime(2024, 5, 27),
+                    BeginDate = new DateOnly(2024, 5, 20),
+                    EndDate = new DateOnly(2024, 5, 27),
                     ChosenFlight = flights[0],
                     City = "Ateny",
                     Country = "Grecja",
@@ -185,8 +185,8 @@ namespace Gate.Controllers
                 },
                 new TripDTO
                 {
-                    BeginDate = new DateTime(2024, 5, 22),
-                    EndDate = new DateTime(2024, 5, 29),
+                    BeginDate = new DateOnly(2024, 5, 22),
+                    EndDate = new DateOnly(2024, 5, 29),
                     ChosenFlight = flights[0],
                     City = "Ateny",
                     Country = "Grecja",
@@ -214,7 +214,7 @@ namespace Gate.Controllers
 
         [HttpGet("trip-info")]
         public async Task<IActionResult> getTripInfo([FromQuery] string destination, [FromQuery] int numberOfPeople,
-            [FromQuery] string departure, [FromQuery] DateTime beginDate, [FromQuery] DateTime endDate, [FromQuery] int hotelId)
+            [FromQuery] string departure, [FromQuery] DateOnly beginDate, [FromQuery] DateOnly endDate, [FromQuery] int hotelId)
         {
             try
             {
@@ -252,7 +252,7 @@ namespace Gate.Controllers
 
         [HttpGet("trip-list-info")]
         public async Task<IActionResult> getTripListInfo([FromQuery] string destination, [FromQuery] int numberOfPeople,
-            [FromQuery] string departure, [FromQuery] DateTime beginDate, [FromQuery] DateTime endDate)
+            [FromQuery] string departure, [FromQuery] DateOnly beginDate, [FromQuery] DateOnly endDate)
         {
             try
             {

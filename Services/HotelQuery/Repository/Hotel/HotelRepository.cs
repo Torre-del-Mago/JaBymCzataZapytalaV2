@@ -71,7 +71,7 @@ public class HotelRepository : IHotelRepository
         return reservation;
     }
 
-    public List<Database.Entity.Reservation> GetReservationWithin(DateTime from, DateTime to)
+    public List<Database.Entity.Reservation> GetReservationWithin(DateOnly from, DateOnly to)
     {
         var reservationCollection = Database.GetCollection<Database.Entity.Reservation>("reservations");
         var reservations = reservationCollection.Find(r => r.From >= from && r.To <= to).ToList();

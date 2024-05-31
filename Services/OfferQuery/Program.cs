@@ -66,8 +66,8 @@ void initDB(IServiceProvider services)
         Offer offer = new Offer() { 
             Id = 0,
             ArrivalTransportId = 0,
-            DateFrom = DateTime.Now,
-            DateTo = DateTime.Now,
+            DateFrom = DateOnly.FromDateTime(DateTime.Now),
+            DateTo = DateOnly.FromDateTime(DateTime.Now),
             DepartureTransportId = 0,
             HotelId = 0,
             NumberOfAdults = 0,

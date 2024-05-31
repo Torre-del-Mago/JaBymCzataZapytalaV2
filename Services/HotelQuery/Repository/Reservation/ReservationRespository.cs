@@ -51,7 +51,7 @@ public class ReservationRespository : IReservationRepository
         return await reservationStatus.Find(filter).AnyAsync();
     }
     
-    public async Task<bool> ReserveAsync(int HotelId, DateTime BeginDate, DateTime EndDate, List<RoomDTO> Rooms, int OfferId)
+    public async Task<bool> ReserveAsync(int HotelId, DateOnly BeginDate, DateOnly EndDate, List<RoomDTO> Rooms, int OfferId)
     {
         using (var session = await Client.StartSessionAsync())
         {

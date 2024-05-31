@@ -31,7 +31,7 @@ namespace HotelCommand.Repository.ReservationRepository
                 .FirstOrDefaultAsync(r => r.OfferId == offerId);
         }
 
-        public async Task<List<Reservation>> GetReservationByHotelIdDatesAndNotDeleted(int hotelId, DateTime beginDate, DateTime endDate)
+        public async Task<List<Reservation>> GetReservationByHotelIdDatesAndNotDeleted(int hotelId, DateOnly beginDate, DateOnly endDate)
         {
             var reservations = await _context.Reservations
                 .Where(r => r.HotelId == hotelId && r.From < endDate && r.To > beginDate)

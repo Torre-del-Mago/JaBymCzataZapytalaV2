@@ -30,15 +30,15 @@ namespace Trip.Consumer
                 {
                     NrOfPeople = 2,
                     Country = "Grecja",
-                    BeginDate = DateTime.Today,
-                    EndDate = DateTime.Today.AddDays(7),
+                    BeginDate = DateOnly.FromDateTime(DateTime.Today),
+                    EndDate = DateOnly.FromDateTime(DateTime.Today.AddDays(7)),
                     Departure = "Gdańsk"
                 };
             }
             if ((criteria.BeginDate == null) || (criteria.EndDate == null))
             {
-                context.Message.Criteria.BeginDate = DateTime.Today;
-                context.Message.Criteria.EndDate = DateTime.Today.AddDays(7);
+                context.Message.Criteria.BeginDate = DateOnly.FromDateTime(DateTime.Today);
+                context.Message.Criteria.EndDate = DateOnly.FromDateTime(DateTime.Today.AddDays(7));
             }
             if ((criteria.NrOfPeople <= 0) || (criteria.NrOfPeople == null))
             {

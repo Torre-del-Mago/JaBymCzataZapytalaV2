@@ -43,7 +43,7 @@ public class HotelService : IHotelService
     }
     
     // Pobieramy wszystkie rezerwacje dla danego hotelu, które zkładają się na przedział czasowy
-    private bool IsHotelAvailable(Database.Entity.Hotel hotel, DateTime beginDate, DateTime endDate, int numberOfPeople)
+    private bool IsHotelAvailable(Database.Entity.Hotel hotel, DateOnly beginDate, DateOnly endDate, int numberOfPeople)
     {
         var reservations = _hotelRepository.GetReservations()
             .Where(r => r.HotelId == hotel.Id &&
@@ -75,7 +75,7 @@ public class HotelService : IHotelService
         return availableRooms.Sum(r => _hotelRepository.GetRoomType(r.RoomTypeId).NumberOfPeople * r.Count) >= numberOfPeople;
     }
 
-    private HotelDTO MapToHotelDto(Database.Entity.Hotel hotel, DateTime beginDate, DateTime endDate)
+    private HotelDTO MapToHotelDto(Database.Entity.Hotel hotel, DateOnly beginDate, DateOnly endDate)
     {
         return new HotelDTO
         {
