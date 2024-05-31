@@ -1,5 +1,7 @@
 using MassTransit;
+using MongoDB.Driver;
 using OfferQuery.Consumer;
+using OfferQuery.Database.Entity;
 using OfferQuery.Repository;
 using OfferQuery.Service;
 
@@ -34,6 +36,7 @@ builder.Services.AddMassTransit(cfg =>
 });
 
 var app = builder.Build();
+initDB(app.Services);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -47,3 +50,43 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+void initDB(IServiceProvider services)
+{
+    using var scope = services.CreateScope();
+    const string ConnectionString = "mongodb://root:example@mongo:27017/";
+    var mongoClient = new MongoClient(ConnectionString);
+    var database = mongoClient.GetDatabase("transport_query");
+
+    var offerCollection = database.GetCollection<Offer>("offers");
+    var offerRoomCollection = database.GetCollection<OfferRoom>("offer_rooms");
+
+    if (!offerCollection.AsQueryable().Any())
+    {
+        Offer offer = new Offer() { 
+            Id = 0,
+            ArrivalTransportId = 0,
+            DateFrom = DateTime.Now,
+            DateTo = DateTime.Now,
+            DepartureTransportId = 0,
+            HotelId = 0,
+            NumberOfAdults = 0,
+            NumberOfNewborns = 0,
+            NumberOfTeenagers = 0,
+            NumberOfToddlers = 0,
+            OfferStatus = "STATUS",
+            UserLogin = "USER_LOGIN"
+        };
+
+        OfferRoom room = new OfferRoom()
+        {
+            Id = 0,
+            NumberOfRooms = 0,
+            OfferId = 0,
+            RoomType = "ROOM_TYPE"
+        };
+
+        offerCollection.InsertOne(offer);
+        offerRoomCollection.InsertOne(room);
+    }
+}
