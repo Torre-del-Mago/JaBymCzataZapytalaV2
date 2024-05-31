@@ -15,6 +15,7 @@ namespace Login.Consumer
 
         public async Task Consume(ConsumeContext<CheckLoginEvent> context)
         {
+            Console.WriteLine("Get CheckLoginEvent");
             var @event = context.Message;
             var userLoggedIn = _service.IsUsernameCorrect(context.Message.Login);
             await context.RespondAsync(new CheckLoginEventReply()
@@ -24,6 +25,7 @@ namespace Login.Consumer
                 CheckLoginEventReply.State.LOGGED :
                 CheckLoginEventReply.State.UNLOGGED
             });
+            Console.WriteLine("Send CheckLoginEventReply");
         }
     }
 }
