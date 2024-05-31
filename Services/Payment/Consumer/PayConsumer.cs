@@ -37,18 +37,22 @@ namespace Payment.Consumer
                     Answer = PayEventReply.State.REJECTED
                 });
             }
-            Guid offerCorrelationId = _repository.GetPaymentForOfferId(context.Message.OfferId).CorrelationId;
-            Console.Out.WriteLine($"Payment was successfully made for offer with id {context.Message.OfferId}");
-            await context.RespondAsync(new PayEventReply()
+            else
             {
-                CorrelationId = context.Message.CorrelationId,
-                Answer = PayEventReply.State.PAID
-            });
-            await context.RespondAsync(new CheckPaymentEventReply()
-            {
-                CorrelationId = offerCorrelationId,
-                Answer = CheckPaymentEventReply.State.PAID
-            });
+                Guid offerCorrelationId = _repository.GetPaymentForOfferId(context.Message.OfferId).CorrelationId;
+                Console.Out.WriteLine($"Payment was successfully made for offer with id {context.Message.OfferId}");
+                await context.RespondAsync(new PayEventReply()
+                {
+                    CorrelationId = context.Message.CorrelationId,
+                    Answer = PayEventReply.State.PAID
+                });
+                await context.Publish(new CheckPaymentEventReply()
+                {
+                    CorrelationId = offerCorrelationId,
+                    Answer = CheckPaymentEventReply.State.PAID
+                });
+            }
+            
         }
     }
 }
