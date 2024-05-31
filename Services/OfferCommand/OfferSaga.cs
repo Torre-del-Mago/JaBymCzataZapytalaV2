@@ -127,9 +127,9 @@ namespace OfferCommand
                     }
                 }).TransitionTo(ReservedOffer),
                 invalid => invalid.ThenAsync(ctx => Console.Out.WriteLineAsync($"Unable to reserve hotel for Saga with id {ctx.Saga.OfferId}")).
-                Then(ctx => cancelReservations(ctx.Saga)).Respond(ctx => new ReserveOfferEventReply()
+                Then(ctx => cancelReservations(ctx.Saga)).Respond(ctx => new CreatedOfferEventReply()
                 {
-                    Answer = ReserveOfferEventReply.State.NOT_RESERVED,
+                    Answer = CreatedOfferEventReply.State.NOT_RESERVED,
                     CorrelationId = ctx.Saga.CorrelationId,
                     Error = "Could not reserve hotel"
                 }
@@ -140,9 +140,9 @@ namespace OfferCommand
                 Then(ctx => processTransport(ctx.Message, ctx.Saga)).
                 IfElse(ctx => ctx.Saga.MadeTransportReservation,
                 valid => valid.ThenAsync(ctx => Console.Out.WriteLineAsync($"Reserved Transport for Saga with id {ctx.Saga.OfferId}")).
-                Respond(ctx => new ReserveOfferEventReply()
+                Respond(ctx => new CreatedOfferEventReply()
                                 {
-                                    Answer = ReserveOfferEventReply.State.RESERVED,
+                                    Answer = CreatedOfferEventReply.State.RESERVED,
                                     CorrelationId = ctx.Saga.CorrelationId
                                 })
                                 .Publish(ctx => new CheckPaymentEvent()
@@ -156,9 +156,9 @@ namespace OfferCommand
                                 .TransitionTo(ReservedOffer),
                 invalid => invalid.ThenAsync(ctx => Console.Out.WriteLineAsync($"Unable to reserve transport for Saga with id {ctx.Saga.OfferId}"))
                         .Then(ctx => cancelReservations(ctx.Saga))
-                                      .Respond(ctx => new ReserveOfferEventReply()
+                                      .Respond(ctx => new CreatedOfferEventReply()
                                     {
-                                        Answer = ReserveOfferEventReply.State.NOT_RESERVED,
+                                        Answer = CreatedOfferEventReply.State.NOT_RESERVED,
                                         CorrelationId = ctx.Saga.CorrelationId,
                                         Error = "Could not reserve transport",
                                     }).Finalize()));
