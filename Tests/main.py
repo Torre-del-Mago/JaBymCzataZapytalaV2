@@ -24,7 +24,7 @@ def tryLoggingIn():
     checkIfLoginIncorrect()
     time.sleep(1)
     login_input.clear()
-    login_input.send_keys("zbysio")
+    login_input.send_keys("Krzysiu")
     login_button.click()
     time.sleep(1)
     checkIfLoggedInCorrectly()
@@ -47,14 +47,14 @@ def checkIfLoggedInCorrectly():
 def chooseSearchOptions():
     destination = Select(
         driver.find_element(By.CSS_SELECTOR, "select[id = 'destination-select']"))
-    destination.select_by_visible_text("Grecja")
+    destination.select_by_visible_text("grecja")
     start_date = driver.find_element(By.CSS_SELECTOR, "input[id = 'start-date']")
-    start_date.send_keys("01052024")
+    start_date.send_keys("01062024")
     end_date = driver.find_element(By.CSS_SELECTOR, "input[id = 'end-date']")
-    end_date.send_keys("31052024")
+    end_date.send_keys("15062024")
     city = Select(
         driver.find_element(By.CSS_SELECTOR, "select[id = 'city-select']"))
-    city.select_by_visible_text("Warszawa")
+    city.select_by_visible_text("warszawa")
     add_child_button = driver.find_element(By.CSS_SELECTOR, "button[id = 'add-child-button']")
     add_child_button.click()
     search()
