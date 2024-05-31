@@ -90,7 +90,7 @@ public class EventService : IEventService
             _reservedRoomRepository.InsertReservedRoom(reservedRoom);
             newReservation.Rooms.Add(reservedRoom);
         }
-        _reservationRepository.InsertReservation(newReservation);
+        //_reservationRepository.InsertReservation(newReservation);
         
         await _eventRepository.InsertReservationEvent(newReservation.Id);
         return true;
