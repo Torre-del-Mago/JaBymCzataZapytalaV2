@@ -213,7 +213,7 @@ namespace Gate.Controllers
         }
 
         [HttpGet("trip-info")]
-        public async Task<IActionResult> getTripInfo([FromQuery] string destination, [FromQuery] int numberOfPeople,
+        public async Task<IActionResult> getTripInfo([FromQuery] string destination, [FromQuery] string country, [FromQuery] int numberOfPeople,
             [FromQuery] string departure, [FromQuery] DateOnly beginDate, [FromQuery] DateOnly endDate, [FromQuery] int hotelId)
         {
             try
@@ -227,8 +227,9 @@ namespace Gate.Controllers
                             EndDate = endDate,
                             Departure = departure,
                             HotelId = hotelId,
-                            Country = destination,
-                            NrOfPeople = numberOfPeople
+                            Country = country,
+                            NrOfPeople = numberOfPeople,
+                            Destination = destination
                         }
                     });
                 
