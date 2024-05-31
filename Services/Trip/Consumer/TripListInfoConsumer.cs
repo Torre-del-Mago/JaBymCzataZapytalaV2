@@ -108,7 +108,7 @@ namespace Trip.Consumer
             {
                 foreach (var transportDto in transportsDto)
                 {
-                    if (hotelDto.Country == transportDto.Destination && hotelDto.City == transportDto.Destination)
+                    if (hotelDto.City == transportDto.Destination )
                     {
                         matchingTrips.Add(Tuple.Create(hotelDto, transportDto));
                     }
