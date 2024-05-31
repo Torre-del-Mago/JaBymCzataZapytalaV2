@@ -155,6 +155,30 @@ namespace TransportQuery.Service.Transport
                     }
                 }
             }
+            var destinations = destinationFlights.Select(df => df.ArrivalLocation).ToList();
+            var otherDestinationFlights = _transportRepository.GetConnectionsForArrivalLocations(destinations);
+            foreach (var destinationFlight in otherDestinationFlights)
+            {
+                var transportsDF = _transportRepository.GetTransportsById(destinationFlight.Id);
+
+                foreach (var transportDF in transportsDF)
+                {
+                    int seatsTotal = transportDF.NumberOfSeats;
+                    int seatsTaken = _transportRepository.GetNumberOfTakenSeatsForTransport(transportDF.Id);
+
+                    if ((criteria.NumberOfPeople <= (seatsTotal - seatsTaken)) && (criteria.BeginDate >= transportDF.DepartureDate))
+                    {
+                        if (!transportConnections.ContainsKey(destinationFlight.DepartureLocation))
+                        {
+                            transportConnections[destinationFlight.DepartureLocation] = new DepartureAndArrivalModel();
+                        }
+
+                        transportConnections[destinationFlight.DepartureLocation].DepartureId = transportDF.Id;
+                        transportConnections[destinationFlight.DepartureLocation].Price += transportDF.PricePerSeat;
+                        break;
+                    }
+                }
+            }
 
             var returnFlights = _transportRepository.GetArrivalFlightConnections(criteria.Departure)
                 .Where(rf => destinationFlights.Select(df =>  df.ArrivalLocation).Any(df => df == rf.DepartureLocation));
@@ -176,6 +200,29 @@ namespace TransportQuery.Service.Transport
 
                         transportConnections[returnFlight.ArrivalLocation].ArrivalId = transportRF.Id;
                         transportConnections[returnFlight.ArrivalLocation].Price += transportRF.PricePerSeat; 
+                        break;
+                    }
+                }
+            }
+            var otherReturnConnections = _transportRepository.GetConnectionsForDepartureLocations(destinations);
+            foreach (var returnFlight in otherReturnConnections)
+            {
+                var transportsRF = _transportRepository.GetTransportsById(returnFlight.Id);
+
+                foreach (var transportRF in transportsRF)
+                {
+                    int seatsTotal = transportRF.NumberOfSeats;
+                    int seatsTaken = _transportRepository.GetNumberOfTakenSeatsForTransport(transportRF.Id);
+
+                    if ((criteria.NumberOfPeople <= (seatsTotal - seatsTaken)) && (criteria.EndDate <= transportRF.DepartureDate))
+                    {
+                        if (!transportConnections.ContainsKey(returnFlight.ArrivalLocation))
+                        {
+                            transportConnections[returnFlight.ArrivalLocation] = new DepartureAndArrivalModel();
+                        }
+
+                        transportConnections[returnFlight.ArrivalLocation].ArrivalId = transportRF.Id;
+                        transportConnections[returnFlight.ArrivalLocation].Price += transportRF.PricePerSeat;
                         break;
                     }
                 }

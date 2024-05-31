@@ -49,5 +49,19 @@ namespace TransportQuery.Repository.Transport
             var result = flightConnectionCollection.Where(c => c.ArrivalCountry == country).ToList();
             return result;
         }
+
+        public List<FlightConnection> GetConnectionsForArrivalLocations(List<string> arrivalLocations)
+        {
+            var flightConnectionCollection = Database.GetCollection<FlightConnection>("flight_connections").AsQueryable();
+            var result = flightConnectionCollection.Where(c => arrivalLocations.Contains(c.ArrivalLocation)).ToList();
+            return result;
+        }
+
+        public List<FlightConnection> GetConnectionsForDepartureLocations(List<string> departureLocations)
+        {
+            var flightConnectionCollection = Database.GetCollection<FlightConnection>("flight_connections").AsQueryable();
+            var result = flightConnectionCollection.Where(c => departureLocations.Contains(c.DepartureLocation)).ToList();
+            return result;
+        }
     }
 }
