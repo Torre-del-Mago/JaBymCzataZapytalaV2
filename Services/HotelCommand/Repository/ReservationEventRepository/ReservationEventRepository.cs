@@ -26,7 +26,7 @@ public class ReservationEventRepository : IReservationEventRepository
         var reservation = new ReservationEvent
         {
             EventType = EventType.Created,
-            TimeStamp = DateTime.UtcNow,
+            TimeStamp = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Utc),
             ReservationId = reservationId,
             Reservation = await _reservationRepository.GetReservationByIdAsync(reservationId)
         };
@@ -42,7 +42,7 @@ public class ReservationEventRepository : IReservationEventRepository
         var reservation = new ReservationEvent
         {
             EventType = EventType.Deleted,
-            TimeStamp = DateTime.UtcNow,
+            TimeStamp = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Utc),
             ReservationId = reservationByOfferId.Id,
             Reservation = reservationByOfferId
         };

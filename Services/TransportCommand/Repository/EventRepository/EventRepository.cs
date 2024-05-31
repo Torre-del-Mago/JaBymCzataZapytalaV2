@@ -57,7 +57,7 @@ namespace TransportCommand.Repository.EventRepository
                 EventType = EventType.Created,
                 TransportId = ticket.TransportId,
                 TicketId = ticket.Id,
-                Timestamp = DateTime.Now
+                Timestamp = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Utc)
             };
             _context.Events.Add(reservation);
             _context.SaveChanges();
