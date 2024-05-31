@@ -18,7 +18,7 @@ namespace TransportQuery.Repository.Transport
         public List<Database.Entity.Transport> GetTransportsById(int flightConnectionId)
         {
             var transportCollection = Database.GetCollection<Database.Entity.Transport>("transports").AsQueryable();
-            return transportCollection.Where(t => t.Id == flightConnectionId).ToList();
+            return transportCollection.Where(t => t.ConnectionId == flightConnectionId).ToList();
         }
         
         public int GetNumberOfTakenSeatsForTransport(int transportId)

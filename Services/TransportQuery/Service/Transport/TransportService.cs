@@ -24,8 +24,8 @@ namespace TransportQuery.Service.Transport
                 .Select(pair => new FlightDTO
                 {
                     Departure = pair.Key,
-                    DepartureTransportId = pair.Value.DepartureId,
-                    ReturnTransportId = pair.Value.ArrivalId,
+                    DepartureTransportId = pair.Value.DepartureId.Value,
+                    ReturnTransportId = pair.Value.ArrivalId.Value,
                     PricePerSeat = pair.Value.Price
                 })
                 .ToList();
@@ -51,8 +51,8 @@ namespace TransportQuery.Service.Transport
                     ChosenFlight = new FlightDTO
                     {
                         Departure = pair.Key,
-                        DepartureTransportId = pair.Value.DepartureId,
-                        ReturnTransportId = pair.Value.ArrivalId,
+                        DepartureTransportId = pair.Value.DepartureId.Value,
+                        ReturnTransportId = pair.Value.ArrivalId.Value,
                         PricePerSeat = pair.Value.Price
                     },
                     PossibleFlights = new List<FlightDTO>
@@ -60,8 +60,8 @@ namespace TransportQuery.Service.Transport
                         new FlightDTO
                         {
                             Departure = pair.Key,
-                            DepartureTransportId = pair.Value.DepartureId,
-                            ReturnTransportId = pair.Value.ArrivalId,
+                            DepartureTransportId = pair.Value.DepartureId.Value,
+                            ReturnTransportId = pair.Value.ArrivalId.Value,
                             PricePerSeat = pair.Value.Price
                         }
                     }
@@ -157,7 +157,7 @@ namespace TransportQuery.Service.Transport
             }
 
             var returnFlights = _transportRepository.GetArrivalFlightConnections(criteria.Departure)
-                .Where(f => f.ArrivalCountry == criteria.Country);
+                .Where(rf => destinationFlights.Select(df =>  df.ArrivalLocation).Any(df => df == rf.DepartureLocation));
             foreach (var returnFlight in returnFlights)
             {
                 var transportsRF = _transportRepository.GetTransportsById(returnFlight.Id);
