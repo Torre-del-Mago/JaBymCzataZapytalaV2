@@ -79,7 +79,8 @@ void initDB()
                 int numberOfTransports = 90;
                 double maxFlightPrice = 2500;
                 string line;
-                int connectionId = 1;
+                int connectionId1 = 1;
+                int connectionId2 = 2;
                 while ((line = reader.ReadLine()) != null)
                 {
                     string[] elements = line.Split(',');
@@ -100,13 +101,13 @@ void initDB()
                     for (int days = 0; days < numberOfTransports; days++)
                     {
                         Transport transport1 = new Transport();
-                        transport1.ConnectionId = connectionId;
+                        transport1.ConnectionId = connectionId1;
                         transport1.NumberOfSeats = random.Next(1, maxNumOfSeats);
                         transport1.DepartureDate = DateTime.SpecifyKind(DateTime.Now.AddDays(Convert.ToDouble(days)), DateTimeKind.Utc);
                         transport1.PricePerSeat = Convert.ToDecimal(Math.Round(random.NextDouble()*maxFlightPrice, 2));
 
                         Transport transport2 = new Transport();
-                        transport2.ConnectionId = connectionId;
+                        transport2.ConnectionId = connectionId2;
                         transport2.NumberOfSeats = random.Next(1, maxNumOfSeats);
                         transport2.DepartureDate = DateTime.SpecifyKind(DateTime.Now.AddDays(Convert.ToDouble(days)), DateTimeKind.Utc);
                         transport2.PricePerSeat = Convert.ToDecimal(Math.Round(random.NextDouble()*maxFlightPrice, 2));
@@ -114,8 +115,8 @@ void initDB()
                         context.Transports.Add(transport1);
                         context.Transports.Add(transport2);
                     }
-
-                    connectionId++;
+                    connectionId1 += 2;
+                    connectionId2 += 2;
                 }
             }
             context.SaveChanges();
