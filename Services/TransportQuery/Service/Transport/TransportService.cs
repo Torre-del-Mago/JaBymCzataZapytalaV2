@@ -70,6 +70,7 @@ namespace TransportQuery.Service.Transport
                         PricePerSeat = tc.Price,
                         Departure = tc.DepratureLocation
                     }).ToList();
+                transports.Add(transport);
             }
             
             return new TransportsDTO { Transports = transports };
