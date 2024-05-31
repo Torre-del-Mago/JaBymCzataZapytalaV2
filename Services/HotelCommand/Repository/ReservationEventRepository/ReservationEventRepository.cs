@@ -22,6 +22,7 @@ public class ReservationEventRepository : IReservationEventRepository
 
     public async Task InsertReservationEvent(int reservationId)
     {
+        Console.WriteLine("InsertReservationEvent - START");
         var reservation = new ReservationEvent
         {
             EventType = EventType.Created,
@@ -30,10 +31,13 @@ public class ReservationEventRepository : IReservationEventRepository
             Reservation = await _reservationRepository.GetReservationByIdAsync(reservationId)
         };
         _context.Events.Add(reservation);
+        _context.SaveChanges();
+        Console.WriteLine("InsertReservationEvent - END");
     }
 
     public async Task InsertCancellationEvent(int offerId)
     {
+        Console.WriteLine("InsertCancellationEvent - START");
         var reservationByOfferId = await _reservationRepository.GetReservationByOfferIdAsync(offerId);
         var reservation = new ReservationEvent
         {
@@ -43,5 +47,7 @@ public class ReservationEventRepository : IReservationEventRepository
             Reservation = reservationByOfferId
         };
         _context.Events.Add(reservation);
+        _context.SaveChanges();
+        Console.WriteLine("InsertCancellationEvent - END");
     }
 }
