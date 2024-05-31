@@ -213,12 +213,24 @@ namespace Gate.Controllers
         }
 
         [HttpGet("trip-info")]
-        public async Task<IActionResult> getTripInfo([FromQuery] GenerateTripRequest request)
+        public async Task<IActionResult> getTripInfo([FromQuery] string destination, [FromQuery] int numberOfPeople,
+            [FromQuery] string departure, [FromQuery] DateTime beginDate, [FromQuery] DateTime endDate, [FromQuery] int hotelId)
         {
             try
             {
                 var clientResponse = await _tripRequestClient.GetResponse<GenerateTripEventReply, TripNotFoundEvent>(
-                    new GenerateTripEvent() { Criteria = request.Criteria });
+                    new GenerateTripEvent()
+                    {
+                        Criteria = new CriteriaForTrip()
+                        {
+                            BeginDate = beginDate,
+                            EndDate = endDate,
+                            Departure = departure,
+                            HotelId = hotelId,
+                            Country = destination,
+                            NrOfPeople = numberOfPeople
+                        }
+                    });
                 
                 if (clientResponse.Is(out Response<TripNotFoundEvent> responseA))
                 {
@@ -239,12 +251,23 @@ namespace Gate.Controllers
         }
 
         [HttpGet("trip-list-info")]
-        public async Task<IActionResult> getTripListInfo([FromQuery] GenerateTripsReqeust request)
+        public async Task<IActionResult> getTripListInfo([FromQuery] string destination, [FromQuery] int numberOfPeople,
+            [FromQuery] string departure, [FromQuery] DateTime beginDate, [FromQuery] DateTime endDate)
         {
             try
             {
                 var clientResponse = await _tripListRequestClient.GetResponse<GenerateTripsEventReply, TripsNotFoundEvent>(
-                    new GenerateTripsEvent() { Criteria = request.Criteria });
+                    new GenerateTripsEvent()
+                    {
+                        Criteria = new CriteriaForTrips()
+                        {
+                            BeginDate = beginDate,
+                            EndDate = endDate,
+                            Departure = departure,
+                            NrOfPeople = numberOfPeople,
+                            Country = destination
+                        }
+                    });
                 if (clientResponse.Is(out Response<TripsNotFoundEvent> responseA))
                 {
                     return BadRequest();
