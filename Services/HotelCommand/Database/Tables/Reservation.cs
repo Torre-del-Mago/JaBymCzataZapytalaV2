@@ -10,10 +10,10 @@ public class Reservation
     public int Id { get; set; }
 
     [Required]
-    public DateTime  From  { get; set; }
+    public DateOnly  From  { get; set; }
 
     [Required]
-    public DateTime  To { get; set; }
+    public DateOnly  To { get; set; }
     
     public List<ReservedRoom> Rooms { get; set; }
 

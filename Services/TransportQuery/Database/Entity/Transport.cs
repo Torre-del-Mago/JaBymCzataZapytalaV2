@@ -15,7 +15,7 @@ public class Transport
     public int NumberOfSeats { get; set; }
 
     [BsonElement("departureDate")]
-    public DateTime DepartureDate { get; set; }
+    public DateOnly DepartureDate { get; set; }
 
     [BsonElement("pricePerSeat")]
     public float PricePerSeat { get; set; }

@@ -109,7 +109,7 @@ void initDB(IServiceProvider services)
                     Transport transport1 = new Transport();
                     transport1.ConnectionId = connectionId1;
                     transport1.NumberOfSeats = random.Next(1, maxNumOfSeats);
-                    transport1.DepartureDate = DateTime.SpecifyKind(DateTime.Now.AddDays(Convert.ToDouble(days)), DateTimeKind.Utc);
+                    transport1.DepartureDate = DateOnly.FromDateTime(DateTime.SpecifyKind(DateTime.Now.AddDays(Convert.ToDouble(days)), DateTimeKind.Utc));
                     transport1.PricePerSeat = (float)Convert.ToDecimal(Math.Round(random.NextDouble() * maxFlightPrice, 2));
                     transport1.Id = IdTransport;
                     IdTransport++;
@@ -117,7 +117,7 @@ void initDB(IServiceProvider services)
                     Transport transport2 = new Transport();
                     transport2.ConnectionId = connectionId2;
                     transport2.NumberOfSeats = random.Next(1, maxNumOfSeats);
-                    transport2.DepartureDate = DateTime.SpecifyKind(DateTime.Now.AddDays(Convert.ToDouble(days)), DateTimeKind.Utc);
+                    transport2.DepartureDate = DateOnly.FromDateTime(DateTime.SpecifyKind(DateTime.Now.AddDays(Convert.ToDouble(days)), DateTimeKind.Utc));
                     transport2.PricePerSeat = (float)Convert.ToDecimal(Math.Round(random.NextDouble() * maxFlightPrice, 2));
                     transport2.Id = IdTransport;
                     IdTransport++;

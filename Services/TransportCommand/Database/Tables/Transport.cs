@@ -13,7 +13,7 @@ public class Transport
     
     public int NumberOfSeats { get; set; }
     
-    public DateTime DepartureDate { get; set; }
+    public DateOnly DepartureDate { get; set; }
     
     public decimal PricePerSeat { get; set; }
 }

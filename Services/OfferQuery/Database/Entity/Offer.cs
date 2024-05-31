@@ -15,10 +15,10 @@ public class Offer
     public int ArrivalTransportId { get; set; }
 
     [BsonElement("dateFrom")]
-    public DateTime DateFrom { get; set; }
+    public DateOnly DateFrom { get; set; }
 
     [BsonElement("dateTo")]
-    public DateTime DateTo { get; set; }
+    public DateOnly DateTo { get; set; }
 
     [BsonElement("hotelId")]
     public int HotelId { get; set; }

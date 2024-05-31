@@ -6,9 +6,9 @@
 
         public string Country { get; set; }
 
-        public DateTime BeginDate { get; set; }
+        public DateOnly BeginDate { get; set; }
 
-        public DateTime EndDate { get; set; }
+        public DateOnly EndDate { get; set; }
 
         public string Departure { get; set; }
     }

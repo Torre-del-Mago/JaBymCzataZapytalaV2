@@ -8,8 +8,8 @@ namespace HotelCommand.Repository.ReservationRepository
         Task<Reservation> GetReservationByIdAsync(int reservationId);
         Task<Reservation> GetReservationByOfferIdAsync(int offerId);
 
-        Task<List<Reservation>> GetReservationByHotelIdDatesAndNotDeleted(int hotelId, DateTime beginDate,
-            DateTime endDate);
+        Task<List<Reservation>> GetReservationByHotelIdDatesAndNotDeleted(int hotelId, DateOnly beginDate,
+            DateOnly endDate);
         void InsertReservation(Reservation reservation);
     }
 }
