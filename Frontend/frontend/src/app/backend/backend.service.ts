@@ -25,14 +25,14 @@ export class BackendService {
   //Nie wiem czy tu jest http czy https więc zmieńcie jak coś
   //Nie wiem jaki port czy też jak nazwiecie bramę w dockerze
   private gateUrl = 'http://localhost:55278/api';
-  private loginCheckUrl = '/logging/test-check';
-  private testPaymentUrl = '/payment/test-check';
-  private testReserveUrl = '/offer/test-reserve';
+  private loginCheckUrl = '/logging/check';
+  private testPaymentUrl = '/payment/check';
+  private testReserveUrl = '/offer/reserve';
   private tripControllerUrl = '/trip';
   private tripListUrl = '/trip-list-info';
   private tripUrl = '/trip-info';
-  private tripsTestUrl = '/test-get';
-  private tripSingleTestUrl = '/test-single-get';
+  private tripsTestUrl = '/trip-list-info';
+  private tripSingleTestUrl = '/trip-info';
   private loggedInUser: string = '';
 
   private currentTrip?: TripDTO;

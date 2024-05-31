@@ -29,7 +29,8 @@ namespace OfferCommand.Repository.OfferRepository
                 NumberOfToddlers = dto.NumberOfToddlers,
                 DepartureTransportId = dto.Flight.DepartureTransportId,
                 ArrivalTransportId = dto.Flight.ReturnTransportId,
-                OfferStatus = EventTypes.Created
+                OfferStatus = EventTypes.Created,
+                UserLogin = "USER_LOGIN"
             };
             _context.Offers.Add(offer);
             _context.SaveChanges();

@@ -1,5 +1,6 @@
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
+using OfferCommand;
 using OfferCommand.Consumer;
 using OfferCommand.Database;
 using OfferCommand.Repository.EventRepository;
@@ -26,6 +27,11 @@ builder.Services.AddScoped<IOfferRepository, OfferRepository>();
 
 builder.Services.AddMassTransit(cfg =>
 {
+    cfg.AddSagaStateMachine<OfferSaga, OfferReservation>(context =>
+    {
+        context.UseMessageRetry(r => r.Interval(3, 1000));
+        context.UseInMemoryOutbox();
+    }).InMemoryRepository();
     cfg.AddConsumer<PaidOfferConsumer>();
     cfg.AddConsumer<RemoveOfferConsumer>();
     cfg.AddConsumer<ReserveOfferConsumer>();
