@@ -39,7 +39,7 @@ namespace TransportCommand.Repository.EventRepository
                     EventType = EventType.Deleted,
                     TransportId = ticket.TransportId,
                     TicketId = ticket.Id,
-                    Timestamp = DateTime.Now
+                    Timestamp = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Utc)
                 };
                 events.Add(reservation);
             }

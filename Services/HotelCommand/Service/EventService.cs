@@ -68,7 +68,8 @@ public class EventService : IEventService
             From = dto.BeginDate,
             To = dto.EndDate,
             HotelId = dto.HotelId,
-            Rooms = new List<ReservedRoom>()
+            Rooms = new List<ReservedRoom>(),
+            OfferId = dto.OfferId
         };
 
         // Tworzenie obiektów ReservedRoom dla nowej rezerwacji

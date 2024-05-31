@@ -40,6 +40,7 @@ namespace OfferCommand.Consumer
             {
                 Offer = context.Message.Offer,
                 OfferId = offer.Id,
+                CorrelationId = context.Message.CorrelationId
             });
             Console.Out.WriteLine($"Got reserving response for offer with id {offer.Id}");
 

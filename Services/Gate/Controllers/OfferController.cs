@@ -22,7 +22,7 @@ namespace Gate.Controllers
             try
             {
                 var cts = new CancellationTokenSource();
-                cts.CancelAfter(TimeSpan.FromSeconds(10));
+                cts.CancelAfter(TimeSpan.FromSeconds(30));
                 var cancellationToken = cts.Token;
                 var clientResponse = await _requestClient.GetResponse<ReserveOfferEventReply>(
                     new ReserveOfferEvent() { Offer = request.Offer }, cancellationToken);
