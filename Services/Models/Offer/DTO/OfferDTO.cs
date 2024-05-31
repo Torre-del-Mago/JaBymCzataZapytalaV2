@@ -11,9 +11,9 @@ namespace Models.Offer.DTO
 
         public string City { get; set; }
 
-        public DateTime BeginDate { get; set; }
+        public DateOnly BeginDate { get; set; }
 
-        public DateTime EndDate { get; set; }
+        public DateOnly EndDate { get; set; }
 
         public FlightDTO Flight { get; set; }
 

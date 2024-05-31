@@ -13,9 +13,9 @@ public class Offer
     
     public int ArrivalTransportId { get; set; }
     
-    public DateTime DateFrom { get; set; }
+    public DateOnly DateFrom { get; set; }
     
-    public DateTime DateTo { get; set; }
+    public DateOnly DateTo { get; set; }
     
     public int HotelId { get; set; }
     

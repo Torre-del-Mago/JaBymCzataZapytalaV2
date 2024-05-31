@@ -2,9 +2,9 @@
 {
     public class CriteriaForTransports
     {
-        public DateTime BeginDate { get; set; }
+        public DateOnly BeginDate { get; set; }
 
-        public DateTime EndDate { get; set; }
+        public DateOnly EndDate { get; set; }
 
         public int NumberOfPeople { get; set; }
 

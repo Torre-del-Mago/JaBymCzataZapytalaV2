@@ -10,9 +10,9 @@
 
         public string City { get; set; }
 
-        public DateTime BeginDate { get; set; }
+        public DateOnly BeginDate { get; set; }
 
-        public DateTime EndDate { get; set; }
+        public DateOnly EndDate { get; set; }
 
         public List<string> TypesOfMeals { get; set; }
 
