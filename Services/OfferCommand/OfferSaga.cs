@@ -142,7 +142,7 @@ namespace OfferCommand
                 Then(ctx => processTransport(ctx.Message, ctx.Saga)).
                 IfElse(ctx => ctx.Saga.MadeTransportReservation,
                 valid => valid.ThenAsync(ctx => Console.Out.WriteLineAsync($"Reserved Transport for Saga with id {ctx.Saga.OfferId}")).
-                Respond(ctx => new CreatedOfferEventReply()
+                Publish(ctx => new CreatedOfferEventReply()
                                 {
                                     Answer = CreatedOfferEventReply.State.RESERVED,
                                     CorrelationId = ctx.Saga.CorrelationId
