@@ -4,14 +4,14 @@ using Models.Login;
 
 namespace Login.Consumer
 {
-    public sealed class LoginConsumer : IConsumer<CheckLoginEvent>
+    public class LoginConsumer : IConsumer<CheckLoginEvent>
     {
         private ILoginService _service { get; set; }
 
-        //public LoginConsumer(ILoginService loginService)
-        //{
-        //    _service = loginService;
-        //}
+        public LoginConsumer(ILoginService loginService)
+        {
+            _service = loginService;
+        }
 
         public async Task Consume(ConsumeContext<CheckLoginEvent> context)
         {

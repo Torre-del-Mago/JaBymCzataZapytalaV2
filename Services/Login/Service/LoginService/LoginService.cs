@@ -6,7 +6,7 @@ namespace Login.Service.LoginService
     public class LoginService : ILoginService
     {
 
-        const string connectionUri = "mongodb://mongo:27017";
+        const string connectionUri = "mongodb://root:example@mongo:27017/";
 
         private MongoClient _client { get; set; }
         private IMongoDatabase _database { get; set; }
@@ -18,7 +18,7 @@ namespace Login.Service.LoginService
 
         public bool IsUsernameCorrect(string username)
         {
-            var userCollection = _database.GetCollection<User>("login").AsQueryable();
+            var userCollection = _database.GetCollection<User>("users").AsQueryable();
 
             var user = userCollection.Where(u => u.Login == username).FirstOrDefault();
 
