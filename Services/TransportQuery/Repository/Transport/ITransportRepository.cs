@@ -8,6 +8,8 @@ namespace TransportQuery.Repository.Transport
         List<Database.Entity.Transport> GetTransportsById(int flightConnectionId);
         List<FlightConnection> GetDepartureFlightConnections(string departure);
         List<FlightConnection> GetArrivalFlightConnections(string arrival);
+
+        List<FlightConnection> GetFlightList(string country);
         
     }
 }
