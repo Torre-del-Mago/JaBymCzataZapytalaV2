@@ -42,33 +42,36 @@ namespace TransportQuery.Service.Transport
 
         public TransportsDTO GetTransportsForCriteria(CriteriaForTransports criteria)
         {
+            var transports = new List<TransportDTO>();
             var transportConnections = GenerateTransportsConnections(criteria);
-
-            var transports = transportConnections
-                .Where(pair => pair.Value.ArrivalId != null && pair.Value.DepartureId != null)
-                .Select(pair => new TransportDTO
+            var criteriaDestinationTransportConnections =
+                transportConnections.Where(tc => tc.DepratureLocation != null && tc.DepratureLocation == criteria.Departure).ToList();
+            var notCriteriaDestinationTransportConnections =
+                transportConnections.Where(tc => tc.DepratureLocation != null && tc.DepratureLocation != criteria.Departure).ToList();
+            var destinations = transportConnections.Select(tc => tc.ArrivalLocation).Distinct().ToList();
+            foreach (var destination in destinations)
+            {
+                var transport = new TransportDTO();
+                int index = criteriaDestinationTransportConnections.FindIndex(tc => tc.ArrivalLocation == destination);
+                transport.Destination = destination;
+                transport.ChosenFlight = new FlightDTO
                 {
-                    Destination = pair.Key,
-                    ChosenFlight = new FlightDTO
+                    DepartureTransportId = criteriaDestinationTransportConnections[index].DepartureId.Value,
+                    ReturnTransportId = criteriaDestinationTransportConnections[index].ArrivalId.Value,
+                    PricePerSeat = criteriaDestinationTransportConnections[index].Price,
+                    Departure = criteriaDestinationTransportConnections[index].DepratureLocation
+                };
+                transport.PossibleFlights = notCriteriaDestinationTransportConnections
+                    .Where(tc => tc.ArrivalLocation == destination)
+                    .Select(tc => new FlightDTO()
                     {
-                        Departure = pair.Key,
-                        DepartureTransportId = pair.Value.DepartureId.Value,
-                        ReturnTransportId = pair.Value.ArrivalId.Value,
-                        PricePerSeat = pair.Value.Price
-                    },
-                    PossibleFlights = new List<FlightDTO>
-                    {
-                        new FlightDTO
-                        {
-                            Departure = pair.Key,
-                            DepartureTransportId = pair.Value.DepartureId.Value,
-                            ReturnTransportId = pair.Value.ArrivalId.Value,
-                            PricePerSeat = pair.Value.Price
-                        }
-                    }
-                })
-                .ToList();
-
+                        DepartureTransportId = tc.DepartureId.Value,
+                        ReturnTransportId = tc.ArrivalId.Value,
+                        PricePerSeat = tc.Price,
+                        Departure = tc.DepratureLocation
+                    }).ToList();
+            }
+            
             return new TransportsDTO { Transports = transports };
         }
 
