@@ -146,13 +146,20 @@ namespace TransportQuery.Service.Transport
 
                     if ((criteria.NumberOfPeople <= (seatsTotal - seatsTaken)) && (criteria.BeginDate >= transportDF.DepartureDate))
                     {
-                        if (!transportConnections.ContainsKey(destinationFlight.DepartureLocation))
+                        if (!transportConnections.Any(tc => tc.ArrivalLocation == destinationFlight.ArrivalLocation && tc.DepratureLocation == destinationFlight.DepartureLocation))
                         {
-                            transportConnections[destinationFlight.DepartureLocation] = new DepartureAndArrivalModel();
+                            transportConnections.Add(new  DepartureAndArrivalModel
+                            {
+                                DepratureLocation = destinationFlight.DepartureLocation, 
+                                ArrivalLocation = destinationFlight.ArrivalLocation
+                            });
                         }
 
-                        transportConnections[destinationFlight.DepartureLocation].DepartureId = transportDF.Id;
-                        transportConnections[destinationFlight.DepartureLocation].Price += transportDF.PricePerSeat; 
+                        int tcIndex = transportConnections.FindIndex(tc =>
+                            tc.ArrivalLocation == destinationFlight.ArrivalLocation &&
+                            tc.DepratureLocation == destinationFlight.DepartureLocation);
+                        transportConnections[tcIndex].DepartureId = transportDF.Id;
+                        transportConnections[tcIndex].Price += transportDF.PricePerSeat; 
                         break;
                     }
                 }
