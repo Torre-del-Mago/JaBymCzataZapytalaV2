@@ -1,17 +1,17 @@
-<a routerLink="/login">Login</a>
+<a id="login" routerLink="/login">Login</a>
 <div>
   <label for="destination">Destynacja</label>
-  <select name="destination" [(ngModel)]="destination">
+  <select id="destination-select" name="destination" [(ngModel)]="destination">
     <option *ngFor="let country of destinations" [ngValue]="country">
       {{ country }}
     </option>
   </select>
   <label for="startDate">Data wylotu</label>
-  <input type="date" name="startDate" [(ngModel)]="startDate" />
+  <input id="start-date" type="date" name="startDate" [(ngModel)]="startDate" />
   <label for="endDate">Data powrotu</label>
-  <input type="date" name="endDate" [(ngModel)]="endDate" />
+  <input id="end-date" type="date" name="endDate" [(ngModel)]="endDate" />
   <label for="startCity">Miejsce wylotu</label>
-  <select name="startCity" [(ngModel)]="startCity">
+  <select id="city-select" name="startCity" [(ngModel)]="startCity">
     <option *ngFor="let city of startCities" [ngValue]="city">
       {{ city }}
     </option>
@@ -20,9 +20,9 @@
   <button (click)="addAdult()" [disabled]="canIncreasePeople">+</button>
   <button (click)="minusAdult()" [disabled]="canDecreaseAdults">-</button>
   Number of children: {{numberOfChildren}} 
-  <button (click)="addChild()" [disabled]="canIncreasePeople">+</button>
+  <button id="add-child-button" (click)="addChild()" [disabled]="canIncreasePeople">+</button>
   <button (click)="minusChild()" [disabled]="canDecreaseChildren">-</button>
-  <button (click)="search()">Szukaj</button>
+  <button id="search-button" (click)="search()">Szukaj</button>
   <div [hidden]="!notAllValuesPresent">
     Not all fields of form have been filled
   </div>
@@ -30,13 +30,13 @@
 <div [hidden]="noMatchesFound">
   <div>Wyniki wyszukiwania</div>
   <div *ngFor="let trip of result$ | async">
-    <span>
+    <span id="trip-span">
       Hotel: {{ trip.hotelName }}, {{ trip.city }} Miasto wylotu:
       {{ trip.chosenFlight.departure }}
       Cena {{trip.price}} zł 
       Od {{transformDate(trip.beginDate)}} Do {{transformDate(trip.endDate)}}
     </span>
-    <button (click)="detail(trip)">Wybierz</button>
+    <button id="choose-button" (click)="detail(trip)">Wybierz</button>
   </div>
 </div>
 <div [hidden]="!noMatchesFound">
