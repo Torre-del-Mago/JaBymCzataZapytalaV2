@@ -165,7 +165,8 @@ namespace TransportQuery.Service.Transport
                 }
             }
             var destinations = destinationFlights.Select(df => df.ArrivalLocation).ToList();
-            var otherDestinationFlights = _transportRepository.GetConnectionsForArrivalLocations(destinations);
+            var otherDestinationFlights = _transportRepository.GetConnectionsForArrivalLocations(destinations)
+                .Where(df => df.DepartureLocation != criteria.Departure);
             foreach (var destinationFlight in otherDestinationFlights)
             {
                 var transportsDF = _transportRepository.GetTransportsById(destinationFlight.Id);
@@ -177,13 +178,20 @@ namespace TransportQuery.Service.Transport
 
                     if ((criteria.NumberOfPeople <= (seatsTotal - seatsTaken)) && (criteria.BeginDate >= transportDF.DepartureDate))
                     {
-                        if (!transportConnections.ContainsKey(destinationFlight.DepartureLocation))
+                        if (!transportConnections.Any(tc => tc.ArrivalLocation == destinationFlight.ArrivalLocation && tc.DepratureLocation == destinationFlight.DepartureLocation))
                         {
-                            transportConnections[destinationFlight.DepartureLocation] = new DepartureAndArrivalModel();
+                            transportConnections.Add(new  DepartureAndArrivalModel
+                            {
+                                DepratureLocation = destinationFlight.DepartureLocation, 
+                                ArrivalLocation = destinationFlight.ArrivalLocation
+                            });
                         }
 
-                        transportConnections[destinationFlight.DepartureLocation].DepartureId = transportDF.Id;
-                        transportConnections[destinationFlight.DepartureLocation].Price += transportDF.PricePerSeat;
+                        int tcIndex = transportConnections.FindIndex(tc =>
+                            tc.ArrivalLocation == destinationFlight.ArrivalLocation &&
+                            tc.DepratureLocation == destinationFlight.DepartureLocation);
+                        transportConnections[tcIndex].DepartureId = transportDF.Id;
+                        transportConnections[tcIndex].Price += transportDF.PricePerSeat; 
                         break;
                     }
                 }
@@ -197,46 +205,54 @@ namespace TransportQuery.Service.Transport
 
                 foreach (var transportRF in transportsRF)
                 {
-                    if (transportConnections.Any(tc => tc.ArrivalLocation == returnFlight.ArrivalLocation && tc.DepratureLocation == returnFlight.DepartureLocation))
+                    int seatsTotal = transportRF.NumberOfSeats;
+                    int seatsTaken = _transportRepository.GetNumberOfTakenSeatsForTransport(transportRF.Id);
+
+                    if ((criteria.NumberOfPeople <= (seatsTotal - seatsTaken)) &&
+                        (criteria.EndDate >= transportRF.DepartureDate))
                     {
-                        transportConnections.Add(new DepartureAndArrivalModel
+                        if (transportConnections.Any(tc =>
+                                tc.ArrivalLocation == returnFlight.DepartureLocation &&
+                                tc.DepratureLocation == returnFlight.ArrivalLocation))
                         {
-                            DepratureLocation = returnFlight.DepartureLocation,
-                            ArrivalLocation = returnFlight.ArrivalLocation
-                        });
-                        int tcIndex = transportConnections.FindIndex(tc =>
-                        tc.ArrivalLocation == returnFlight.ArrivalLocation &&
-                        tc.DepratureLocation == returnFlight.DepartureLocation);
-                        transportConnections[tcIndex].DepartureId = transportRF.Id;
-                        transportConnections[tcIndex].Price += transportRF.PricePerSeat;
-                        break;
+                            int tcIndex = transportConnections.FindIndex(tc =>
+                                tc.ArrivalLocation == returnFlight.DepartureLocation &&
+                                tc.DepratureLocation == returnFlight.ArrivalLocation);
+                            transportConnections[tcIndex].ArrivalId = transportRF.Id;
+                            transportConnections[tcIndex].Price += transportRF.PricePerSeat;
+                            break;
+                        }
                     }
                 }
             }
-            var otherReturnConnections = _transportRepository.GetConnectionsForDepartureLocations(destinations);
+            var otherReturnConnections = _transportRepository.GetConnectionsForDepartureLocations(destinations)
+                .Where(rc => rc.ArrivalLocation != criteria.Departure);
             foreach (var returnFlight in otherReturnConnections)
             {
                 var transportsRF = _transportRepository.GetTransportsById(returnFlight.Id);
 
                 foreach (var transportRF in transportsRF)
                 {
-                    if (transportConnections.Any(tc => tc.ArrivalLocation == returnFlight.ArrivalLocation && tc.DepratureLocation == returnFlight.DepartureLocation))
+                    int seatsTotal = transportRF.NumberOfSeats;
+                    int seatsTaken = _transportRepository.GetNumberOfTakenSeatsForTransport(transportRF.Id);
+
+                    if ((criteria.NumberOfPeople <= (seatsTotal - seatsTaken)) &&
+                        (criteria.EndDate >= transportRF.DepartureDate))
                     {
-                        transportConnections.Add(new DepartureAndArrivalModel
+                        if (transportConnections.Any(tc =>
+                                tc.ArrivalLocation == returnFlight.DepartureLocation &&
+                                tc.DepratureLocation == returnFlight.ArrivalLocation))
                         {
-                            DepratureLocation = returnFlight.DepartureLocation,
-                            ArrivalLocation = returnFlight.ArrivalLocation
-                        });
-                        int tcIndex = transportConnections.FindIndex(tc =>
-                        tc.ArrivalLocation == returnFlight.ArrivalLocation &&
-                        tc.DepratureLocation == returnFlight.DepartureLocation);
-                        transportConnections[tcIndex].DepartureId = transportRF.Id;
-                        transportConnections[tcIndex].Price += transportRF.PricePerSeat;
-                        break;
+                            int tcIndex = transportConnections.FindIndex(tc =>
+                                tc.ArrivalLocation == returnFlight.DepartureLocation &&
+                                tc.DepratureLocation == returnFlight.ArrivalLocation);
+                            transportConnections[tcIndex].ArrivalId = transportRF.Id;
+                            transportConnections[tcIndex].Price += transportRF.PricePerSeat;
+                            break;
+                        }
                     }
                 }
             }
-
             return transportConnections;
         }
 
