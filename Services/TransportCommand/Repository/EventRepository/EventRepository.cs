@@ -26,6 +26,7 @@ namespace TransportCommand.Repository.EventRepository
                 Timestamp = DateTime.Now
             };
             _context.Events.Add(reservation);
+            _context.SaveChanges();
         }
 
         public async Task InsertCancellationEventForTickets(List<ReservedTicket> tickets)
@@ -45,6 +46,7 @@ namespace TransportCommand.Repository.EventRepository
             if(events.Count > 0)
             {
                 _context.Events.AddRange(events);
+                _context.SaveChanges();
             }
         }
 
@@ -58,6 +60,7 @@ namespace TransportCommand.Repository.EventRepository
                 Timestamp = DateTime.Now
             };
             _context.Events.Add(reservation);
+            _context.SaveChanges();
         }
     }
 }

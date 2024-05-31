@@ -36,5 +36,6 @@ public class ReservedTicketRepository : IReservedTicketRepository
     public async Task InsertTicket(ReservedTicket ticket)
     {
         _context.ReservedTickets.Add(ticket);
+        _context.SaveChanges();
     }
 }
