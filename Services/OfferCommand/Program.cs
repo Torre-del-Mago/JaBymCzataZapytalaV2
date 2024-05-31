@@ -29,7 +29,6 @@ builder.Services.AddMassTransit(cfg =>
 {
     cfg.AddSagaStateMachine<OfferSaga, OfferReservation>(context =>
     {
-        context.UseMessageRetry(r => r.Interval(3, 1000));
         context.UseInMemoryOutbox();
     }).InMemoryRepository();
     cfg.AddConsumer<PaidOfferConsumer>();
