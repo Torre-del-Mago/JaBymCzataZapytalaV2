@@ -41,6 +41,7 @@ namespace OfferCommand.Repository.EventRepository
                 EventType = eventType,
                 TimeStamp = DateTime.Now
             });
+            _context.SaveChanges();
         }
     }
 }
