@@ -36,6 +36,7 @@ namespace Trip.Consumer
                 NumberOfPeople=context.Message.Criteria.NrOfPeople,
                 Country= context.Message.Criteria.Country,
                 Departure= context.Message.Criteria.Departure,
+                Destination= context.Message.Criteria.Destination
                 }
             };
             HotelDTO hotelDto = new HotelDTO();
