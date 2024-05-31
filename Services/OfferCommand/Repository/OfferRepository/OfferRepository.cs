@@ -32,6 +32,7 @@ namespace OfferCommand.Repository.OfferRepository
                 OfferStatus = EventTypes.Created
             };
             _context.Offers.Add(offer);
+            _context.SaveChanges();
             List<OfferRoom> rooms = new List<OfferRoom>();
             foreach (var room in dto.Rooms)
             {
@@ -43,6 +44,7 @@ namespace OfferCommand.Repository.OfferRepository
                 });
             }
             _context.Rooms.AddRange(rooms);
+            _context.SaveChanges();
 
             return offer;
         }
