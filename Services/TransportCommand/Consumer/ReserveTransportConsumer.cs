@@ -21,14 +21,17 @@ namespace TransportCommand.Consumer
                 {
                     Answer = ReserveTransportEventReply.State.NOT_RESERVED,
                     CorrelationId = context.Message.CorrelationId
-                });            
+                });
             }
-            Console.Out.WriteLine($"Reserved transport for offer with id {context.Message.Reservation.OfferId}");
-            await context.RespondAsync(new ReserveTransportEventReply()
+            else
             {
-                Answer = ReserveTransportEventReply.State.RESERVED,
-                CorrelationId = context.Message.CorrelationId
-            });
+                Console.Out.WriteLine($"Reserved transport for offer with id {context.Message.Reservation.OfferId}");
+                await context.RespondAsync(new ReserveTransportEventReply()
+                {
+                    Answer = ReserveTransportEventReply.State.RESERVED,
+                    CorrelationId = context.Message.CorrelationId
+                });
+            }
 
             await context.Publish(new ReserveTransportSyncEvent()
             {
