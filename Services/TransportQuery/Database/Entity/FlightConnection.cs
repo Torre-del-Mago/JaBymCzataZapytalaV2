@@ -14,7 +14,7 @@ public class FlightConnection
     [BsonElement("arrivalLocation")]
     public string ArrivalLocation { get; set; }
 
-    [BsonElement("country")]
+    [BsonElement("arrivalCountry")]
     public string ArrivalCountry { get; set; }
 
 }

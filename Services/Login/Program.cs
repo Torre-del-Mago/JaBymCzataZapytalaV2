@@ -74,7 +74,7 @@ void initDB(IServiceProvider services)
         User user3 = new User()
         {
             Id = 3,
-            Login = "Kubu�"
+            Login = "Kubuś"
         };
         User user4 = new User()
         {

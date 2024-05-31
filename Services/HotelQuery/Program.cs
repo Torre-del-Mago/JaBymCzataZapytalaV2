@@ -82,8 +82,8 @@ void initDB(IServiceProvider services)
 
     var roomTypes = new[]
     {
-        "Pok骿 typu business", "Pok骿 dla niepal筩ych", "Pok骿 typu loft", "Pok骿 typu studio", "Pok骿 typu suite", "Pok骿 typu deluxe",
-        "Pok骿 typu superior", "Pok骿 z tarasem", "Pok骿 z balkonem", "Pok骿 typu penthouse"
+        "Pok贸j typu business", "Pok贸j dla niepal贸cych", "Pok贸j typu loft", "Pok贸j typu studio", "Pok贸j typu suite", "Pok贸j typu deluxe",
+        "Pok贸j typu superior", "Pok贸j z tarasem", "Pok贸j z balkonem", "Pok贸j typu penthouse"
     };
 
     var hotelsCollection = database.GetCollection<Hotel>("hotels");

@@ -14,6 +14,6 @@ public class HotelRoomType
     [BsonElement("pricePerNight")]
     public int PricePerNight { get; set; }
     
-    [BsonElement("hotelId")]
+    [BsonElement("roomTypeId")]
     public int RoomTypeId { get; set; }
 }
