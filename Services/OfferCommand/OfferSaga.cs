@@ -129,7 +129,7 @@ namespace OfferCommand
                     }
                 }).TransitionTo(WaitingForTransport),
                 invalid => invalid.ThenAsync(ctx => Console.Out.WriteLineAsync($"Unable to reserve hotel for Saga with id {ctx.Saga.OfferId}")).
-                Then(ctx => cancelReservations(ctx.Saga)).Respond(ctx => new CreatedOfferEventReply()
+                Then(ctx => cancelReservations(ctx.Saga)).Publish(ctx => new CreatedOfferEventReply()
                 {
                     Answer = CreatedOfferEventReply.State.NOT_RESERVED,
                     CorrelationId = ctx.Saga.CorrelationId,
@@ -158,7 +158,7 @@ namespace OfferCommand
                                 .TransitionTo(ReservedOffer),
                 invalid => invalid.ThenAsync(ctx => Console.Out.WriteLineAsync($"Unable to reserve transport for Saga with id {ctx.Saga.OfferId}"))
                         .Then(ctx => cancelReservations(ctx.Saga))
-                                      .Respond(ctx => new CreatedOfferEventReply()
+                                      .Publish(ctx => new CreatedOfferEventReply()
                                     {
                                         Answer = CreatedOfferEventReply.State.NOT_RESERVED,
                                         CorrelationId = ctx.Saga.CorrelationId,
