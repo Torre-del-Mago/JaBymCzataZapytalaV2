@@ -132,8 +132,7 @@ namespace TransportQuery.Service.Transport
         {
             Dictionary<string, DepartureAndArrivalModel> transportConnections = new Dictionary<string, DepartureAndArrivalModel>();
 
-            var destinationFlights = _transportRepository.GetDepartureFlightConnections(criteria.Departure)
-                .Where(f => f.ArrivalCountry == criteria.Country); 
+            var destinationFlights = _transportRepository.GetFlightList(criteria.Country);
             foreach (var destinationFlight in destinationFlights)
             {
                 var transportsDF = _transportRepository.GetTransportsById(destinationFlight.Id);
