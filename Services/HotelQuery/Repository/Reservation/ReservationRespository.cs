@@ -51,11 +51,10 @@ public class ReservationRespository : IReservationRepository
         return await reservationStatus.Find(filter).AnyAsync();
     }
     
-    public async Task<bool> ReserveAsync(int HotelId, DateOnly BeginDate, DateOnly EndDate, List<RoomDTO> Rooms, int OfferId)
+    public async Task<bool> ReserveAsync(int reservationId, int HotelId, DateOnly BeginDate, DateOnly EndDate, List<RoomDTO> Rooms, int OfferId)
     {
         using (var session = await Client.StartSessionAsync())
         {
-            session.StartTransaction();
             try
             {
                 if (FindIfReservationsAreCanceledAsync(OfferId).Result)
@@ -99,6 +98,7 @@ public class ReservationRespository : IReservationRepository
                 // Dodaj rezerwację
                 var newReservation = new Database.Entity.Reservation
                 {
+                    Id = reservationId,
                     HotelId = HotelId,
                     From = BeginDate,
                     To = EndDate,
@@ -131,12 +131,10 @@ public class ReservationRespository : IReservationRepository
                 };
                 await AddNewReservationStatusAsync(session, newStatus);
 
-                await session.CommitTransactionAsync();
                 return true;
             }
             catch (Exception e)
             {
-                await session.AbortTransactionAsync();
                 return false;
             }
         }
@@ -147,8 +145,7 @@ public class ReservationRespository : IReservationRepository
     {
         using (var session = await Client.StartSessionAsync())
         {
-            session.StartTransaction();
-            try
+             try
             {
                 var newStatus = new ReservationStatus
                 {
@@ -174,13 +171,11 @@ public class ReservationRespository : IReservationRepository
                     await AddNewReservationStatusAsync(session,newStatus);
                 }
 
-                await session.CommitTransactionAsync();
-
+            
             }
             catch (Exception e)
             {
-                await session.AbortTransactionAsync();
-
+             
             }
         }
     }

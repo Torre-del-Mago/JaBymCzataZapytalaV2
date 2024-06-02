@@ -18,7 +18,7 @@ namespace Gate.Controllers
         }
 
         [HttpPost("check")]
-        public async Task<IActionResult> CheckPayment([FromQuery] int OfferId, [FromQuery] int Amount)
+        public async Task<IActionResult> CheckPayment([FromQuery] int OfferId, [FromQuery] double Amount)
         {
             try
             {

@@ -10,7 +10,6 @@ services:
     container_name: 'gate'
     depends_on:
         - rabbitmq 
-        - postgres
     deploy:
       restart_policy:
         condition: on-failure
@@ -54,8 +53,8 @@ services:
     hostname: 'hotelquery'
     container_name: 'hotelquery'
     depends_on:
-        - rabbitmq 
-        - postgres
+        - rabbitmq
+        - mongo
     deploy:
       restart_policy:
         condition: on-failure
@@ -75,8 +74,8 @@ services:
     hostname: 'login'
     container_name: 'login'
     depends_on:
-        - rabbitmq 
-        - postgres
+        - rabbitmq
+        - mongo
     deploy:
       restart_policy:
         condition: on-failure
@@ -117,8 +116,8 @@ services:
     hostname: 'offerquery'
     container_name: 'offerquery'
     depends_on:
-        - rabbitmq 
-        - postgres
+        - rabbitmq
+        - mongo
     deploy:
       restart_policy:
         condition: on-failure
@@ -138,8 +137,8 @@ services:
     hostname: 'payment'
     container_name: 'payment'
     depends_on:
-        - rabbitmq 
-        - postgres
+        - rabbitmq
+        - mongo
     deploy:
       restart_policy:
         condition: on-failure
@@ -181,7 +180,7 @@ services:
     container_name: 'transportquery'
     depends_on:
         - rabbitmq 
-        - postgres
+        - mongo
     deploy:
       restart_policy:
         condition: on-failure
@@ -201,8 +200,7 @@ services:
     hostname: 'trip'
     container_name: 'trip'
     depends_on:
-        - rabbitmq 
-        - postgres
+        - rabbitmq
     deploy:
       restart_policy:
         condition: on-failure
@@ -294,6 +292,8 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
+    volumes:
+      - mongodb_data:/data/db
     networks:
         - backend
 
@@ -319,6 +319,19 @@ services:
     networks:
         - backend
 
+  front:
+    image: front_for_trips:latest
+    hostname: 'front_for_trips'
+    container_name: 'front_for_trips'
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 2
+        window: 140s
+    ports:
+      - 80:80
+
 
 networks:
   backend: {}
@@ -326,3 +339,4 @@ networks:
 
 volumes:
   postgres_data:
+  mongodb_data:

@@ -1,11 +1,12 @@
 ﻿using HotelCommand.Repository.ReservationEventRepository;
+using HotelCommand.Repository.ReservationRepository;
 using HotelCommand.Service;
 using MassTransit;
 using Models.Hotel;
 
 namespace HotelCommand.Consumer
 {
-    public class ReserveHotelConsumer(IEventService eventService, IPublishEndpoint publishEndpoint)
+    public class ReserveHotelConsumer(IEventService eventService, IReservationRepository reservationRepository, IPublishEndpoint publishEndpoint)
         : IConsumer<ReserveHotelEvent>
     {
         public async Task Consume(ConsumeContext<ReserveHotelEvent> context)
@@ -27,14 +28,19 @@ namespace HotelCommand.Consumer
                     Answer = ReserveHotelEventReply.State.RESERVED,
                     CorrelationId = context.Message.CorrelationId
                 });
-            }
-            Console.WriteLine("Send ReserveHotelEventReply");
 
-            await publishEndpoint.Publish(new ReserveHotelSyncEvent()
-            {
-                Reservation = context.Message.Reservation
-            });
-            Console.WriteLine("Send ReserveHotelSyncEvent");
+                var reservation =
+                    await reservationRepository.GetReservationByOfferIdAsync(context.Message.Reservation.OfferId);
+                var reservationToSend = context.Message.Reservation;
+                reservationToSend.ReservationId = reservation.Id;
+                Console.WriteLine("Send ReserveHotelEventReply");
+
+                await publishEndpoint.Publish(new ReserveHotelSyncEvent()
+                {
+                    Reservation = reservationToSend
+                });
+                Console.WriteLine("Send ReserveHotelSyncEvent");
+            }
         }
     }
 }

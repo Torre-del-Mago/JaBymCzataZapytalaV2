@@ -2,6 +2,7 @@
 {
     public class HotelReservationDTO
     {
+        public int ReservationId { get; set; }
         public int HotelId { get; set; }
 
         public DateOnly BeginDate { get; set; }

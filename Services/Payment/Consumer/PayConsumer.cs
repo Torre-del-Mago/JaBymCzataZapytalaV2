@@ -53,7 +53,6 @@ namespace Payment.Consumer
                     Answer = CheckPaymentEventReply.State.PAID
                 });
             }
-            
         }
     }
 }

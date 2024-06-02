@@ -56,7 +56,6 @@ namespace TransportQuery.Repository.Ticket
         {
             using (var session = await Client.StartSessionAsync())
             {
-                session.StartTransaction();
                 try
                 {
                     if (FindIfTicketsAreCanceledAsync(OfferId).Result)
@@ -103,13 +102,11 @@ namespace TransportQuery.Repository.Ticket
                     };
                     await AddNewTicketStatusAsync(session, newStatus);
 
-                    await session.CommitTransactionAsync();
-
                     return true;
                 }
                 catch (Exception e)
                 {
-                    await session.AbortTransactionAsync();
+                    Console.Error.Write(e);
                     return false;
                 }
             }

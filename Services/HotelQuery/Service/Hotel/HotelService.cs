@@ -103,7 +103,7 @@ public class HotelService : IHotelService
 
     public Task<bool> ReserveHotel(HotelReservationDTO dto)
     {
-        return _reservationRepository.ReserveAsync(dto.HotelId, dto.BeginDate, dto.EndDate, dto.Rooms, dto.OfferId);
+        return _reservationRepository.ReserveAsync(dto.ReservationId, dto.HotelId, dto.BeginDate, dto.EndDate, dto.Rooms, dto.OfferId);
     }
 
     public Task CancelHotel(int offerId)

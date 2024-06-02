@@ -1,5 +1,6 @@
 ﻿using MassTransit;
 using Models.Transport;
+using TransportCommand.Repository.ReservedTicketRepository;
 using TransportCommand.Service;
 
 namespace TransportCommand.Consumer
@@ -7,9 +8,11 @@ namespace TransportCommand.Consumer
     public class ReserveTransportConsumer : IConsumer<ReserveTransportEvent>
     {
         private IEventService _eventService;
-        public ReserveTransportConsumer(IEventService eventService)
+        private IReservedTicketRepository _reservedTicketRepository;
+        public ReserveTransportConsumer(IEventService eventService, IReservedTicketRepository reservedTicketRepository)
         {
             _eventService = eventService;
+            _reservedTicketRepository = reservedTicketRepository;
         }
         public async Task Consume(ConsumeContext<ReserveTransportEvent> context)
         {
@@ -31,13 +34,17 @@ namespace TransportCommand.Consumer
                     Answer = ReserveTransportEventReply.State.RESERVED,
                     CorrelationId = context.Message.CorrelationId
                 });
+                var tickets =
+                    await _reservedTicketRepository.GetReservedTicketsByOfferId(context.Message.Reservation.OfferId);
+                var arrivalTicketId = tickets.First(t => t.TransportId == context.Message.Reservation.ArrivalTransportId).Id;
+                var returnTicketId = tickets.First(t => t.TransportId == context.Message.Reservation.ReturnTransportId).Id;
+                await context.Publish(new ReserveTransportSyncEvent()
+                {
+                    Reservation = context.Message.Reservation,
+                    ArrivalTicketId = arrivalTicketId,
+                    ReturnTicketId = returnTicketId
+                });
             }
-
-            await context.Publish(new ReserveTransportSyncEvent()
-            {
-                Reservation = context.Message.Reservation
-            });
-
         }
     }
 }
