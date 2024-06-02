@@ -14,6 +14,8 @@ namespace OfferCommand
     public class OfferReservation : SagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; }
+
+        public ConsumeContext OCConsumeContext { get; set; }
         public string CurrentState { get; set; }
 
         public int OfferId { get; set; }
@@ -96,6 +98,7 @@ namespace OfferCommand
                 When(CreatedOfferEvent).
                 Then(ctx => ctx.Saga.OfferId = ctx.Message.OfferId).
                 Then(ctx => ctx.Saga.Offer = ctx.Message.Offer).
+                Then(ctx => ctx.Saga.OCConsumeContext = ctx).
                 Then(ctx => Console.WriteLine($"\nSaga correlation id {ctx.Saga.CorrelationId}, saga consumer correlation id {ctx.Message.CorrelationId}")).
                 Then(ctx => Console.WriteLine($"Created Saga with id {ctx.Saga.OfferId}")).
                 Publish(ctx => new ReserveHotelEvent()
@@ -118,13 +121,13 @@ namespace OfferCommand
                 Then(ctx => processHotel(ctx.Message, ctx.Saga)).
                 IfElse(ctx => ctx.Saga.MadeHotelReservation,
                 valid => valid.ThenAsync(ctx => Console.Out.WriteLineAsync($"ReservedHotel for Saga with id {ctx.Saga.OfferId}")).
-                Publish(ctx => new ReserveTransportEvent() { 
+                Publish(ctx => new ReserveTransportEvent() {
                     CorrelationId = ctx.Saga.CorrelationId,
                     Reservation = new Models.Transport.DTO.TransportReservationDTO()
                     {
                         ArrivalTransportId = ctx.Saga.Offer.Flight.DepartureTransportId,
                         ReturnTransportId = ctx.Saga.Offer.Flight.ReturnTransportId,
-                        NumberOfPeople = ctx.Saga.Offer.NumberOfAdults + ctx.Saga.Offer.NumberOfNewborns + 
+                        NumberOfPeople = ctx.Saga.Offer.NumberOfAdults + ctx.Saga.Offer.NumberOfNewborns +
                         ctx.Saga.Offer.NumberOfTeenagers + ctx.Saga.Offer.NumberOfToddlers,
                         OfferId = ctx.Saga.OfferId
                     }
@@ -136,7 +139,11 @@ namespace OfferCommand
                     CorrelationId = ctx.Saga.CorrelationId,
                     Error = "Could not reserve hotel"
                 }
-                ).Finalize()));
+                ).Then(ctx => ctx.Saga.OCConsumeContext.Respond(new CreatedOfferEventReply()
+                {
+                    Answer = CreatedOfferEventReply.State.NOT_RESERVED,
+                    CorrelationId = ctx.Saga.CorrelationId
+                })).Finalize()));
 
             During(WaitingForTransport,
                 When(ReserveTransportEvent).
@@ -148,6 +155,11 @@ namespace OfferCommand
                     Answer = CreatedOfferEventReply.State.RESERVED,
                     CorrelationId = ctx.Saga.CorrelationId
                 })
+                .Then(ctx => ctx.Saga.OCConsumeContext.Respond(new CreatedOfferEventReply()
+                {
+                    Answer = CreatedOfferEventReply.State.RESERVED,
+                    CorrelationId = ctx.Saga.CorrelationId
+                }))
                 .Publish(ctx => new CheckPaymentEvent()
                 {
                     CorrelationId = ctx.Saga.CorrelationId,
@@ -169,6 +181,11 @@ namespace OfferCommand
                     CorrelationId = ctx.Saga.CorrelationId,
                     Error = "Could not reserve transport",
                 })
+                .Then(ctx => ctx.Saga.OCConsumeContext.Respond(new CreatedOfferEventReply()
+                {
+                    Answer = CreatedOfferEventReply.State.NOT_RESERVED,
+                    CorrelationId = ctx.Saga.CorrelationId
+                }))
                 .Finalize()));
 
 
