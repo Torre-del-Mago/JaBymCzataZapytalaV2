@@ -7,7 +7,7 @@ namespace Payment.Repository
     public class PaymentRepository : IPaymentRepository
     {
 
-        const string connectionUri = "mongodb://root:example@mongo:27017/";
+        const string connectionUri = "mongodb://root:student@student-swarm01.maas:27017/";
 
         private MongoClient _client { get; set; }
         private IMongoDatabase _database { get; set; }

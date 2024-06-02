@@ -1,264 +1,196 @@
-version: '3.3'
-
+version: '3.4'
 services:
-
   gate:
-    image: gate
-    build:
-      args:
-        Version: "1"
-      context: ../
-      dockerfile: Services/Gate/dev.Dockerfile
-    container_name: gate
+    image: kkucht/rsww_184543_gate:latest
+    depends_on:
+        - rabbitmq 
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 2
+        window: 140s
     ports:
-      - 6010:80
-      - 5010:443
-    volumes:
-      - ~/.aspnet/https:/https:ro
+         - 55278:80 
     environment:
-      - ASPNETCORE_ENVIRONMENT=docker
-      - ASPNETCORE_URLS=https://+;http://+
-      - ASPNETCORE_HTTPS_PORT=5010
-      - ASPNETCORE_HTTP_PORT=6010
-      - ASPNETCORE_Kestrel__Certificates__Default__Password=password
-      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+        ASPNETCORE_ENVIRONMENT: Development
+    networks:
+        - rsww-184543-network
+         
 
-  hotel_command:
-    image: hotel_command
-    build:
-      args:
-        Version: "1"
-      context: ../
-      dockerfile: Services/HotelCommand/dev.Dockerfile
-    container_name: hotel_command
+  hotelcommand:
+    image: kkucht/rsww_184543_hotelcommand:latest
+    depends_on:
+        - rabbitmq 
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 2
+        window: 140s
     ports:
-      - 6010:80
-      - 5010:443
-    volumes:
-      - ~/.aspnet/https:/https:ro
-    environment:
-      - ASPNETCORE_ENVIRONMENT=docker
-      - ASPNETCORE_URLS=https://+;http://+
-      - ASPNETCORE_HTTPS_PORT=5010
-      - ASPNETCORE_HTTP_PORT=6010
-      - ASPNETCORE_Kestrel__Certificates__Default__Password=password
-      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+         - 8020:80 
+    networks:
+        - rsww-184543-network
+        - rsww-184543-postgres-net
 
-  hotel_query:
-    image: hotel_query
-    build:
-      args:
-        Version: "1"
-      context: ../
-      dockerfile: Services/HotelQuery/dev.Dockerfile
-    container_name: hotel_query
+  hotelquery:
+    image: kkucht/rsww_184543_hotelquery:latest
+    depends_on:
+        - rabbitmq 
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 2
+        window: 140s
     ports:
-      - 6010:80
-      - 5010:443
-    volumes:
-      - ~/.aspnet/https:/https:ro
-    environment:
-      - ASPNETCORE_ENVIRONMENT=docker
-      - ASPNETCORE_URLS=https://+;http://+
-      - ASPNETCORE_HTTPS_PORT=5010
-      - ASPNETCORE_HTTP_PORT=6010
-      - ASPNETCORE_Kestrel__Certificates__Default__Password=password
-      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+         - 8030:80 
+    networks:
+        - rsww-184543-network
+        - rsww-184543-mongo-net
 
   login:
-    image: login
-    build:
-      args:
-        Version: "1"
-      context: ../
-      dockerfile: Services/Login/dev.Dockerfile
-    container_name: login
+    image: kkucht/rsww_184543_login:latest
+    depends_on:
+        - rabbitmq 
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 2
+        window: 140s
     ports:
-      - 6010:80
-      - 5010:443
-    volumes:
-      - ~/.aspnet/https:/https:ro
-    environment:
-      - ASPNETCORE_ENVIRONMENT=docker
-      - ASPNETCORE_URLS=https://+;http://+
-      - ASPNETCORE_HTTPS_PORT=5010
-      - ASPNETCORE_HTTP_PORT=6010
-      - ASPNETCORE_Kestrel__Certificates__Default__Password=password
-      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+         - 8040:80 
+    networks:
+        - rsww-184543-network
+        - rsww-184543-mongo-net
 
-  offer_command:
-    image: offer_command
-    build:
-      args:
-        Version: "1"
-      context: ../
-      dockerfile: Services/OfferCommand/dev.Dockerfile
-    container_name: offer_command
-    ports:
-      - 6010:80
-      - 5010:443
-    volumes:
-      - ~/.aspnet/https:/https:ro
-    environment:
-      - ASPNETCORE_ENVIRONMENT=docker
-      - ASPNETCORE_URLS=https://+;http://+
-      - ASPNETCORE_HTTPS_PORT=5010
-      - ASPNETCORE_HTTP_PORT=6010
-      - ASPNETCORE_Kestrel__Certificates__Default__Password=password
-      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
 
-  offer_query:
-    image: offer_query
-    build:
-      args:
-        Version: "1"
-      context: ../
-      dockerfile: Services/OfferQuery/dev.Dockerfile
-    container_name: offer_query
+  offercommand:
+    image: kkucht/rsww_184543_offercommand:latest
+    depends_on:
+        - rabbitmq 
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 2
+        window: 140s
     ports:
-      - 6010:80
-      - 5010:443
-    volumes:
-      - ~/.aspnet/https:/https:ro
-    environment:
-      - ASPNETCORE_ENVIRONMENT=docker
-      - ASPNETCORE_URLS=https://+;http://+
-      - ASPNETCORE_HTTPS_PORT=5010
-      - ASPNETCORE_HTTP_PORT=6010
-      - ASPNETCORE_Kestrel__Certificates__Default__Password=password
-      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+         - 8050:80 
+    networks:
+        - rsww-184543-network
+        - rsww-184543-postgres-net
+
+  offerquery:
+    image: kkucht/rsww_184543_offerquery:latest
+    depends_on:
+        - rabbitmq 
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 2
+        window: 140s
+    ports:
+         - 8060:80 
+    networks:
+        - rsww-184543-network
+        - rsww-184543-mongo-net
 
   payment:
-    image: payment
-    build:
-      args:
-        Version: "1"
-      context: ../
-      dockerfile: Services/Payment/dev.Dockerfile
-    container_name: payment
+    image: kkucht/rsww_184543_payment:latest
+    depends_on:
+        - rabbitmq 
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 2
+        window: 140s
     ports:
-      - 6010:80
-      - 5010:443
-    volumes:
-      - ~/.aspnet/https:/https:ro
-    environment:
-      - ASPNETCORE_ENVIRONMENT=docker
-      - ASPNETCORE_URLS=https://+;http://+
-      - ASPNETCORE_HTTPS_PORT=5010
-      - ASPNETCORE_HTTP_PORT=6010
-      - ASPNETCORE_Kestrel__Certificates__Default__Password=password
-      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+         - 8070:80 
+    networks:
+        - rsww-184543-network
+        - rsww-184543-mongo-net
 
-  transport_command:
-    image: transport_command
-    build:
-      args:
-        Version: "1"
-      context: ../
-      dockerfile: Services/TransportCommand/dev.Dockerfile
-    container_name: transport_command
+  transportcommand:
+    image: kkucht/rsww_184543_transportcommand:latest
+    depends_on:
+        - rabbitmq 
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 2
+        window: 140s
     ports:
-      - 6010:80
-      - 5010:443
-    volumes:
-      - ~/.aspnet/https:/https:ro
-    environment:
-      - ASPNETCORE_ENVIRONMENT=docker
-      - ASPNETCORE_URLS=https://+;http://+
-      - ASPNETCORE_HTTPS_PORT=5010
-      - ASPNETCORE_HTTP_PORT=6010
-      - ASPNETCORE_Kestrel__Certificates__Default__Password=password
-      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+         - 8090:80 
+    networks:
+        - rsww-184543-network
+        - rsww-184543-postgres-net
 
-  transport_query:
-    image: transport_query
-    build:
-      args:
-        Version: "1"
-      context: ../
-      dockerfile: Services/TransportQuery/dev.Dockerfile
-    container_name: transport_query
+  transportquery:
+    image: kkucht/rsww_184543_transportquery:latest
+    depends_on:
+        - rabbitmq 
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 2
+        window: 140s
     ports:
-      - 6010:80
-      - 5010:443
-    volumes:
-      - ~/.aspnet/https:/https:ro
-    environment:
-      - ASPNETCORE_ENVIRONMENT=docker
-      - ASPNETCORE_URLS=https://+;http://+
-      - ASPNETCORE_HTTPS_PORT=5010
-      - ASPNETCORE_HTTP_PORT=6010
-      - ASPNETCORE_Kestrel__Certificates__Default__Password=password
-      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+         - 8100:80 
+    networks:
+        - rsww-184543-network
+        - rsww-184543-mongo-net
 
   trip:
-    image: trip
-    build:
-      args:
-        Version: "1"
-      context: ../
-      dockerfile: Services/Trip/dev.Dockerfile
-    container_name: trip
+    image: kkucht/rsww_184543_trip:latest
+    depends_on:
+        - rabbitmq 
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 2
+        window: 140s
     ports:
-      - 6010:80
-      - 5010:443
-    volumes:
-      - ~/.aspnet/https:/https:ro
-    environment:
-      - ASPNETCORE_ENVIRONMENT=docker
-      - ASPNETCORE_URLS=https://+;http://+
-      - ASPNETCORE_HTTPS_PORT=5010
-      - ASPNETCORE_HTTP_PORT=6010
-      - ASPNETCORE_Kestrel__Certificates__Default__Password=password
-      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
- 
-  db:
-    image: postgres:latest
-    restart: always
-    environment:
-      POSTGRES_DB: local_database
-      POSTGRES_USER: root
-      POSTGRES_PASSWORD: root
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-
-  pgadmin:
-    image: dpage/pgadmin4:latest
-    restart: always
-    environment:
-      PGADMIN_DEFAULT_EMAIL: your_email@example.com
-      PGADMIN_DEFAULT_PASSWORD: your_pgadmin_password
-    ports:
-      - "5050:80"
-
+         - 8110:80 
+    networks:
+        - rsww-184543-network
+          
   rabbitmq:
-    image: rabbitmq:3-management-alpine
-    ports:
-        - 5672:5672
-        - 15672:15672
-    volumes:
-        - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
-        - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
-
-  mongo:
-    image: mongo
-    restart: always
+    image: heidiks/rabbitmq-delayed-message-exchange:latest 
+    hostname: 'rabbitmq'
+    container_name: 'rabbitmq'
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 2
+        window: 140s
+    ports: 
+        - 5672:5672  
+        - 15672:15672 
     environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: example
+        RABBITMQ_DEFAULT_USER: guest
+        RABBITMQ_DEFAULT_PASS: guest
+    networks:
+        - rsww-184543-network
 
-  mongo-express:
-    image: mongo-express
-    restart: always
-    ports:
-      - 8081:8081
-    environment:
-      ME_CONFIG_MONGODB_ADMINUSERNAME: root
-      ME_CONFIG_MONGODB_ADMINPASSWORD: example
-      ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
-      ME_CONFIG_BASICAUTH: false
+networks:
+  rsww-184543-network:
+    driver: bridge
+  rsww-184543-mongo-net:
+    external: true
+    name: admin-mongodb_default
+  rsww-184543-postgres-net:
+    external: true
+    name: admin-postgres_default
+
 
 volumes:
   postgres_data:
