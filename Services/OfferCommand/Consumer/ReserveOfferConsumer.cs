@@ -77,6 +77,7 @@ namespace OfferCommand.Consumer
             {
                 Answer = ReserveOfferEventReply.State.RESERVED,
                 CorrelationId = context.Message.CorrelationId,
+                OfferId = offer.Id
             });
         }
     }

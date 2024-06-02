@@ -33,7 +33,7 @@ builder.Services.AddMassTransit(cfg =>
     }).InMemoryRepository();
     cfg.AddConsumer<PaidOfferConsumer>();
     cfg.AddConsumer<RemoveOfferConsumer>();
-    cfg.AddConsumer<ReserveOfferConsumer>();
+    cfg.AddConsumer<ReserveOfferConsumer>(ctx => ctx.UseInMemoryOutbox());
     cfg.AddDelayedMessageScheduler();
     cfg.UsingRabbitMq((context, rabbitCfg) =>
     {

@@ -6,8 +6,8 @@ namespace Models.Hotel
     {
         public enum State
         {
-            RESERVED,
-            NOT_RESERVED
+            NOT_RESERVED,
+            RESERVED
         };
 
         public State Answer { get; set; }

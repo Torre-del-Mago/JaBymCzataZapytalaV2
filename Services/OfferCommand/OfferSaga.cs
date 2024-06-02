@@ -14,9 +14,11 @@ namespace OfferCommand
     public class OfferReservation : SagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; }
-
-        public ConsumeContext OCConsumeContext { get; set; }
         public string CurrentState { get; set; }
+        
+        public Guid? RequestId { get; set; }
+        public Uri ResponseAddress { get; set; }
+        public Guid OrderId { get; set; }
 
         public int OfferId { get; set; }
 
@@ -38,35 +40,12 @@ namespace OfferCommand
         public State WaitingForTransport { get; set; }
         public State ReservedOffer { get; set; }
 
-        private IPublishEndpoint _publishEndpoint { get; set; }
-
         public Event<CreatedOfferEvent> CreatedOfferEvent { get; set; }
         public Event<CheckPaymentEventReply> PaymentEvent { get; set; }
         public Event<ReserveHotelEventReply> ReserveHotelEvent { get; set; }
         public Event<ReserveTransportEventReply> ReserveTransportEvent { get; set; }
 
         public Schedule<OfferReservation, PaymentTimeout> PaymentNotSentTimeout { get; set; }
-
-        private void cancelReservations(OfferReservation reservation)
-        {
-            Console.Out.WriteLine($"Cancelling reservations for saga {reservation.OfferId}");
-            if(reservation.MadeTransportReservation)
-            {
-                _publishEndpoint.Publish(new CancelReservationTransportEvent()
-                {
-                    CorrelationId = reservation.CorrelationId,
-                    OfferId = reservation.OfferId
-                });
-            }
-            if(reservation.MadeHotelReservation)
-            {
-                _publishEndpoint.Publish(new CancelReservationHotelEvent()
-                {
-                    CorrelationId = reservation.CorrelationId,
-                    OfferId = reservation.OfferId
-                });
-            }
-        }
 
         private void processHotel(ReserveHotelEventReply reply, OfferReservation reservation)
         {
@@ -82,7 +61,11 @@ namespace OfferCommand
         {
             InstanceState(x => x.CurrentState);
 
-            Event(() => CreatedOfferEvent, x => x.SelectId(ctx => ctx.Message.CorrelationId));
+            Event(() => CreatedOfferEvent, x =>
+            {
+                x.CorrelateById(ctx => ctx.Message.CorrelationId);
+                x.SelectId(ctx => ctx.Message.CorrelationId);
+            });
             Event(() => PaymentEvent, x => x.CorrelateById(ctx => ctx.Message.CorrelationId));
             Event(() => ReserveHotelEvent, x => x.CorrelateById(ctx => ctx.Message.CorrelationId));
             Event(() => ReserveTransportEvent, x => x.CorrelateById(ctx => ctx.Message.CorrelationId));
@@ -96,9 +79,15 @@ namespace OfferCommand
 
             Initially(
                 When(CreatedOfferEvent).
-                Then(ctx => ctx.Saga.OfferId = ctx.Message.OfferId).
-                Then(ctx => ctx.Saga.Offer = ctx.Message.Offer).
-                Then(ctx => ctx.Saga.OCConsumeContext = ctx).
+                Then(ctx =>
+                {
+                    ctx.Saga.OrderId = Guid.NewGuid();
+
+                    ctx.Saga.RequestId = ctx.RequestId;
+                    ctx.Saga.ResponseAddress = ctx.ResponseAddress;
+                    ctx.Saga.OfferId = ctx.Message.OfferId;
+                    ctx.Saga.Offer = ctx.Message.Offer;
+                }).
                 Then(ctx => Console.WriteLine($"\nSaga correlation id {ctx.Saga.CorrelationId}, saga consumer correlation id {ctx.Message.CorrelationId}")).
                 Then(ctx => Console.WriteLine($"Created Saga with id {ctx.Saga.OfferId}")).
                 Publish(ctx => new ReserveHotelEvent()
@@ -118,6 +107,7 @@ namespace OfferCommand
 
             During(WaitingForHotel,
                 When(ReserveHotelEvent).
+                Then(ctx => Console.WriteLine($"ReserveHotelEvent ResponseAddress = {ctx.ResponseAddress}")).
                 Then(ctx => processHotel(ctx.Message, ctx.Saga)).
                 IfElse(ctx => ctx.Saga.MadeHotelReservation,
                 valid => valid.ThenAsync(ctx => Console.Out.WriteLineAsync($"ReservedHotel for Saga with id {ctx.Saga.OfferId}")).
@@ -133,39 +123,39 @@ namespace OfferCommand
                     }
                 }).TransitionTo(WaitingForTransport),
                 invalid => invalid.ThenAsync(ctx => Console.Out.WriteLineAsync($"Unable to reserve hotel for Saga with id {ctx.Saga.OfferId}")).
-                Respond(ctx => new CreatedOfferEventReply()
+                ThenAsync(async ctx =>
                 {
-                    Answer = CreatedOfferEventReply.State.NOT_RESERVED,
-                    CorrelationId = ctx.Saga.CorrelationId,
-                    Error = "Could not reserve hotel"
-                }
-                ).Then(ctx => ctx.Saga.OCConsumeContext.Respond(new CreatedOfferEventReply()
-                {
-                    Answer = CreatedOfferEventReply.State.NOT_RESERVED,
-                    CorrelationId = ctx.Saga.CorrelationId
-                })).Finalize()));
+                    var message = new CreatedOfferEventReply()
+                    {
+                        Answer = CreatedOfferEventReply.State.NOT_RESERVED,
+                        CorrelationId = ctx.Saga.CorrelationId,
+                        Error = "Could not reserve hotel"
+                    };
+                    var endpoint = await ctx.GetSendEndpoint(ctx.Saga.ResponseAddress);
+                    await endpoint.Send(message, r => r.RequestId = ctx.Saga.RequestId);
+                }).Finalize()));
 
             During(WaitingForTransport,
                 When(ReserveTransportEvent).
+                Then(ctx => Console.WriteLine($"ReserveTransportEvent ResponseAddress = {ctx.ResponseAddress}")).
                 Then(ctx => processTransport(ctx.Message, ctx.Saga)).
                 IfElse(ctx => ctx.Saga.MadeTransportReservation,
                 valid => valid.Then(ctx => Console.Out.WriteLine($"Reserved Transport for Saga with id {ctx.Saga.OfferId}")).
-                Respond(ctx => new CreatedOfferEventReply()
+                ThenAsync(async ctx =>
                 {
-                    Answer = CreatedOfferEventReply.State.RESERVED,
-                    CorrelationId = ctx.Saga.CorrelationId
+                    var message = new CreatedOfferEventReply()
+                    {
+                        Answer = CreatedOfferEventReply.State.RESERVED,
+                        CorrelationId = ctx.Saga.CorrelationId
+                    };
+                    var endpoint = await ctx.GetSendEndpoint(ctx.Saga.ResponseAddress);
+                    await endpoint.Send(message, r => r.RequestId = ctx.Saga.RequestId);
                 })
-                .Then(ctx => ctx.Saga.OCConsumeContext.Respond(new CreatedOfferEventReply()
-                {
-                    Answer = CreatedOfferEventReply.State.RESERVED,
-                    CorrelationId = ctx.Saga.CorrelationId
-                }))
                 .Publish(ctx => new CheckPaymentEvent()
                 {
                     CorrelationId = ctx.Saga.CorrelationId,
                     OfferId = ctx.Saga.OfferId,
                     TimeForPayment = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Utc)
-                    
                 })
                 .Schedule(PaymentNotSentTimeout, context => context.Init<PaymentTimeout>(new PaymentTimeout (){ CorrelationId = context.Saga.CorrelationId}))
                 .TransitionTo(ReservedOffer),
@@ -175,22 +165,23 @@ namespace OfferCommand
                     CorrelationId = ctx.Saga.CorrelationId,
                     OfferId = ctx.Saga.OfferId
                 })
-                .Respond(ctx => new CreatedOfferEventReply()
+                .ThenAsync(async ctx =>
                 {
-                    Answer = CreatedOfferEventReply.State.NOT_RESERVED,
-                    CorrelationId = ctx.Saga.CorrelationId,
-                    Error = "Could not reserve transport",
+                    var message = new CreatedOfferEventReply()
+                    {
+                        Answer = CreatedOfferEventReply.State.NOT_RESERVED,
+                        CorrelationId = ctx.Saga.CorrelationId,
+                        Error = "Could not reserve hotel"
+                    };
+                    var endpoint = await ctx.GetSendEndpoint(ctx.Saga.ResponseAddress);
+                    await endpoint.Send(message, r => r.RequestId = ctx.Saga.RequestId);
                 })
-                .Then(ctx => ctx.Saga.OCConsumeContext.Respond(new CreatedOfferEventReply()
-                {
-                    Answer = CreatedOfferEventReply.State.NOT_RESERVED,
-                    CorrelationId = ctx.Saga.CorrelationId
-                }))
                 .Finalize()));
 
 
             During(ReservedOffer,
                 When(PaymentNotSentTimeout.Received).
+                Then(ctx => Console.WriteLine($"PaymentNotSentTimeout ResponseAddress = {ctx.ResponseAddress}")).
                 ThenAsync(ctx => Console.Out.WriteLineAsync($"Timeout for Saga with id {ctx.Saga.OfferId}")).
                 Publish(ctx => new RemoveOfferEvent()
                 {
