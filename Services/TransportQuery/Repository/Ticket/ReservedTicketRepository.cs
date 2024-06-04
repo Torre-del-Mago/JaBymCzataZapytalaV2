@@ -110,14 +110,12 @@ namespace TransportQuery.Repository.Ticket
                     return false;
                 }
             }
-
         }
 
         public async Task CancelTickets(int OfferId)
         {
             using (var session = await Client.StartSessionAsync())
             {
-                session.StartTransaction();
                 try
                 {
                     var newStatus = new ReservedTicketStatus()
@@ -144,14 +142,10 @@ namespace TransportQuery.Repository.Ticket
                     {
                         await AddNewTicketStatusAsync(session,newStatus);
                     }
-
-                    await session.CommitTransactionAsync();
-
                 }
                 catch (Exception e)
                 {
-                    await session.AbortTransactionAsync();
-
+                    Console.Error.Write(e);
                 }
             }
         }

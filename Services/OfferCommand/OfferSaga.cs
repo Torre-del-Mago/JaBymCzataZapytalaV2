@@ -199,6 +199,7 @@ namespace OfferCommand
                 }).
                 Finalize(),
                 When(PaymentEvent).
+                Then(_ => Console.WriteLine("ReserveOfferSyncEvent received. Reservation is paid.")).
                 Unschedule(PaymentNotSentTimeout).
                 Finalize());
         }

@@ -41,7 +41,6 @@ namespace OfferQuery.Repository
         {
             using (var session = await Client.StartSessionAsync())
             {
-                session.StartTransaction();
                 try
                 {
                     var collection = Database.GetCollection<Offer>("offers");
@@ -70,7 +69,6 @@ namespace OfferQuery.Repository
                     {
                         await collection.InsertOneAsync(session, newOffer);
 
-                        await session.CommitTransactionAsync();
                         return true;
                     }
                     else {
@@ -79,28 +77,23 @@ namespace OfferQuery.Repository
                         if (oSt == "CREATED")
                         {
                             await collection.ReplaceOneAsync(session, filter, newOffer);
-                            await session.AbortTransactionAsync();
                         }
                         else if (oSt == "RESERVED" && nSt == "PAID")
                         {
                             await collection.ReplaceOneAsync(session, filter, newOffer);
-                            await session.AbortTransactionAsync();
                         }
                         else if (nSt == "REMOVED")
                         {
                             await collection.ReplaceOneAsync(session, filter, newOffer);
-                            await session.AbortTransactionAsync();
                         }
                         else
                         {
-                            await session.AbortTransactionAsync();
                             throw new Exception("Unknown status of Offer");
                         }
                     }
                 }
                 catch (Exception e)
                 {
-                    await session.AbortTransactionAsync();
                     throw new Exception("Error with synchronise Offer");
                 }
             }

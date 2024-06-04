@@ -15,6 +15,7 @@ namespace OfferQuery.Consumer
 
         public Task Consume(ConsumeContext<PaidOfferSyncEvent> context)
         {
+            Console.Out.WriteLine("Offer Gets Event PaidOfferSyncEvent");
             return _service.SynchroniseContent(context.Message.OfferSync, context.Message.RoomSyncs);
         }
     }

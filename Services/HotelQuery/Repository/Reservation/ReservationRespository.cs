@@ -135,10 +135,10 @@ public class ReservationRespository : IReservationRepository
             }
             catch (Exception e)
             {
+                Console.Error.Write(e);
                 return false;
             }
         }
-        
     }
     
     public async Task CancelReservation(int OfferId)
@@ -170,12 +170,10 @@ public class ReservationRespository : IReservationRepository
                 {
                     await AddNewReservationStatusAsync(session,newStatus);
                 }
-
-            
             }
             catch (Exception e)
             {
-             
+                Console.Error.Write(e);
             }
         }
     }

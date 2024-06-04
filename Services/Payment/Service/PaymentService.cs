@@ -25,7 +25,5 @@ namespace Payment.Service
         {
             _repository.InsertPayment(paymentEvent);
         }
-
-
     }
 }

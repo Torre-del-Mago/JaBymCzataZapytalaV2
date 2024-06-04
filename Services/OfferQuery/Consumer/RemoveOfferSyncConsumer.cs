@@ -13,6 +13,7 @@ namespace OfferQuery.Consumer
         }
         public Task Consume(ConsumeContext<RemoveOfferSyncEvent> context)
         {
+            Console.Out.WriteLine("Offer Gets Event RemoveOfferSyncEvent");
             return _service.SynchroniseContent(context.Message.OfferSync, context.Message.RoomSyncs);
         }
     }

@@ -14,6 +14,7 @@ namespace HotelQuery.Consumer
 
         public Task Consume(ConsumeContext<ReserveHotelSyncEvent> context)
         {
+            Console.Out.WriteLine("Hotel Gets Event ReserveHotelSyncEvent");
             return _service.ReserveHotel(context.Message.Reservation);
         }
     }

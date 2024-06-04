@@ -15,6 +15,7 @@ namespace TransportQuery.Consumer
 
         public Task Consume(ConsumeContext<CancelReservationTransportSyncEvent> context)
         {
+            Console.Out.WriteLine("Transport Gets Event CancelReservationTransportSyncEvent");
             return _service.CancelTransport(context.Message.OfferId);
         }
     }
