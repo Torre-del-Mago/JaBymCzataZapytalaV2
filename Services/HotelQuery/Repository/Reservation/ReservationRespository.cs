@@ -126,6 +126,7 @@ public class ReservationRespository : IReservationRepository
                 // Dodaj nowy status rezerwacji
                 var newStatus = new ReservationStatus
                 {
+                    Id = OfferId,
                     OfferId = OfferId,
                     reservationStatus = "RESERVED"
                 };
@@ -149,6 +150,7 @@ public class ReservationRespository : IReservationRepository
             {
                 var newStatus = new ReservationStatus
                 {
+                    Id = OfferId,
                     OfferId = OfferId,
                     reservationStatus = "CANCELED"
                 };

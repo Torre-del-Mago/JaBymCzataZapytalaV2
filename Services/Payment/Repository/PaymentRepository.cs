@@ -26,14 +26,15 @@ namespace Payment.Repository
 
         public void InsertPayment(CheckPaymentEvent paymentEvent)
         {
+            var collection = _database.GetCollection<Database.Entity.Payment>("payments");
             var payment = new Database.Entity.Payment()
             {
+                Id = collection.AsQueryable().Count() + 1,
                 OfferId = paymentEvent.OfferId,
                 StartTimeOfPayment = paymentEvent.TimeForPayment,
                 CorrelationId = paymentEvent.CorrelationId
             };
 
-            var collection = _database.GetCollection<Database.Entity.Payment>("payments");
             collection.InsertOne(payment);
         }
     }
