@@ -327,9 +327,12 @@ services:
         - backend
 
   front:
-    image: front_for_trips:latest
-    hostname: 'front_for_trips'
-    container_name: 'front_for_trips'
+    build:
+      context: ../Frontend/frontend
+      dockerfile: Dockerfile
+    image: front
+    hostname: 'front'
+    container_name: 'front'
     deploy:
       restart_policy:
         condition: on-failure

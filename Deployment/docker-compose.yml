@@ -181,6 +181,19 @@ services:
     networks:
         - rsww-184543-network
 
+  front:
+    image: kkucht/rsww_184543_front:latest
+    hostname: 'front'
+    container_name: 'front'
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 2
+        window: 140s
+    ports:
+      - 18454:80
+
 networks:
   rsww-184543-network:
     driver: bridge
