@@ -66,7 +66,7 @@ void initDB(IServiceProvider services)
     using var scope = services.CreateScope();
     const string ConnectionString = "mongodb://root:student@student-swarm01.maas:27017/";
     var mongoClient = new MongoClient(ConnectionString);
-    var database = mongoClient.GetDatabase("transport_query");
+    var database = mongoClient.GetDatabase("rsww_184543_transport_query");
 
     var transportsCollection = database.GetCollection<Transport>("transports");
     var flightConnectionCollection = database.GetCollection<FlightConnection>("flight_connections");

@@ -16,7 +16,7 @@ public class ReservationRespository : IReservationRepository
     public ReservationRespository(IHotelRepository hotelRepository)
     {
         Client = new MongoClient(ConnectionString);
-        Database = Client.GetDatabase("hotel_query");
+        Database = Client.GetDatabase("rsww_184543_hotel_query");
         HotelRepository = hotelRepository;
     }
     

@@ -13,7 +13,7 @@ namespace Login.Service.LoginService
         public LoginService()
         {
             _client = new MongoClient(connectionUri);
-            _database = _client.GetDatabase("login");
+            _database = _client.GetDatabase("rsww_184543_login");
         }
 
         public bool IsUsernameCorrect(string username)

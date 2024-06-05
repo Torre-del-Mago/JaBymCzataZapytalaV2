@@ -12,7 +12,7 @@ namespace TransportQuery.Repository.Transport
         public TransportRepository()
         {
             Client = new MongoClient(ConnectionString);
-            Database = Client.GetDatabase("transport_query");
+            Database = Client.GetDatabase("rsww_184543_transport_query");
         }
         
         public List<Database.Entity.Transport> GetTransportsById(int flightConnectionId)

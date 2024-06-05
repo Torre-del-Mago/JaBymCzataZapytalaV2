@@ -13,7 +13,7 @@ namespace OfferQuery.Repository
         public OfferRepository()
         {
             Client = new MongoClient(ConnectionString);
-            Database = Client.GetDatabase("offer_query");
+            Database = Client.GetDatabase("rsww_184543_offer_query");
         }
 
         public async Task AddRooms(List<OfferRoomSyncDTO> rooms)

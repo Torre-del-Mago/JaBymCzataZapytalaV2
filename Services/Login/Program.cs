@@ -55,7 +55,7 @@ void initDB(IServiceProvider services)
     using var scope = services.CreateScope();
     const string ConnectionString = "mongodb://root:student@student-swarm01.maas:27017/";
     var mongoClient = new MongoClient(ConnectionString);
-    var database = mongoClient.GetDatabase("login");
+    var database = mongoClient.GetDatabase("rsww_184543_login");
 
     var userCollection = database.GetCollection<User>("users");
 

@@ -12,7 +12,7 @@ public class HotelRepository : IHotelRepository
     public HotelRepository()
     {
         Client = new MongoClient(ConnectionString);
-        Database = Client.GetDatabase("hotel_query");
+        Database = Client.GetDatabase("rsww_184543_hotel_query");
     }
     
     public List<Database.Entity.Hotel> GetHotels()

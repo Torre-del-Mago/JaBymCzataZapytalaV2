@@ -1,4 +1,4 @@
-version: '3.4'
+version: '3.9'
 services:
   gate:
     image: kkucht/rsww_184543_gate:latest
@@ -28,8 +28,6 @@ services:
         delay: 5s
         max_attempts: 2
         window: 140s
-    ports:
-         - 8020:80 
     networks:
         - rsww-184543-network
         - rsww-184543-postgres-net
@@ -44,8 +42,6 @@ services:
         delay: 5s
         max_attempts: 2
         window: 140s
-    ports:
-         - 8030:80 
     networks:
         - rsww-184543-network
         - rsww-184543-mongo-net
@@ -60,8 +56,6 @@ services:
         delay: 5s
         max_attempts: 2
         window: 140s
-    ports:
-         - 8040:80 
     networks:
         - rsww-184543-network
         - rsww-184543-mongo-net
@@ -77,8 +71,6 @@ services:
         delay: 5s
         max_attempts: 2
         window: 140s
-    ports:
-         - 8050:80 
     networks:
         - rsww-184543-network
         - rsww-184543-postgres-net
@@ -93,8 +85,6 @@ services:
         delay: 5s
         max_attempts: 2
         window: 140s
-    ports:
-         - 8060:80 
     networks:
         - rsww-184543-network
         - rsww-184543-mongo-net
@@ -109,8 +99,6 @@ services:
         delay: 5s
         max_attempts: 2
         window: 140s
-    ports:
-         - 8070:80 
     networks:
         - rsww-184543-network
         - rsww-184543-mongo-net
@@ -125,8 +113,6 @@ services:
         delay: 5s
         max_attempts: 2
         window: 140s
-    ports:
-         - 8090:80 
     networks:
         - rsww-184543-network
         - rsww-184543-postgres-net
@@ -141,8 +127,6 @@ services:
         delay: 5s
         max_attempts: 2
         window: 140s
-    ports:
-         - 8100:80 
     networks:
         - rsww-184543-network
         - rsww-184543-mongo-net
@@ -157,8 +141,6 @@ services:
         delay: 5s
         max_attempts: 2
         window: 140s
-    ports:
-         - 8110:80 
     networks:
         - rsww-184543-network
           
@@ -196,7 +178,8 @@ services:
 
 networks:
   rsww-184543-network:
-    driver: bridge
+    driver: overlay
+    name: rsww_184543_network
   rsww-184543-mongo-net:
     external: true
     name: admin-mongodb_default

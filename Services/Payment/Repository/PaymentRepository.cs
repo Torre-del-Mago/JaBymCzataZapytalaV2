@@ -15,7 +15,7 @@ namespace Payment.Repository
         public PaymentRepository()
         {
             _client = new MongoClient(connectionUri);
-            _database = _client.GetDatabase("payment");
+            _database = _client.GetDatabase("rsww_184543_payment");
         }
 
         public Database.Entity.Payment GetPaymentForOfferId(int offerId)

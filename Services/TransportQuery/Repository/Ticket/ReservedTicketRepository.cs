@@ -16,7 +16,7 @@ namespace TransportQuery.Repository.Ticket
         public ReservedTicketRepository(ITransportRepository TransportRepository)
         {
             Client = new MongoClient(ConnectionString);
-            Database = Client.GetDatabase("transport_query");
+            Database = Client.GetDatabase("rsww_184543_transport_query");
             this.TransportRepository = TransportRepository;
         }
 

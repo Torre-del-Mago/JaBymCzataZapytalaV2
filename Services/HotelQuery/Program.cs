@@ -66,7 +66,7 @@ void initDB(IServiceProvider services)
     //var mongoClient = scope.ServiceProvider.GetRequiredService<IMongoClient>();
     //var database = mongoClient.GetDatabase(ConnectionString);
     var mongoClient = new MongoClient(ConnectionString);
-    var database = mongoClient.GetDatabase("hotel_query");
+    var database = mongoClient.GetDatabase("rsww_184543_hotel_query");
 
     var random = new Random(123);
 
