@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import { TripDTO } from '../dto/TripDTO';
+import { TripDTO } from '../dto/model/TripDTO';
 import { BackendService } from '../backend/backend.service';
-import { PayResponse } from '../dto/PayResponse';
-import { ReserveOfferResponse } from '../dto/ReserveOfferResponse';
+import { PayResponse } from '../dto/response/PayResponse';
+import { ReserveOfferResponse } from '../dto/response/ReserveOfferResponse';
 import { Router } from '@angular/router';
 import {map, Observable, of, tap} from 'rxjs';
 
@@ -16,10 +16,12 @@ export class ReserveComponent {
   numberOfAdults: number = 0;
   numberOfChildren: number = 0;
   display?: string
-  canPay = true
   offerInfo?: ReserveOfferResponse 
   result$: Observable<string> = of('')
   timerRef?: Object
+  paid = false
+  waitingForPayment = false
+  timeUp = false
 
   constructor(private service: BackendService, private router: Router ) {
 
@@ -57,22 +59,26 @@ export class ReserveComponent {
       this.display = `${prefix}${Math.floor(seconds / 60)}:${textSec}`;
 
       if (seconds == 0) {
-        this.canPay = false
+        this.timeUp = true
         clearInterval(timer);
-        this.router.navigateByUrl('');
       }
     }, 1000);
     return timer;
   }
 
   async tryPaying() {
+    this.waitingForPayment = true
     //TODO: Dodaj catchError()
     const offerPaidFor = 0;
     this.result$ = this.service.tryPaying(this.offerInfo!.offerId, this.trip!.price!).pipe(
       tap((r: PayResponse) => {
-        if(r.answer === offerPaidFor) {
-          clearInterval(this.timerRef! as number)
-          this.router.navigateByUrl('');
+        if(!this.paid) {
+          if(r.answer === offerPaidFor) {
+            clearInterval(this.timerRef! as number)
+            this.router.navigateByUrl('');
+            this.paid = true
+          }
+          this.waitingForPayment = false
         }
       }),
       map((r: PayResponse) => { 

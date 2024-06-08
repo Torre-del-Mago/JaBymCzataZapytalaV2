@@ -1,4 +1,5 @@
 <a id="login" routerLink="/login">Login</a>
+<a id="admin-panel" routerLink="/admin">Admin Panel</a>
 <div>
   <label for="destination">Destynacja</label>
   <select id="destination-select" name="destination" [(ngModel)]="destination">
@@ -24,7 +25,7 @@
   <button (click)="minusChild()" [disabled]="canDecreaseChildren">-</button>
   <button id="search-button" (click)="search()">Szukaj</button>
   <div [hidden]="!notAllValuesPresent">
-    Not all fields of form have been filled
+    Nie wszystkie pola zostały wypełnione
   </div>
 </div>
 <div [hidden]="noMatchesFound">
@@ -33,7 +34,7 @@
     <span id="trip-span">
       Hotel: {{ trip.hotelName }}, {{ trip.city }} Miasto wylotu:
       {{ trip.chosenFlight.departure }}
-      Cena {{trip.price}} zł 
+      Cena {{trip.price | number: "2"}} zł 
       Od {{transformDate(trip.beginDate)}} Do {{transformDate(trip.endDate)}}
     </span>
     <button id="choose-button" (click)="detail(trip)">Wybierz</button>

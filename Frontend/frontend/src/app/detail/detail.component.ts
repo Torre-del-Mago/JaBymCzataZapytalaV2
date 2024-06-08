@@ -1,13 +1,16 @@
 import { Component, OnInit } from '@angular/core';
-import { TripDTO } from '../dto/TripDTO';
-import { RoomDTO } from '../dto/RoomDTO';
-import { GenerateTripResponse } from '../dto/GenerateTripResponse';
-import { ReserveOfferResponse } from '../dto/ReserveOfferResponse';
+import { TripDTO } from '../dto/model/TripDTO';
+import { RoomDTO } from '../dto/model/RoomDTO';
+import { GenerateTripResponse } from '../dto/response/GenerateTripResponse';
+import { ReserveOfferResponse } from '../dto/response/ReserveOfferResponse';
 import { BackendService } from '../backend/backend.service';
+import { RealTimeService } from '../real-time/real-time.service';
 import { ActivatedRoute } from '@angular/router';
-import { FlightDTO } from '../dto/FlightDTO';
+import { FlightDTO } from '../dto/model/FlightDTO';
 import { Subscription, of, Observable, pipe, map, catchError, tap, firstValueFrom } from 'rxjs';
 import { Router } from '@angular/router';
+import {DetailRealTimeDTO} from '../dto/real-time/DetailRealTimeDTO'
+import {realTimeObservable} from '../functions'
 
 @Component({
   selector: 'app-detail',
@@ -38,12 +41,16 @@ export class DetailComponent implements OnInit {
   public backup: number[] = [0, 0]
   private days = 0;
   reserveError$: Observable<string> = of('');
+  private subscriptionIn?: Subscription
+  private subscriptionOut?: Subscription
+  public detailInfo?: Observable<DetailRealTimeDTO>
   
 
   constructor(
     private route: ActivatedRoute,
     private service: BackendService,
-    private router: Router
+    private router: Router,
+    private realTimeService: RealTimeService
   ) {}
 
   displayPrice() {}
@@ -67,6 +74,9 @@ export class DetailComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.subscriptionIn = this.realTimeService.postUserInDetail().subscribe();
+    this.detailInfo = realTimeObservable(this.realTimeService.getDetailRealTimeData);
+    this.startListening();
     if(this.service.getCurrentTrip() === undefined || this.service.getUser() === '') {
       this.router.navigateByUrl('');
     }
@@ -88,6 +98,19 @@ export class DetailComponent implements OnInit {
     if (this.numberOfChildren == 0) {
       this.canDecreaseAdults = false;
     }
+  }
+
+  private startListening(): void {
+    window.addEventListener("beforeunload", this.ngOnDestroy.bind(this));
+  }
+ 
+  private stopListening(): void {
+    window.removeEventListener("beforeunload", this.ngOnDestroy.bind(this));
+  }
+
+  ngOnDestroy() {
+    this.subscriptionOut = this.realTimeService.postUserOutOfDetail().subscribe();
+    this.stopListening();
   }
 
   createBackup() {

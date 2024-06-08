@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { BackendService } from '../backend/backend.service';
-import { TripDTO } from '../dto/TripDTO';
+import { TripDTO } from '../dto/model/TripDTO';
 import { Router } from '@angular/router';
 import {AsyncPipe} from '@angular/common'
 import {Subscription, of, Observable, pipe, tap, map, catchError} from 'rxjs'; 
