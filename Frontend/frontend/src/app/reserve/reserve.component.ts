@@ -16,10 +16,12 @@ export class ReserveComponent {
   numberOfAdults: number = 0;
   numberOfChildren: number = 0;
   display?: string
-  canPay = true
   offerInfo?: ReserveOfferResponse 
   result$: Observable<string> = of('')
   timerRef?: Object
+  paid = false
+  waitingForPayment = false
+  timeUp = false
 
   constructor(private service: BackendService, private router: Router ) {
 
@@ -57,22 +59,35 @@ export class ReserveComponent {
       this.display = `${prefix}${Math.floor(seconds / 60)}:${textSec}`;
 
       if (seconds == 0) {
-        this.canPay = false
+        if(!this.paid || !this.waitingForPayment)
+        {
+          this.canPay = false
+        }
+        timeUp = true
         clearInterval(timer);
-        this.router.navigateByUrl('');
       }
     }, 1000);
     return timer;
   }
 
   async tryPaying() {
+    this.waitingForPayment = true
     //TODO: Dodaj catchError()
     const offerPaidFor = 0;
     this.result$ = this.service.tryPaying(this.offerInfo!.offerId, this.trip!.price!).pipe(
       tap((r: PayResponse) => {
-        if(r.answer === offerPaidFor) {
-          clearInterval(this.timerRef! as number)
-          this.router.navigateByUrl('');
+        if(!this.paid) {
+          if(r.answer === offerPaidFor) {
+            clearInterval(this.timerRef! as number)
+            this.router.navigateByUrl('');
+            this.paid = true
+            this.waitingForPayment = false
+          }
+          else {
+            if(this.timeUp) {
+              this.canPay = false
+            }
+          }
         }
       }),
       map((r: PayResponse) => { 
