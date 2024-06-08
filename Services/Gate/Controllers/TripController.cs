@@ -218,6 +218,10 @@ namespace Gate.Controllers
         {
             try
             {
+                if (beginDate.CompareTo(endDate) >= 0)
+                {
+                    return BadRequest();
+                }
                 var clientResponse = await _tripRequestClient.GetResponse<GenerateTripEventReply, TripNotFoundEvent>(
                     new GenerateTripEvent()
                     {
@@ -257,6 +261,10 @@ namespace Gate.Controllers
         {
             try
             {
+                if (beginDate.CompareTo(endDate) >= 0)
+                {
+                    return BadRequest();
+                }
                 var clientResponse = await _tripListRequestClient.GetResponse<GenerateTripsEventReply, TripsNotFoundEvent>(
                     new GenerateTripsEvent()
                     {
