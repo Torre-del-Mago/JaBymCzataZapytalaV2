@@ -1,17 +1,21 @@
 <div id="hotel-panel">
     <p>Top hotele</p>
-    <div *ngFor="let hotel of (this.hotels | async)">
-        {{hotel.topNumber}}. {{hotel.hotelName}} 
+    <div *ngFor="let hotel of (this.statistics | async)?.topHotelsDto?.topHotels">
+        {{hotel.name}}. {{hotel.numberOfElements}} 
     </div> 
     <p>Top typy poków</p>
-    <div *ngFor="let roomType of (this.roomTypes | async)">
-        {{roomType.topNumber}}. {{roomType.typeOfRoom}} 
+    <div *ngFor="let roomType of (this.statistics | async)?.topRoomTypesDto?.topRoomTypes">
+        {{roomType.name}}. {{roomType.numberOfElements}}
     </div> 
 </div>
 <div id="transport-panel">
-    <p>Top transporty</p>
-    <div *ngFor="let transport of (this.transports | async)">
-        {{transport.topNumber}}. {{transport.country}} {{transport.city}} 
+    <p>Top wyloty</p>
+    <div *ngFor="let departure of (this.statistics | async)?.topDepartureDto?.topDepartures">
+        {{departure.name}}. {{departure.numberOfElements}}
+    </div> 
+    <p>Top cele podróży</p>
+    <div *ngFor="let destination of (this.statistics | async)?.topDestinationDto?.topDestinations">
+        {{destination.name}}. {{destination.numberOfElements}}
     </div> 
 
 </div>
