@@ -59,11 +59,7 @@ export class ReserveComponent {
       this.display = `${prefix}${Math.floor(seconds / 60)}:${textSec}`;
 
       if (seconds == 0) {
-        if(!this.paid || !this.waitingForPayment)
-        {
-          this.canPay = false
-        }
-        timeUp = true
+        this.timeUp = true
         clearInterval(timer);
       }
     }, 1000);
@@ -81,13 +77,8 @@ export class ReserveComponent {
             clearInterval(this.timerRef! as number)
             this.router.navigateByUrl('');
             this.paid = true
-            this.waitingForPayment = false
           }
-          else {
-            if(this.timeUp) {
-              this.canPay = false
-            }
-          }
+          this.waitingForPayment = false
         }
       }),
       map((r: PayResponse) => { 
