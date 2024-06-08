@@ -3,7 +3,7 @@
 <div [hidden]="!configurationAvailable">
     <p>W przedziałach czasowych </p>
 <p>Od: {{transformDate(this.trip!.beginDate)}} do {{transformDate(this.trip!.endDate)}}</p>
-<p>Cena łączna {{trip?.price}}zł</p>
+<p>Cena łączna {{trip?.price | number: "2"}}zł</p>
 <div>Typ posiłku: <select [(ngModel)]="mealType">
 <option [value]="mealType" *ngFor="let mealType of this.mealTypes">{{mealType}}</option>
 </select>

@@ -195,7 +195,7 @@ export class BackendService {
         this.tripSingleTestUrl +
         '?destination=' +
         destination +
-        '?country=' +
+        '&country=' +
         country +
         '&departure=' +
         startCity +
