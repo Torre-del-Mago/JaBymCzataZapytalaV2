@@ -1,4 +1,5 @@
 ﻿using HotelQuery.Database.Entity;
+using Models.Admin.DTO;
 
 namespace HotelQuery.Repository.Hotel;
 
@@ -23,4 +24,7 @@ public interface IHotelRepository
 
     List<HotelRoomType> GetHotelRoomTypes();
     HotelRoomType GetHotelRoomType (int hotelRoomTypeId);
+
+    List<EntryDTO> GetTopHotels(int numberOfElements);
+    List<Object> GetTopRoomTypes(int numberOfElements);
 }

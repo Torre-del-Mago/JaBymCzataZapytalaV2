@@ -1,6 +1,7 @@
 ﻿using HotelQuery.Database.Entity;
 using HotelQuery.Repository.Hotel;
 using HotelQuery.Repository.Reservation;
+using Models.Admin.DTO;
 using Models.Hotel.DTO;
 
 namespace HotelQuery.Service.Hotel;
@@ -109,5 +110,14 @@ public class HotelService : IHotelService
     public Task CancelHotel(int offerId)
     {
         return _reservationRepository.CancelReservation(offerId);
+    }
+
+    public TopHotelsDTO GetTopHotels(int numberOfElements)
+    {
+        var topHotels = _hotelRepository.GetTopHotels(numberOfElements);
+        return new TopHotelsDTO()
+        {
+            TopHotels = topHotels
+        };
     }
 }

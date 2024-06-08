@@ -2,6 +2,6 @@ namespace Models.Admin.DTO
 {
     public class TopDestinationDTO
     {
-        public List<EntryDTO> TopDestinations;
+        public List<EntryDTO> TopDestinations { get; set; }
     }
 }

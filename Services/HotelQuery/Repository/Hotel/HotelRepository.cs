@@ -1,5 +1,7 @@
 ﻿using HotelQuery.Database.Entity;
+using Models.Admin.DTO;
 using MongoDB.Driver;
+using MongoDB.Driver.Linq;
 
 namespace HotelQuery.Repository.Hotel;
 
@@ -111,5 +113,30 @@ public class HotelRepository : IHotelRepository
         var hotelRoomTypeCollection = Database.GetCollection<HotelRoomType>("hotel_room_types");
         var hotelRoomType = hotelRoomTypeCollection.Find(rr => rr.Id == hotelRoomTypeId).FirstOrDefault();
         return hotelRoomType;
+    }
+
+    public List<EntryDTO> GetTopHotels(int numberOfElements)
+    {
+        var statusesCollection = Database.GetCollection<ReservationStatus>("reservation_statuses");
+        var hotelCollection = Database.GetCollection<Database.Entity.Hotel>("hotels").AsQueryable();
+        var reservetionsCollection = Database.GetCollection<Database.Entity.Reservation>("reservations").AsQueryable();
+        var topHotels = from reservation in reservetionsCollection
+            join hotel in hotelCollection on reservation.HotelId equals hotel.Id 
+            join status in statusesCollection on reservation.OfferId equals status.OfferId
+            where status.reservationStatus == "RESERVED"
+            group hotel by hotel.Name into grp
+            select new { key = grp.Key, cnt = grp.Count() };
+        return topHotels.Take(numberOfElements)
+            .Select(res => new EntryDTO()
+            {
+                Name = res.key,
+                NumberOfElements = res.cnt
+            })
+            .ToList();
+    }
+
+    public List<object> GetTopRoomTypes(int numberOfElements)
+    {
+        throw new NotImplementedException();
     }
 }

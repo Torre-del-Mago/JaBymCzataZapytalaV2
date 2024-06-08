@@ -1,4 +1,5 @@
-﻿using Models.Hotel.DTO;
+﻿using Models.Admin.DTO;
+using Models.Hotel.DTO;
 
 namespace HotelQuery.Service.Hotel;
 
@@ -8,4 +9,6 @@ public interface IHotelService
     HotelDTO GetHotelForCriteria(CriteriaForHotel criteria);
     Task<bool> ReserveHotel(HotelReservationDTO dto);
     Task CancelHotel(int offerId);
+    TopHotelsDTO GetTopHotels(int numberOfElements);
+    
 }

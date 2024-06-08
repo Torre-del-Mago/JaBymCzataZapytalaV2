@@ -23,6 +23,7 @@ builder.Services.AddScoped<IReservationRepository, ReservationRespository>();
 builder.Services.AddMassTransit(cfg =>
 {
     cfg.AddConsumer<CancelReservationHotelSyncConsumer>();
+    cfg.AddConsumer<GetTopHotelRoomTypeConsumer>();
     cfg.AddConsumer<HotelQueryConsumer>();
     cfg.AddConsumer<HotelListQueryConsumer>();
     cfg.AddConsumer<ReserveHotelSyncConsumer>();

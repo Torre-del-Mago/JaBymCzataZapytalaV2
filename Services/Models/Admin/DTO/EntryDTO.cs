@@ -2,7 +2,7 @@ namespace Models.Admin.DTO
 {
     public class EntryDTO
     {
-        public string Name;
-        public int NumberOfElements;
+        public string Name { get; set; }
+        public int NumberOfElements { get; set; }
     }
 }

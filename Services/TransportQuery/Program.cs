@@ -28,6 +28,7 @@ builder.Services.AddMassTransit(cfg =>
     cfg.AddConsumer<TransportQueryConsumer>();
     cfg.AddConsumer<TransportListQueryConsumer>();
     cfg.AddConsumer<CancelReservationTransportSyncConsumer>();
+    cfg.AddConsumer<GetTopDepartureDestinationConsumer>();
     cfg.AddConsumer<ReserveTransportSyncConsumer>();
     cfg.AddConsumer<TransportListQueryConsumer>();
 
