@@ -9,6 +9,7 @@ import { SearchComponent } from './search/search.component';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { ReserveComponent } from './reserve/reserve.component';
+import { AdminPanelComponent } from './admin-panel/admin-panel.component';
 
 @NgModule({
   declarations: [
@@ -17,6 +18,7 @@ import { ReserveComponent } from './reserve/reserve.component';
     LoginComponent,
     SearchComponent,
     ReserveComponent,
+    AdminPanelComponent,
   ],
   imports: [
     BrowserModule,

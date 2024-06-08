@@ -1,0 +1,17 @@
+<div id="hotel-panel">
+    <p>Top hotele</p>
+    <div *ngFor="let hotel of (this.hotels | async)">
+        {{hotel.topNumber}}. {{hotel.hotelName}} 
+    </div> 
+    <p>Top typy poków</p>
+    <div *ngFor="let roomType of (this.roomTypes | async)">
+        {{roomType.topNumber}}. {{roomType.typeOfRoom}} 
+    </div> 
+</div>
+<div id="transport-panel">
+    <p>Top transporty</p>
+    <div *ngFor="let transport of (this.transports | async)">
+        {{transport.topNumber}}. {{transport.country}} {{transport.city}} 
+    </div> 
+
+</div>
