@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import { TripDTO } from '../dto/TripDTO';
+import { TripDTO } from '../dto/model/TripDTO';
 import { BackendService } from '../backend/backend.service';
-import { PayResponse } from '../dto/PayResponse';
-import { ReserveOfferResponse } from '../dto/ReserveOfferResponse';
+import { PayResponse } from '../dto/response/PayResponse';
+import { ReserveOfferResponse } from '../dto/response/ReserveOfferResponse';
 import { Router } from '@angular/router';
 import {map, Observable, of, tap} from 'rxjs';
 

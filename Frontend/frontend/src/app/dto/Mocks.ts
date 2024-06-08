@@ -1,7 +1,7 @@
-import { FlightDTO } from './FlightDTO';
-import { RoomDTO } from './RoomDTO';
-import { TripDTO } from './TripDTO';
-import { TripsDTO } from './TripsDTO';
+import { FlightDTO } from './model/FlightDTO';
+import { RoomDTO } from './model/RoomDTO';
+import { TripDTO } from './model/TripDTO';
+import { TripsDTO } from './model/TripsDTO';
 
 export const rooms: RoomDTO[] = [
   {

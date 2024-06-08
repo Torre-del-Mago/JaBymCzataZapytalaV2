@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import * as Mocks from '../dto/Mocks';
-import { TripDTO } from '../dto/TripDTO';
-import { RoomDTO } from '../dto/RoomDTO';
-import { GenerateTripResponse } from '../dto/GenerateTripResponse';
-import { GenerateTripsResponse } from '../dto/GenerateTripsResponse';
-import { PayResponse } from '../dto/PayResponse';
-import { ReserveOfferResponse } from '../dto/ReserveOfferResponse';
-import { ReserveOfferRequest } from '../dto/ReserveOfferRequest';
-import { OfferDTO } from '../dto/OfferDTO';
+import { TripDTO } from '../dto/model/TripDTO';
+import { RoomDTO } from '../dto/model/RoomDTO';
+import { GenerateTripResponse } from '../dto/response/GenerateTripResponse';
+import { GenerateTripsResponse } from '../dto/response/GenerateTripsResponse';
+import { PayResponse } from '../dto/response/PayResponse';
+import { ReserveOfferResponse } from '../dto/response/ReserveOfferResponse';
+import { ReserveOfferRequest } from '../dto/request/ReserveOfferRequest';
+import { OfferDTO } from '../dto/model/OfferDTO';
 import { Observable, pipe, map } from 'rxjs';
 
 interface RoomSize {

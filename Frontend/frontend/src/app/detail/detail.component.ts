@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { TripDTO } from '../dto/TripDTO';
-import { RoomDTO } from '../dto/RoomDTO';
-import { GenerateTripResponse } from '../dto/GenerateTripResponse';
-import { ReserveOfferResponse } from '../dto/ReserveOfferResponse';
+import { TripDTO } from '../dto/model/TripDTO';
+import { RoomDTO } from '../dto/model/RoomDTO';
+import { GenerateTripResponse } from '../dto/response/GenerateTripResponse';
+import { ReserveOfferResponse } from '../dto/response/ReserveOfferResponse';
 import { BackendService } from '../backend/backend.service';
 import { ActivatedRoute } from '@angular/router';
-import { FlightDTO } from '../dto/FlightDTO';
+import { FlightDTO } from '../dto/model/FlightDTO';
 import { Subscription, of, Observable, pipe, map, catchError, tap, firstValueFrom } from 'rxjs';
 import { Router } from '@angular/router';
 
