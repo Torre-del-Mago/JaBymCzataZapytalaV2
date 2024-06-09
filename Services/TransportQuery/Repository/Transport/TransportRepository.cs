@@ -1,4 +1,5 @@
-﻿using MongoDB.Driver;
+﻿using Models.Admin.DTO;
+using MongoDB.Driver;
 using TransportQuery.Database.Entity;
 
 namespace TransportQuery.Repository.Transport
@@ -49,7 +50,6 @@ namespace TransportQuery.Repository.Transport
             var result = flightConnectionCollection.Where(c => c.ArrivalCountry == country).ToList();
             return result;
         }
-
         public List<FlightConnection> GetConnectionsForArrivalLocations(List<string> arrivalLocations)
         {
             var flightConnectionCollection = Database.GetCollection<FlightConnection>("flight_connections").AsQueryable();
@@ -62,6 +62,36 @@ namespace TransportQuery.Repository.Transport
             var flightConnectionCollection = Database.GetCollection<FlightConnection>("flight_connections").AsQueryable();
             var result = flightConnectionCollection.Where(c => departureLocations.Contains(c.DepartureLocation)).ToList();
             return result;
+        }
+
+        public List<EntryDTO> GetTopDepartures(int numberOfElements)
+        {
+            var ticketCollection = Database.GetCollection<ReservedTicket>("reserved_tickets").AsQueryable();
+            var transportCollection = Database.GetCollection<Database.Entity.Transport>("transports").AsQueryable();
+            var flightConnectionCollection = Database.GetCollection<FlightConnection>("flight_connections").AsQueryable();
+            var result =  from ticket in ticketCollection
+                join transport in transportCollection on ticket.TransportId equals transport.Id
+                join flightConnection in flightConnectionCollection on transport.ConnectionId equals flightConnection.Id
+                where !"polska".Equals(flightConnection.ArrivalCountry)
+                group flightConnection by flightConnection.DepartureLocation
+                into grp
+                select new EntryDTO() { Name = grp.Key, NumberOfElements = grp.Count() };
+            return result.ToList();
+        }
+
+        public List<EntryDTO> GetTopDestinations(int numberOfElements)
+        {       
+            var ticketCollection = Database.GetCollection<ReservedTicket>("reserved_tickets").AsQueryable();
+            var transportCollection = Database.GetCollection<Database.Entity.Transport>("transports").AsQueryable();
+            var flightConnectionCollection = Database.GetCollection<FlightConnection>("flight_connections").AsQueryable();
+            var result =  from ticket in ticketCollection
+                join transport in transportCollection on ticket.TransportId equals transport.Id
+                join flightConnection in flightConnectionCollection on transport.ConnectionId equals flightConnection.Id
+                where !"polska".Equals(flightConnection.ArrivalCountry)
+                group flightConnection by flightConnection.ArrivalCountry + " " + flightConnection.ArrivalLocation
+                into grp
+                select new EntryDTO() { Name = grp.Key, NumberOfElements = grp.Count() };
+            return result.ToList();
         }
     }
 }

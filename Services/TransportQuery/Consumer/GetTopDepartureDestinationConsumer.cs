@@ -16,9 +16,13 @@ namespace TransportQuery.Consumer
         public async Task Consume(ConsumeContext<GetTopDepartureDestinationEvent> context)
         {
             Console.Out.WriteLine("Hotel Gets Event GetTopHotelRoomTypeEvent");
+            var topDepartures = _service.GetTopDepartures(10);
+            var topDestinations = _service.GetTopDestinations(10);
             await context.RespondAsync(new GetTopDepartureDestinationEventReply()
             {
-                CorrelationId = context.Message.CorrelationId
+                CorrelationId = context.Message.CorrelationId,
+                TopDepartureDto = topDepartures,
+                TopDestinationDto = topDestinations
             });
         }
     }

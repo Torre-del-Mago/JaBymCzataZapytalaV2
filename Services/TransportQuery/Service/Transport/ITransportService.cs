@@ -1,4 +1,5 @@
-﻿using Models.Transport.DTO;
+﻿using Models.Admin.DTO;
+using Models.Transport.DTO;
 
 namespace TransportQuery.Service.Transport
 {
@@ -8,5 +9,7 @@ namespace TransportQuery.Service.Transport
         TransportDTO GetTransportForCriteria(CriteriaForTransport criteria);
         Task<bool> ReserveTransport(TransportReservationDTO dto, int ArrivalTicketId, int ReturnTicketId);
         Task CancelTransport(int offerId);
+        TopDepartureDTO GetTopDepartures(int numberOfElements);
+        TopDestinationDTO GetTopDestinations(int numberOfElements);
     }
 }

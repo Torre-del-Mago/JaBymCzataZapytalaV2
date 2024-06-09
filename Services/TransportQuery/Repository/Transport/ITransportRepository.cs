@@ -1,4 +1,5 @@
-﻿using TransportQuery.Database.Entity;
+﻿using Models.Admin.DTO;
+using TransportQuery.Database.Entity;
 
 namespace TransportQuery.Repository.Transport
 {
@@ -12,6 +13,7 @@ namespace TransportQuery.Repository.Transport
         List<FlightConnection> GetArrivalFlightConnections(string arrival);
 
         List<FlightConnection> GetFlightList(string country);
-        
+        List<EntryDTO> GetTopDepartures(int numberOfElements);
+        List<EntryDTO> GetTopDestinations(int numberOfElements);
     }
 }

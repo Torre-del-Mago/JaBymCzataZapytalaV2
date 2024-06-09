@@ -1,4 +1,5 @@
-﻿using Models.Transport.DTO;
+﻿using Models.Admin.DTO;
+using Models.Transport.DTO;
 using MongoDB.Driver.Linq;
 using TransportQuery.Model;
 using TransportQuery.Repository.Ticket;
@@ -228,6 +229,24 @@ namespace TransportQuery.Service.Transport
         public Task CancelTransport(int offerId)
         {
             return _reservedTicketRepository.CancelTickets(offerId);
+        }
+
+        public TopDepartureDTO GetTopDepartures(int numberOfElements)
+        {
+            var topDepartureList = _transportRepository.GetTopDepartures(10);
+            return new TopDepartureDTO()
+            {
+                TopDepartures = topDepartureList
+            };
+        }
+
+        public TopDestinationDTO GetTopDestinations(int numberOfElements)
+        {
+            var topDestinations = _transportRepository.GetTopDestinations(10);
+            return new TopDestinationDTO()
+            {
+                TopDestinations = topDestinations
+            };
         }
     }
 }
