@@ -10,5 +10,5 @@ public interface IHotelService
     Task<bool> ReserveHotel(HotelReservationDTO dto);
     Task CancelHotel(int offerId);
     TopHotelsDTO GetTopHotels(int numberOfElements);
-    
+    TopRoomTypesDTO GetTopRoomTypes(int numberOfElements);
 }

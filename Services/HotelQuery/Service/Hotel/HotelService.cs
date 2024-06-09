@@ -120,4 +120,13 @@ public class HotelService : IHotelService
             TopHotels = topHotels
         };
     }
+
+    public TopRoomTypesDTO GetTopRoomTypes(int numberOfElements)
+    {
+        var topRoomTypes = _hotelRepository.GetTopRoomTypes(numberOfElements);
+        return new TopRoomTypesDTO()
+        {
+            TopRoomTypes = topRoomTypes
+        };
+    }
 }

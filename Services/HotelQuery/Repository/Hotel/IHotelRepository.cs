@@ -26,5 +26,5 @@ public interface IHotelRepository
     HotelRoomType GetHotelRoomType (int hotelRoomTypeId);
 
     List<EntryDTO> GetTopHotels(int numberOfElements);
-    List<Object> GetTopRoomTypes(int numberOfElements);
+    List<EntryDTO> GetTopRoomTypes(int numberOfElements);
 }

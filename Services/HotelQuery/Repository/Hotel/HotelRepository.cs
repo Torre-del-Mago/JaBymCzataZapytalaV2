@@ -117,14 +117,15 @@ public class HotelRepository : IHotelRepository
 
     public List<EntryDTO> GetTopHotels(int numberOfElements)
     {
-        var statusesCollection = Database.GetCollection<ReservationStatus>("reservation_statuses");
-        var hotelCollection = Database.GetCollection<Database.Entity.Hotel>("hotels").AsQueryable();
         var reservetionsCollection = Database.GetCollection<Database.Entity.Reservation>("reservations").AsQueryable();
+        var hotelCollection = Database.GetCollection<Database.Entity.Hotel>("hotels").AsQueryable();
+        var statusesCollection = Database.GetCollection<ReservationStatus>("reservation_statuses");
         var topHotels = from reservation in reservetionsCollection
             join hotel in hotelCollection on reservation.HotelId equals hotel.Id 
             join status in statusesCollection on reservation.OfferId equals status.OfferId
             where status.reservationStatus == "RESERVED"
             group hotel by hotel.Name into grp
+            orderby grp.Count() descending
             select new { key = grp.Key, cnt = grp.Count() };
         return topHotels.Take(numberOfElements)
             .Select(res => new EntryDTO()
@@ -135,8 +136,17 @@ public class HotelRepository : IHotelRepository
             .ToList();
     }
 
-    public List<object> GetTopRoomTypes(int numberOfElements)
+    public List<EntryDTO> GetTopRoomTypes(int numberOfElements)
     {
-        throw new NotImplementedException();
+        var reservetionsCollection = Database.GetCollection<Database.Entity.Reservation>("reservations").AsQueryable();
+        var reservedHotelsId = reservetionsCollection.Select(r => r.HotelId).ToList();
+        var hotelCollection = Database.GetCollection<Database.Entity.Hotel>("hotels").AsQueryable().Where(h => reservedHotelsId.Contains(h.Id)).ToList();
+        var roomTypeCollection = Database.GetCollection<Database.Entity.RoomType>("room_types").AsQueryable().ToList();
+        var roomTypeMap = roomTypeCollection.ToDictionary(room => room.Id, room => room.Name);
+        var hotelRoomTypeRoomTypeMap = hotelCollection.SelectMany(h => h.Rooms)
+            .ToDictionary(room => room.Id, room => roomTypeMap[room.RoomTypeId]);
+        return reservetionsCollection.SelectMany(r => r.Rooms).ToList().Select(room => hotelRoomTypeRoomTypeMap[room.HotelRoomTypesId])
+            .GroupBy(roomTypeId => roomTypeId).Select(group => new EntryDTO {Name = group.Key, NumberOfElements = group.Count() })
+            .OrderByDescending(entry => entry.NumberOfElements).ToList();
     }
 }

@@ -19,10 +19,12 @@ namespace HotelQuery.Consumer
             Console.Out.WriteLine("Hotel Gets Event GetTopHotelRoomTypeEvent");
             var @event = context.Message;
             var topHotels = _service.GetTopHotels(10);
+            var topRoomTypes = _service.GetTopRoomTypes(10);
             await context.RespondAsync(new GetTopHotelRoomTypeEventReply()
             {
                 CorrelationId = @event.CorrelationId,
-                TopHotelsDto = new TopHotelsDTO(){TopHotels = topHotels.TopHotels}
+                TopHotelsDto = topHotels,
+                TopRoomTypesDto = topRoomTypes
             });
         }
     }
