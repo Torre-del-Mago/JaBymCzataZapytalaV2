@@ -34,7 +34,7 @@
     <span id="trip-span">
       Hotel: {{ trip.hotelName }}, {{ trip.city }} Miasto wylotu:
       {{ trip.chosenFlight.departure }}
-      Cena {{trip.price | number: "2"}} zł 
+      Cena {{trip.price | number: "1.2-2"}} zł 
       Od {{transformDate(trip.beginDate)}} Do {{transformDate(trip.endDate)}}
     </span>
     <button id="choose-button" (click)="detail(trip)">Wybierz</button>

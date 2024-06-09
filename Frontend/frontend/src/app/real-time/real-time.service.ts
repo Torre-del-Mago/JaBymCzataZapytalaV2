@@ -21,7 +21,7 @@ export class RealTimeService {
   }
 
   getStatistics(): Observable<GetAdminDataResponse> {
-    return of(adminDataResponse);
+    return this.client.get<GetAdminDataResponse>(this.gateUrl + this.adminUrl);
   }
 
   getTransports(): Observable<AdminTransportInfoDTO[]> {
