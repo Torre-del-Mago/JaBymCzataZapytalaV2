@@ -4,5 +4,6 @@ namespace Models.Gate.HotelStatistics
     {
         public bool IsSomeoneElseWatching { get; set; }
         public bool HasSomebodyReservedHotel { get; set; }
+        
     }
 }
