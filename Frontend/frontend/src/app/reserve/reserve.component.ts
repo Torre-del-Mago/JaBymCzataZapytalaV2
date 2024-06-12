@@ -75,11 +75,10 @@ export class ReserveComponent {
         if(!this.paid) {
           if(r.answer === offerPaidFor) {
             clearInterval(this.timerRef! as number)
-            this.router.navigateByUrl('');
             this.paid = true
           }
-          this.waitingForPayment = false
         }
+        this.waitingForPayment = false
       }),
       map((r: PayResponse) => { 
         return r.answer === offerPaidFor ? "Zapłacono za ofertę" : "Płatność się nie powiodła"}));

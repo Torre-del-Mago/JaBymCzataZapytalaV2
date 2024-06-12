@@ -3,7 +3,7 @@
 <div [hidden]="!configurationAvailable">
     <p>W przedziałach czasowych </p>
 <p>Od: {{transformDate(this.trip!.beginDate)}} do {{transformDate(this.trip!.endDate)}}</p>
-<p>Cena łączna {{trip?.price | number: "2"}}zł</p>
+<p>Cena łączna {{trip?.price | number: "1.2-2"}}zł</p>
 <div>Typ posiłku: <select [(ngModel)]="mealType">
 <option [value]="mealType" *ngFor="let mealType of this.mealTypes">{{mealType}}</option>
 </select>
@@ -16,7 +16,7 @@
         <div *ngIf="numOfRooms > 0">
             <span>{{numOfRooms}} {{numOfRooms == 1 ? "Pokój" : "Pokoje"}} {{i+1}}os.</span>
             <select [ngModel]="this.trip!.chosenRooms![i+1]" (ngModelChange)="roomChanged($event, i)">
-                <option [ngValue]="roomType" *ngFor="let roomType of this.getRoomsFor(i+1, numOfRooms)">{{roomType.typeOfRoom}} - {{roomType.pricePerRoom}} zł za noc</option>
+                <option [ngValue]="roomType" *ngFor="let roomType of this.getRoomsFor(i+1, numOfRooms)">{{roomType.typeOfRoom}} - {{roomType.pricePerRoom | number: '1.2-2'}} zł za noc</option>
             </select>
         </div>
     </div>

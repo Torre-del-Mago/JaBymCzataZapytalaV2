@@ -14,9 +14,9 @@ import {Subscription, of, Observable, pipe, tap, map, catchError} from 'rxjs';
   ]
 })
 export class SearchComponent {
-  destinations = ['', 'grecja', 'brazylia', 'cypr', 'egipt'];
+  destinations = ['', 'Grecja', 'brazylia', 'cypr', 'egipt'];
   startCities = ['','bydgoszcz', 'gdansk', 'katowice', 'krakow', 'lublin', 'lodz', 'olsztyn-mazury',
-  'poznan', 'rzeszow', 'szczecin', 'warszawa', 'warszawa-radom', 'wroclaw',
+  'poznan', 'rzeszow', 'szczecin', 'Warszawa', 'warszawa-radom', 'wroclaw',
   'zielona-gora'];
   destination = '';
   startCity = '';

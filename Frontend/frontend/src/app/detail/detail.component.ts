@@ -7,10 +7,11 @@ import { BackendService } from '../backend/backend.service';
 import { RealTimeService } from '../real-time/real-time.service';
 import { ActivatedRoute } from '@angular/router';
 import { FlightDTO } from '../dto/model/FlightDTO';
-import { Subscription, of, Observable, pipe, map, catchError, tap, firstValueFrom } from 'rxjs';
+import { Subscription, of, Observable, pipe, map, catchError, tap, firstValueFrom, flatMap, timer } from 'rxjs';
 import { Router } from '@angular/router';
 import {DetailRealTimeDTO} from '../dto/real-time/DetailRealTimeDTO'
 import {realTimeObservable} from '../functions'
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-detail',
@@ -50,7 +51,8 @@ export class DetailComponent implements OnInit {
     private route: ActivatedRoute,
     private service: BackendService,
     private router: Router,
-    private realTimeService: RealTimeService
+    private realTimeService: RealTimeService,
+    private client: HttpClient
   ) {}
 
   displayPrice() {}
@@ -75,12 +77,16 @@ export class DetailComponent implements OnInit {
 
   ngOnInit() {
     this.subscriptionIn = this.realTimeService.postUserInDetail().subscribe();
-    this.detailInfo = realTimeObservable(this.realTimeService.getDetailRealTimeData);
     this.startListening();
     if(this.service.getCurrentTrip() === undefined || this.service.getUser() === '') {
       this.router.navigateByUrl('');
     }
     this.getTrip();
+    this.detailInfo = timer(0, 5000).pipe(
+        flatMap((_) => {
+            return this.realTimeService.getDetailRealTimeData(this.client, this.trip!.hotelId)
+        })
+    ) 
     this.pricePerPerson = Math.random() * 500 + 500;
     this.numberOfAdults = this.service.getNumbers()[0];
     this.numberOfChildren = this.service.getNumbers()[1];
@@ -279,6 +285,7 @@ export class DetailComponent implements OnInit {
 
       console.log(this.trip!.chosenFlight)
       console.log(this.trip!.possibleFlights)
+      this.trip!.possibleFlights.push(this.trip!.chosenFlight)
       let flight = this.trip!.possibleFlights.find((f: FlightDTO) => f.departure == this.trip!.chosenFlight.departure)
       if(flight !== undefined) {
         this.trip!.chosenFlight = flight

@@ -1,4 +1,5 @@
-<div [hidden]="!paid && timeUp">
+<a routerLink="/">Wróć do strony głównej</a>
+<div [hidden]="!paid && !waitingForPayment && timeUp">
     <div>{{trip?.country}} Wycieczka do miejscowości {{trip?.city}} do hotelu {{trip?.hotelName}}</div>
     <div>Od {{trip?.beginDate | date: 'yyyy/MM/dd'}} do {{trip?.endDate | date: 'yyyy/MM/dd'}}</div>
     <div>Z pokojami<br>
@@ -18,16 +19,16 @@
     Dla {{numberOfAdults}} {{numberOfAdults > 1 ? "dorosłych" : "dorosłego"}} i {{numberOfChildren}} {{numberOfChildren > 1 ? "dzieci" : "dziecka"}}
     </div>
     <div>
-    Cena łączna {{this.trip?.price | number: "2"}} zł
+    Cena łączna {{this.trip?.price | number: "1.2-2"}} zł
     </div>
-    <div>
+    <div [hidden]="paid">
     Czas do zapłacenia {{this.display}}
     </div>
-    <button [hidden]="timeUp || waitingForPayment || paid" (click)="tryPaying()">Zapłać</button>
-    <div *ngIf="this.result$ | async">
-        {{this.result$ | async}}
-    </div>
+    <button [disabled]="timeUp || waitingForPayment || paid" (click)="tryPaying()">Zapłać</button>
 </div>
-<div [hidden]="!timeUp && !paid">
+<div *ngIf="this.result$ | async">
+    {{this.result$ | async}}
+</div>
+<div [hidden]="!timeUp || waitingForPayment || paid">
     Skończył się czas rezerwacji. Przekierowujemy do ekranu głównego
 </div>
