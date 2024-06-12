@@ -27,7 +27,10 @@ builder.Services.AddMassTransit(cfg =>
     cfg.AddConsumer<HotelQueryConsumer>();
     cfg.AddConsumer<HotelListQueryConsumer>();
     cfg.AddConsumer<ReserveHotelSyncConsumer>();
-
+    cfg.AddConsumer<AddWatcherConsumer>();
+    cfg.AddConsumer<RemoveWatcherConsumer>();
+    cfg.AddConsumer<GetHotelStatisticsConsumer>();
+    
     cfg.AddDelayedMessageScheduler();
     cfg.UsingRabbitMq((context, rabbitCfg) =>
     {

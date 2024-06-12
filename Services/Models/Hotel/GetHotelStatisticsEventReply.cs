@@ -1,6 +1,6 @@
-namespace Models.Gate.HotelStatistics
+namespace Models.Hotel
 {
-    public class HotelStatisticsInfoResponse
+    public class GetHotelStatisticsEventReply : EventModel
     {
         public bool IsSomeoneElseWatching { get; set; }
         public bool HasSomebodyReservedHotel { get; set; }
