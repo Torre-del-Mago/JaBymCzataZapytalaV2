@@ -149,4 +149,68 @@ public class HotelRepository : IHotelRepository
             .GroupBy(roomTypeId => roomTypeId).Select(group => new EntryDTO {Name = group.Key, NumberOfElements = group.Count() })
             .OrderByDescending(entry => entry.NumberOfElements).ToList();
     }
+    
+    public void AddWatcher(int hotelId)
+    {
+        var hotelWatcher = GetHotelWatcherIfExists(hotelId);
+        if (hotelWatcher != null)
+        {
+            hotelWatcher.Count++;
+            Database.GetCollection<HotelWatchers>("hotel_watchers")
+                .FindOneAndReplace(hw => hw.HotelId == hotelId, hotelWatcher);
+        }
+        else
+        {
+            Database.GetCollection<HotelWatchers>("hotel_watchers").InsertOne(new HotelWatchers()
+            {
+                Id = hotelId,
+                HotelId = hotelId,
+                Count = 1
+            });
+        }
+    }
+
+    public void RemoveWatcher(int hotelId)
+    {
+        var hotelWatcher = GetHotelWatcherIfExists(hotelId);
+        if (hotelWatcher != null)
+        {
+            hotelWatcher.Count--;
+            if (hotelWatcher.Count > 0)
+            {
+                Database.GetCollection<HotelWatchers>("hotel_watchers")
+                    .FindOneAndReplace(hw => hw.HotelId == hotelId, hotelWatcher);
+            }
+            else
+            {
+                Database.GetCollection<HotelWatchers>("hotel_watchers")
+                    .DeleteOne(hw => hw.HotelId == hotelId);
+            }
+        }
+    }
+
+    public int NumberOfCurrentWatchers(int hotelId)
+    {
+        var hotelWatcher = GetHotelWatcherIfExists(hotelId);
+        if (hotelWatcher != null)
+        {
+            return hotelWatcher.Count;
+        }
+        else
+        {
+            return 0;
+        }
+    }
+
+    private HotelWatchers? GetHotelWatcherIfExists(int hotelId)
+    {
+        var hotelWatchers = GetAllHotelWatchers();
+        return hotelWatchers.Find(hw => hw.HotelId == hotelId);
+    }
+
+    private List<HotelWatchers> GetAllHotelWatchers()
+    {
+        var hotelWatchersCollection = Database.GetCollection<HotelWatchers>("hotel_watchers").AsQueryable();
+        return hotelWatchersCollection.ToList();
+    }
 }

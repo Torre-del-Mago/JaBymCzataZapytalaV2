@@ -27,4 +27,7 @@ public interface IHotelRepository
 
     List<EntryDTO> GetTopHotels(int numberOfElements);
     List<EntryDTO> GetTopRoomTypes(int numberOfElements);
+    void AddWatcher(int hotelId);
+    void RemoveWatcher(int hotelId);
+    int NumberOfCurrentWatchers(int hotelId);
 }

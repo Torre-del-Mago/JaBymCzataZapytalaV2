@@ -103,7 +103,8 @@ public class ReservationRespository : IReservationRepository
                     From = BeginDate,
                     To = EndDate,
                     OfferId = OfferId,
-                    Rooms = new List<ReservedRoom>()
+                    Rooms = new List<ReservedRoom>(),
+                    ReservedAt = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Utc)
                 };
                 
 
@@ -178,5 +179,13 @@ public class ReservationRespository : IReservationRepository
                 Console.Error.Write(e);
             }
         }
+    }
+
+    public List<Database.Entity.Reservation> GetListOfReservationsOfHotel(int hotelId)
+    {
+        var reservations = Database.GetCollection<Database.Entity.Reservation>("reservations").AsQueryable();
+        return (from reservation in reservations
+            where reservation.HotelId == hotelId
+            select reservation).ToList();
     }
 }

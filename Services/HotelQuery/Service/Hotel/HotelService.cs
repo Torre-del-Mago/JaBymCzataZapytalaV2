@@ -129,4 +129,27 @@ public class HotelService : IHotelService
             TopRoomTypes = topRoomTypes
         };
     }
+
+    public void AddWatcher(int hotelId)
+    {
+        _hotelRepository.AddWatcher(hotelId);
+    }
+
+    public void RemoveWatcher(int hotelId)
+    {
+        _hotelRepository.RemoveWatcher(hotelId);
+    }
+
+    public bool IsSomeoneElseWatching(int hotelId)
+    {
+        int currentWatchersNumber = _hotelRepository.NumberOfCurrentWatchers(hotelId);
+        return currentWatchersNumber > 1;
+    }
+
+    public bool HasSomeoneReservedHotel(int hotelId)
+    {
+        var reservations = _reservationRepository.GetListOfReservationsOfHotel(hotelId);
+        var lastReservationDate = reservations.Select(r => r.ReservedAt).OrderDescending().FirstOrDefault(DateTime.UtcNow.AddDays(100.0d));
+        return Math.Abs(DateTime.UtcNow.Subtract(lastReservationDate).TotalMinutes) < 10;
+    }
 }

@@ -11,4 +11,8 @@ public interface IHotelService
     Task CancelHotel(int offerId);
     TopHotelsDTO GetTopHotels(int numberOfElements);
     TopRoomTypesDTO GetTopRoomTypes(int numberOfElements);
+    void AddWatcher(int hotelId);
+    void RemoveWatcher(int hotelId);
+    bool IsSomeoneElseWatching(int hotelId);
+    bool HasSomeoneReservedHotel(int hotelId);
 }

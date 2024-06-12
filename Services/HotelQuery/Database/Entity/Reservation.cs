@@ -22,4 +22,7 @@ public class Reservation
     
     [BsonElement("offerId")]
     public int OfferId { get; set; }
+    
+    [BsonElement("reservedAt")]
+    public DateTime ReservedAt { get; set; }
 }
