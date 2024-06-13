@@ -15,15 +15,15 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./admin-panel.component.css'],
 })
 export class AdminPanelComponent {
-  statistics?: Observable<GetAdminDataResponse>;
+  statistics?: GetAdminDataResponse;
 
   constructor(private service: RealTimeService, private client: HttpClient) {}
 
   ngOnInit() {
-    this.statistics = timer(0, 5000).pipe(
+    timer(0, 5000).pipe(
         flatMap((_) => {
             return this.service.getStatistics(this.client)
         })
-    )
+    ).subscribe(x => this.statistics = x);
   }
 }

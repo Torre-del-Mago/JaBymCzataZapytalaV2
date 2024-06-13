@@ -1,27 +1,27 @@
 <div id="hotel-panel">
     <p>Top hotele</p>
-    <div *ngFor="let hotel of (this.statistics | async)?.topHotelsDto?.topHotels">
+    <div *ngFor="let hotel of (this.statistics)?.topHotelsDto?.topHotels">
         {{hotel.name}}. {{hotel.numberOfElements}} 
     </div> 
     <p>Top typy poków</p>
-    <div *ngFor="let roomType of (this.statistics | async)?.topRoomTypesDto?.topRoomTypes">
+    <div *ngFor="let roomType of (this.statistics)?.topRoomTypesDto?.topRoomTypes">
         {{roomType.name}}. {{roomType.numberOfElements}}
     </div> 
 </div>
 <div id="transport-panel">
     <p>Top wyloty</p>
-    <div *ngFor="let departure of (this.statistics | async)?.topDepartureDto?.topDepartures">
+    <div *ngFor="let departure of (this.statistics)?.topDepartureDto?.topDepartures">
         {{departure.name}}. {{departure.numberOfElements}}
     </div> 
     <p>Top cele podróży</p>
-    <div *ngFor="let destination of (this.statistics | async)?.topDestinationDto?.topDestinations">
+    <div *ngFor="let destination of (this.statistics)?.topDestinationDto?.topDestinations">
         {{destination.name}}. {{destination.numberOfElements}}
     </div> 
 
 </div>
 <div id="events">
     <p>Top cele podróży</p>
-    <div *ngFor="let event of (this.statistics | async)?.lastTravelAgencyChangesDto?.recentChanges">
+    <div *ngFor="let event of this.statistics?.lastTravelAgencyChangesDto?.recentChanges">
         Id zmienianego obiektu: {{event.idChanged}}, Nazwa zdarzenia:{{event.eventName}}: {{event.change | number: '1.2-2'}}
     </div> 
 </div>
