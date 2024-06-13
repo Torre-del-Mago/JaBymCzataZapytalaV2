@@ -20,7 +20,8 @@
 
 </div>
 <div id="events">
+    <p>Top cele podróży</p>
     <div *ngFor="let event of (this.statistics | async)?.lastTravelAgencyChangesDto?.recentChanges">
-        {{event.eventName}}. {{event.idChanged}} {{event.change | number: '1.2-2'}}
+        Id zmienianego obiektu: {{event.idChanged}}, Nazwa zdarzenia:{{event.eventName}}: {{event.change | number: '1.2-2'}}
     </div> 
 </div>
