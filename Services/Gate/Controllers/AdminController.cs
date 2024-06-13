@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Models.Gate;
 using Models.Hotel;
 using Models.Transport;
+using Models.TravelAgency;
 
 namespace Gate.Controllers
 {
@@ -13,6 +14,7 @@ namespace Gate.Controllers
         private readonly IPublishEndpoint _publishEndpoint;
 
         private IRequestClient<GetTopHotelRoomTypeEvent> _hotelRequestClient { get; set; }
+        private IRequestClient<GetLastTravelAgencyChangesEvent> _travelAgencyRequestClient { get; set; }
         private IRequestClient<GetTopDepartureDestinationEvent> _transportRequestClient { get; set; }
 
         public AdminController(IRequestClient<GetTopHotelRoomTypeEvent> hotelRequestClient,
@@ -30,17 +32,21 @@ namespace Gate.Controllers
                 Console.Out.WriteLine("Got Request getAdminInfo ");
                 var hotelRequest =
                     _hotelRequestClient.GetResponse<GetTopHotelRoomTypeEventReply>(new GetTopHotelRoomTypeEvent());
+                var travelAgencyRequest =
+                    _travelAgencyRequestClient.GetResponse<GetLastTravelAgencyChangesEventReply>(new GetLastTravelAgencyChangesEvent());
                 var transportRequest =
                     _transportRequestClient.GetResponse<GetTopDepartureDestinationEventReply>(
                         new GetTopDepartureDestinationEvent());
                 var hotelReply = await hotelRequest;
+                var travelAgencyReply = await travelAgencyRequest;
                 var transportReply = await transportRequest;
                 var response = new GetAdminDataResponse()
                 {
                     TopDepartureDto = transportReply.Message.TopDepartureDto,
                     TopDestinationDto = transportReply.Message.TopDestinationDto,
                     TopHotelsDto = hotelReply.Message.TopHotelsDto,
-                    TopRoomTypesDto = hotelReply.Message.TopRoomTypesDto
+                    TopRoomTypesDto = hotelReply.Message.TopRoomTypesDto,
+                    LastTravelAgencyChangesDto = travelAgencyReply.Message.LastTravelAgencyChangesDto
                 };
                 return Ok(response);
             }

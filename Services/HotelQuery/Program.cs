@@ -32,6 +32,7 @@ builder.Services.AddMassTransit(cfg =>
     cfg.AddConsumer<GetHotelStatisticsConsumer>();
     cfg.AddConsumer<AddDietSyncConsumer>();
     cfg.AddConsumer<ChangeHotelDiscountSyncConsumer>();
+    cfg.AddConsumer<GetLastTravelAgencyChangesConsumer>();
     
     cfg.AddDelayedMessageScheduler();
     cfg.UsingRabbitMq((context, rabbitCfg) =>

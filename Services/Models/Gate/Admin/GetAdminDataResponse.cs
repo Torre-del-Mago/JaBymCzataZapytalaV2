@@ -1,5 +1,5 @@
 using Models.Admin.DTO;
-using Models.Gate.TravelAgency;
+using Models.TravelAgency.DTO;
 
 namespace Models.Gate
 {
@@ -9,6 +9,6 @@ namespace Models.Gate
         public TopRoomTypesDTO TopRoomTypesDto { get; set; }
         public TopDepartureDTO TopDepartureDto { get; set; }
         public TopDestinationDTO TopDestinationDto { get; set; }
-        public LastTravelAgencyChangesResponse LastTravelAgencyChangesResponse { get; set; }
+        public LastTravelAgencyChangesDTO LastTravelAgencyChangesDto { get; set; }
     }
 }
