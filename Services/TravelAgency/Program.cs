@@ -13,7 +13,7 @@ busControl.Start();
 int hotelCount = 207;
 int transportsCount = 5760;
 int dietsCount = 6;
-var rand = new Random(123);
+var rand = new Random();
 
 await Task.Delay(10 * 1000 );
 while (true)
