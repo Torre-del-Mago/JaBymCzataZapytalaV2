@@ -4,7 +4,7 @@ import { BackendService } from '../backend/backend.service';
 import { PayResponse } from '../dto/response/PayResponse';
 import { ReserveOfferResponse } from '../dto/response/ReserveOfferResponse';
 import { Router } from '@angular/router';
-import {map, Observable, of, tap} from 'rxjs';
+import {map, Observable, of, tap, shareReplay, BehaviorSubject} from 'rxjs';
 
 @Component({
   selector: 'app-reserve',
@@ -17,11 +17,12 @@ export class ReserveComponent {
   numberOfChildren: number = 0;
   display?: string
   offerInfo?: ReserveOfferResponse 
-  result$: Observable<string> = of('')
   timerRef?: Object
   paid = false
   waitingForPayment = false
   timeUp = false
+  private paymentResult$ = new BehaviorSubject<string | null>(null);
+  public result$ = this.paymentResult$.asObservable();
 
   constructor(private service: BackendService, private router: Router ) {
 
@@ -70,17 +71,21 @@ export class ReserveComponent {
     this.waitingForPayment = true
     //TODO: Dodaj catchError()
     const offerPaidFor = 0;
-    this.result$ = this.service.tryPaying(this.offerInfo!.offerId, this.trip!.price!).pipe(
+    this.service.tryPaying(this.offerInfo!.offerId, this.trip!.price!).pipe(
       tap((r: PayResponse) => {
-        if(!this.paid) {
-          if(r.answer === offerPaidFor) {
-            clearInterval(this.timerRef! as number)
-            this.paid = true
+        if (!this.paid) {
+          if (r.answer === offerPaidFor) {
+            clearInterval(this.timerRef! as number);
+            this.paid = true;
           }
         }
-        this.waitingForPayment = false
+        this.waitingForPayment = false;
       }),
-      map((r: PayResponse) => { 
-        return r.answer === offerPaidFor ? "Zapłacono za ofertę" : "Płatność się nie powiodła"}));
+      map((r: PayResponse) => {
+        return r.answer === offerPaidFor ? "Zapłacono za ofertę" : "Płatność się nie powiodła";
+      }),
+    ).subscribe(result => {
+      this.paymentResult$.next(result);
+    });
   }
 }
