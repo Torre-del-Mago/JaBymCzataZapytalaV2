@@ -34,4 +34,6 @@ public interface IHotelRepository
     void AddDietToHotel(int hotelId, int dietId);
     void RegisterTransportAgencyChange(string eventName, int idChanged, double change);
     List<TravelAgencyEntryDTO> getLastTravelAgencyChanges(int numberOfChanges);
+
+    void ChangeHotelDiscount(int hotelId, double discountChange);
 }

@@ -15,5 +15,8 @@ namespace TransportQuery.Repository.Transport
         List<FlightConnection> GetFlightList(string country);
         List<EntryDTO> GetTopDepartures(int numberOfElements);
         List<EntryDTO> GetTopDestinations(int numberOfElements);
+
+        void UpdateNumberOfSeats(int transportId, int numberOfSeats);
+        void UpdatePricePerSeat(int transportId, double pricePerSeat);
     }
 }

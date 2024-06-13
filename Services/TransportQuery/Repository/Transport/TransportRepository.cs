@@ -93,5 +93,23 @@ namespace TransportQuery.Repository.Transport
                 select new EntryDTO() { Name = grp.Key, NumberOfElements = grp.Count() };
             return result.ToList();
         }
+
+        public void UpdateNumberOfSeats(int transportId, int numberOfSeats)
+        {
+            var transportCollection = Database.GetCollection<Database.Entity.Transport>("transports").AsQueryable();
+            Database.Entity.Transport transport = transportCollection.Where(t => t.Id == transportId).First();
+            transport.NumberOfSeats += numberOfSeats;
+            Database.GetCollection<Database.Entity.Transport>("transports")
+                    .FindOneAndReplace(t => t.Id == transportId, transport);
+        }
+
+        public void UpdatePricePerSeat(int transportId, double pricePerSeat)
+        {
+            var transportCollection = Database.GetCollection<Database.Entity.Transport>("transports").AsQueryable();
+            Database.Entity.Transport transport = transportCollection.Where(t => t.Id == transportId).First();
+            transport.PricePerSeat += Convert.ToSingle(pricePerSeat);
+            Database.GetCollection<Database.Entity.Transport>("transports")
+                    .FindOneAndReplace(t => t.Id == transportId, transport);
+        }
     }
 }

@@ -164,7 +164,7 @@ public class HotelService : IHotelService
 
     public void ChangeHotelDiscount(int hotelId, double discountChange)
     {
-        throw new NotImplementedException();
+        _hotelRepository.ChangeHotelDiscount(hotelId, discountChange);
     }
 
     public void RegisterTransportAgencyChange(string eventName, int idChanged, double change)

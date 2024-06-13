@@ -253,12 +253,13 @@ namespace TransportQuery.Service.Transport
 
         public void ChangeNumberOfSeats(int transportId, int numberOfSeats)
         {
-            throw new NotImplementedException();
+            _transportRepository.UpdateNumberOfSeats(transportId, numberOfSeats);
         }
 
         public void ChangePricePerSeat(int transportId, double priceChange)
         {
-            throw new NotImplementedException();
+            _transportRepository.UpdatePricePerSeat(transportId, priceChange);
+
         }
     }
 }

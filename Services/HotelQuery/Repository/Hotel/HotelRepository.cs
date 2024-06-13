@@ -251,4 +251,14 @@ public class HotelRepository : IHotelRepository
         var hotelWatchersCollection = Database.GetCollection<HotelWatchers>("hotel_watchers").AsQueryable();
         return hotelWatchersCollection.ToList();
     }
+
+    public void ChangeHotelDiscount(int hotelId, double discountChange)
+    {
+        var hotelCollection = Database.GetCollection<Database.Entity.Hotel>("hotels").AsQueryable();
+        Database.Entity.Hotel hotel = hotelCollection.Where(h => h.Id == hotelId).First();
+        
+        hotel.Discount += Convert.ToSingle(discountChange);
+        Database.GetCollection<Database.Entity.Hotel>("transports")
+                .FindOneAndReplace(h => h.Id == hotelId, hotel);
+    }
 }
