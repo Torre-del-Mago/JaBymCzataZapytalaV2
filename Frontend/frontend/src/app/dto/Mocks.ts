@@ -5,18 +5,21 @@ import { TripsDTO } from './model/TripsDTO';
 
 export const rooms: RoomDTO[] = [
   {
+    id:1,
     count: 2,
     numberOfPeopleForTheRoom: 2,
     pricePerRoom: 200,
     typeOfRoom: 'Cowabunga',
   },
   {
+    id:2,
     count: 2,
     numberOfPeopleForTheRoom: 1,
     pricePerRoom: 500,
     typeOfRoom: 'Funky Monkey',
   },
   {
+    id:3,
     count: 2,
     numberOfPeopleForTheRoom: 1,
     pricePerRoom: 300,
@@ -25,6 +28,7 @@ export const rooms: RoomDTO[] = [
 ];
 export const dummyRoom: RoomDTO = 
   {
+    id: 0,
     count: 0,
     numberOfPeopleForTheRoom: 0,
     pricePerRoom: 500,
