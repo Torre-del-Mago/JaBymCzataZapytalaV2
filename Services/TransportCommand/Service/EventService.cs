@@ -99,14 +99,30 @@ namespace TransportCommand.Service
             await _eventRepository.InsertCancellationEventForTickets(tickets);
         }
 
-        public void ChangeNumberOfSeats(int transportId, int numberOfSeats)
+        public int ChangeNumberOfSeats(int transportId, int numberOfSeats)
         {
-            throw new NotImplementedException();
+            var transport = _transportRepository.GetTransportById(transportId);
+            if(transport == null)
+            {
+                throw new InvalidOperationException();
+            }
+            var sumOfReservedSeats = _ticketRepository.GetNumberOfReservedSeatsByTransportId(transportId);
+            int actualNumberOfSeats;
+            if (transport.NumberOfSeats + numberOfSeats < sumOfReservedSeats)
+            {
+                actualNumberOfSeats = transport.NumberOfSeats - sumOfReservedSeats;
+            }
+            else
+            {
+                actualNumberOfSeats = numberOfSeats;
+            }
+            _transportRepository.UpdateNumberOfSeats(transportId, actualNumberOfSeats);
+            return actualNumberOfSeats;
         }
 
         public void ChangePricePerSeat(int transportId, double priceChange)
         {
-            throw new NotImplementedException();
+            _transportRepository.UpdatePricePerSeat(transportId, priceChange);
         }
     }
 }

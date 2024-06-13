@@ -9,11 +9,11 @@ public class ChangeNumberOfSeatsConsumer(IEventService eventService, IPublishEnd
     public async Task Consume(ConsumeContext<ChangeNumberOfSeatsEvent> context)
     {
         Console.Out.WriteLine("Got event ChangeNumberOfSeatsEvent for transport:" + context.Message.TransportId);
-        eventService.ChangeNumberOfSeats(context.Message.TransportId, context.Message.NumberOfSeats);
+        int actualNumberOfSeatsUpdated = eventService.ChangeNumberOfSeats(context.Message.TransportId, context.Message.NumberOfSeats);
         await publishEndpoint.Publish(new ChangeNumberOfSeatsSyncEvent()
         {
             TransportId = context.Message.TransportId,
-            NumberOfSeats = context.Message.NumberOfSeats
+            NumberOfSeats = actualNumberOfSeatsUpdated
         });
     }
 }

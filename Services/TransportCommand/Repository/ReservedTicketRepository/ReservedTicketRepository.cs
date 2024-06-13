@@ -38,4 +38,9 @@ public class ReservedTicketRepository : IReservedTicketRepository
         _context.ReservedTickets.Add(ticket);
         _context.SaveChanges();
     }
+
+    public int GetNumberOfReservedSeatsByTransportId(int transportId)
+    {
+        return _context.ReservedTickets.Where(r => r.TransportId == transportId).Sum(r => r.NumberOfReservedSeats);
+    }
 }
