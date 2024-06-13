@@ -303,7 +303,7 @@ export class BackendService {
   }
 
   public getNumbers(): number[] {
-    return [this.numOfAdults, this.numOfChildren];
+    return [this.numOfAdults, this.numOfChildren, this.numOfToddlers, this.numOfTeenagers, this.numOfNewborns];
   }
 
   public getDates(): string[] {

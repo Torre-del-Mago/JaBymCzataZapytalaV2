@@ -97,6 +97,9 @@ export class DetailComponent implements OnInit {
     this.pricePerPerson = Math.random() * 500 + 500;
     this.numberOfAdults = this.service.getNumbers()[0];
     this.numberOfChildren = this.service.getNumbers()[1];
+    this.numberOfToddlers = this.service.getNumbers()[2];
+    this.numberOfTeenagers = this.service.getNumbers()[3];
+    this.numberOfNewborns = this.service.getNumbers()[4];
     let dates = this.service.getDates();
     this.beginDate = dates[0];
     this.endDate = dates[1];
