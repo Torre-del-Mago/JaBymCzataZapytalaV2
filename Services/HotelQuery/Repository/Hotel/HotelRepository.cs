@@ -202,6 +202,28 @@ public class HotelRepository : IHotelRepository
         }
     }
 
+    public void AddDietToHotel(int hotelId, int dietId)
+    {
+        var hotel = GetHotel(hotelId);
+        var diet = GetDiet(dietId);
+        hotel.Diets.Add(diet);
+        Database.GetCollection<Database.Entity.Hotel>("hotels").FindOneAndReplace(h => h.Id == hotelId, hotel);
+    }
+
+    public void RegisterTransportAgencyChange(string eventName, int idChanged, double change)
+    {
+        var transportAgencyCollection = Database.GetCollection<TransportAgencyChange>("transport_agency_change");
+        var nextId = transportAgencyCollection.AsQueryable().Count() + 1;
+        TransportAgencyChange transportAgencyChange = new TransportAgencyChange()
+        {
+            Id = nextId,
+            EventName = eventName,
+            IdChanged = idChanged,
+            Change = change
+        };
+        transportAgencyCollection.InsertOne(transportAgencyChange);
+    }
+
     private HotelWatchers? GetHotelWatcherIfExists(int hotelId)
     {
         var hotelWatchers = GetAllHotelWatchers();

@@ -7,6 +7,6 @@ public interface IEventService
     Task<bool> ReserveHotel(HotelReservationDTO dto);
     Task CancelHotel(int offerId);
 
-    Task AddDiet(int hotelId, int dietId);
+    Task<bool> AddDiet(int hotelId, int dietId);
     double ChangeHotelDiscount(int hotelId, double discountChange);
 }

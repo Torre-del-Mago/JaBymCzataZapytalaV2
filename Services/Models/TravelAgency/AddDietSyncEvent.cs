@@ -4,5 +4,6 @@ namespace Models.TravelAgency
     {
         public int HotelId { get; set; }
         public int DietId { get; set; }
+        public bool Done { get; set; }
     }
 }
