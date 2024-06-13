@@ -1,5 +1,6 @@
 ﻿using HotelQuery.Database.Entity;
 using Models.Admin.DTO;
+using Models.TravelAgency;
 
 namespace HotelQuery.Repository.Hotel;
 
@@ -32,4 +33,5 @@ public interface IHotelRepository
     int NumberOfCurrentWatchers(int hotelId);
     void AddDietToHotel(int hotelId, int dietId);
     void RegisterTransportAgencyChange(string eventName, int idChanged, double change);
+    List<TravelAgencyEntryDTO> getLastTravelAgencyChanges(int numberOfChanges);
 }
