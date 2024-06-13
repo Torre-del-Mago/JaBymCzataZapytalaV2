@@ -7,7 +7,7 @@ import { BackendService } from '../backend/backend.service';
 import { RealTimeService } from '../real-time/real-time.service';
 import { ActivatedRoute } from '@angular/router';
 import { FlightDTO } from '../dto/model/FlightDTO';
-import { Subscription, of, Observable, pipe, map, catchError, tap, firstValueFrom, flatMap, timer } from 'rxjs';
+import { Subscription, of, Observable, pipe, map, catchError, tap, firstValueFrom, flatMap, timer, shareReplay } from 'rxjs';
 import { Router } from '@angular/router';
 import {DetailRealTimeDTO} from '../dto/real-time/DetailRealTimeDTO'
 import {realTimeObservable} from '../functions'
@@ -44,7 +44,8 @@ export class DetailComponent implements OnInit {
   reserveError$: Observable<string> = of('');
   private subscriptionIn?: Subscription
   private subscriptionOut?: Subscription
-  public detailInfo?: Observable<DetailRealTimeDTO>
+  public detailInfo?: Subscription
+  public detailInfoText?: DetailRealTimeDTO
   
 
   constructor(
@@ -86,7 +87,7 @@ export class DetailComponent implements OnInit {
         flatMap((_) => {
             return this.realTimeService.getDetailRealTimeData(this.client, this.trip!.hotelId)
         })
-    ) 
+    ).subscribe(x => this.detailInfoText = x)
     this.pricePerPerson = Math.random() * 500 + 500;
     this.numberOfAdults = this.service.getNumbers()[0];
     this.numberOfChildren = this.service.getNumbers()[1];
@@ -117,6 +118,7 @@ export class DetailComponent implements OnInit {
   ngOnDestroy() {
     this.subscriptionOut = this.realTimeService.postUserOutOfDetail(this.trip!.hotelId).subscribe();
     this.stopListening();
+    this.detailInfo?.unsubscribe()
   }
 
   createBackup() {
@@ -235,6 +237,7 @@ export class DetailComponent implements OnInit {
   }
 
   async reserve(): Promise<void> {
+    console.log("Started reserving")
     let offerReserved = 0;
     this.trip!.chosenMeal = this.mealType;
     this.reserveError$ = this.service.reserveOffer(
