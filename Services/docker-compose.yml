@@ -200,7 +200,7 @@ services:
     hostname: 'trip'
     container_name: 'trip'
     depends_on:
-        - rabbitmq
+      - rabbitmq
     deploy:
       restart_policy:
         condition: on-failure
@@ -208,9 +208,29 @@ services:
         max_attempts: 2
         window: 140s
     ports:
-         - 8110:80 
+      - 8110:80
     networks:
-        - backend
+      - backend
+
+  travel_agency:
+    image: ${DOCKER_REGISTRY-}travel_agency
+    build:
+      context: .
+      dockerfile: TravelAgency/Dockerfile
+    hostname: 'travelAgency'
+    container_name: 'travelAgency'
+    depends_on:
+      - rabbitmq
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 2
+        window: 140s
+    ports:
+      - 8120:80
+    networks:
+      - backend
 
   postgres:
     image: postgres:14.2

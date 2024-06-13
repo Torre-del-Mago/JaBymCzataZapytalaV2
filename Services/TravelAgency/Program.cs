@@ -15,6 +15,7 @@ int transportsCount = 5760;
 int dietsCount = 6;
 var rand = new Random(123);
 
+await Task.Delay(10 * 1000 );
 while (true)
 {
     var number = rand.Next(1, 5);
@@ -30,7 +31,7 @@ while (true)
             break;
     }
     var randTime = rand.Next(0, 10000) - 5000;
-    await Task.Delay(5 * 60 * 1000 - randTime);
+    await Task.Delay(1 * 60 * 1000 - randTime);
 }
 
 busControl.Stop();
@@ -78,7 +79,7 @@ async void ChangeNumberOfSeats(Random random, IBusControl bus)
     };
     await bus.Publish(@event);
     Console.Out.WriteLine("Published ChangeNumberOfSeats transportToChange: " + transportToChange + " numberOfSeats: " + numberOfSeats );
-    var name = "Zmiana promocji na hotel";
+    var name = "Zmiana liczby siedzeń w połączeniu";
     await RegisterChange(name, transportToChange, numberOfSeats, bus);
 }
 
@@ -93,7 +94,7 @@ async void ChangePricePerSeat(Random random, IBusControl bus)
     };
     await bus.Publish(@event);
     Console.Out.WriteLine("Published ChangePricePerSeat transportToChange: " + transportToChange + " priceChange: " + priceChange );
-    var name = "Zmiana promocji na hotel";
+    var name = "Zmiana ceny siedzenia w połączeniu";
     await RegisterChange(name, transportToChange, priceChange, bus);
 }
 
