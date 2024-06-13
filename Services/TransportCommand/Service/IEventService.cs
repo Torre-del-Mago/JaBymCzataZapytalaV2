@@ -9,6 +9,6 @@ namespace TransportCommand.Service
         Task CancelTransport(int offerId);
 
         int ChangeNumberOfSeats(int transportId, int numberOfSeats);
-        void ChangePricePerSeat(int transportId, double priceChange);
+        double ChangePricePerSeat(int transportId, double priceChange);
     }
 }
