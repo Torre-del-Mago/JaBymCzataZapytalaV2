@@ -3,7 +3,7 @@ import { BackendService } from '../backend/backend.service';
 import { TripDTO } from '../dto/model/TripDTO';
 import { Router } from '@angular/router';
 import {AsyncPipe} from '@angular/common'
-import {Subscription, of, Observable, pipe, tap, map, catchError} from 'rxjs'; 
+import {Subscription, of, Observable, pipe, tap, map, catchError} from 'rxjs';
 
 @Component({
   selector: 'app-search',
@@ -14,9 +14,9 @@ import {Subscription, of, Observable, pipe, tap, map, catchError} from 'rxjs';
   ]
 })
 export class SearchComponent {
-  destinations = ['', 'Grecja', 'brazylia', 'cypr', 'egipt'];
+  destinations = ['', 'grecja', 'brazylia', 'cypr', 'egipt'];
   startCities = ['','bydgoszcz', 'gdansk', 'katowice', 'krakow', 'lublin', 'lodz', 'olsztyn-mazury',
-  'poznan', 'rzeszow', 'szczecin', 'Warszawa', 'warszawa-radom', 'wroclaw',
+  'poznan', 'rzeszow', 'szczecin', 'warszawa', 'warszawa-radom', 'wroclaw',
   'zielona-gora'];
   destination = '';
   startCity = '';
@@ -82,7 +82,7 @@ export class SearchComponent {
     }
   }
 
-  
+
   transformDate(notdate: Date): string {
     const date = new Date(notdate);
     const year = date.getFullYear();
@@ -118,8 +118,8 @@ export class SearchComponent {
     }
     this.canDecreaseChildren = false;
   }
-  
-  
+
+
   minusChild(): void {
     this.numberOfChildren--;
     this.numberOfPeople--;
