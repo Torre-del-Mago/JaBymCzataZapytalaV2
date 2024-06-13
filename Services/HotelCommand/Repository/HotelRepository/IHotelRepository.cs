@@ -10,5 +10,8 @@ namespace HotelCommand.Repository.HotelRepository
         Task<Hotel> GetHotelByIdAsync(int hotelId);
 
         EntityEntry<Hotel> UpdateHotel(Hotel hotel);
+
+        void UpdateDiscount(int hotelId, float discount);
+        Hotel GetHotel(int hotelId);
     }
 }

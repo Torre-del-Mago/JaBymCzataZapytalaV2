@@ -128,8 +128,20 @@ public class EventService : IEventService
         }
     }
 
-    public void ChangeHotelDiscount(int hotelId, double discountChange)
+    public double ChangeHotelDiscount(int hotelId, double discountChange)
     {
-        throw new NotImplementedException();
+        var hotel = _hotelRepository.GetHotel(hotelId);
+        double newDiscount = Convert.ToDouble(discountChange);
+        double currentDiscount = Convert.ToDouble(hotel.Discount);
+        if ((currentDiscount + discountChange) < 0)
+        {
+            newDiscount = currentDiscount;
+        }
+        else if((currentDiscount + discountChange) >= 1.0)
+        {
+            newDiscount = (1.0) - currentDiscount;
+        }
+        _hotelRepository.UpdateDiscount(hotelId, Convert.ToSingle(newDiscount));
+        return newDiscount;
     }
 }
