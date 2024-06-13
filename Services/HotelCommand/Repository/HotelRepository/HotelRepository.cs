@@ -19,6 +19,11 @@ namespace HotelCommand.Repository.HotelRepository
             return await _context.Hotels.ToListAsync();
         }
 
+        public Hotel GetHotel(int hotelId)
+        {
+            return _context.Hotels.SingleOrDefault(h => h.Id == hotelId);
+        }
+
         public async Task<Hotel> GetHotelByIdAsync(int hotelId)
         {
             return await _context.Hotels.FindAsync(hotelId);
