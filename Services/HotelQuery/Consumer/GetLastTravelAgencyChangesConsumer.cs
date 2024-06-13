@@ -9,10 +9,11 @@ public class GetLastTravelAgencyChangesConsumer(IHotelService service) : IConsum
     public async Task Consume(ConsumeContext<GetLastTravelAgencyChangesEvent> context)
     {
         Console.WriteLine("Hotel received event GetLastTravelAgencyChangesEvent");
+        var lastChanges = service.getLastTravelAgencyChanges(10);
         await context.RespondAsync(new GetLastTravelAgencyChangesEventReply
         {
             CorrelationId = context.Message.CorrelationId,
-            LastTravelAgencyChangesDto = null
+            LastTravelAgencyChangesDto = lastChanges
         });
     }
 }

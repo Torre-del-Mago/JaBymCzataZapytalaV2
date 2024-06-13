@@ -1,5 +1,6 @@
 ﻿using HotelQuery.Database.Entity;
 using Models.Admin.DTO;
+using Models.TravelAgency;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 
@@ -222,6 +223,21 @@ public class HotelRepository : IHotelRepository
             Change = change
         };
         transportAgencyCollection.InsertOne(transportAgencyChange);
+    }
+
+    public List<TravelAgencyEntryDTO> getLastTravelAgencyChanges(int numberOfChanges)
+    {
+        var transportAgencyCollection =
+            Database.GetCollection<TransportAgencyChange>("transport_agency_change").AsQueryable();
+        var lastChanges = transportAgencyCollection.OrderByDescending(t => t.Id)
+            .Take(numberOfChanges).Select(t =>
+            new TravelAgencyEntryDTO()
+            {
+                EventName = t.EventName,
+                IdChanged = t.IdChanged,
+                Change = t.Change
+            }).ToList();
+        return lastChanges;
     }
 
     private HotelWatchers? GetHotelWatcherIfExists(int hotelId)
