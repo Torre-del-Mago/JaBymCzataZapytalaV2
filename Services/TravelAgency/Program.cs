@@ -48,6 +48,8 @@ async void ChangeDiscount(Random random, IBusControl bus)
     };
     await bus.Publish(@event);
     Console.Out.WriteLine("Published ChangeHotelDiscountEvent hotelId: " + hotelToChange + " discountChange: " + discountChange );
+    var name = "Dodanie diety do hotelu";
+    await RegisterChange(name, hotelToChange, discountChange, bus);
 }
 
 async void AddDiet(Random random, IBusControl bus)
@@ -61,6 +63,8 @@ async void AddDiet(Random random, IBusControl bus)
     };
     await bus.Publish(@event);
     Console.Out.WriteLine("Published AddDietEvent hotelId: " + hotelToChange + " dietToChange: " + dietToChange );
+    var name = "Zmiana promocji na hotel";
+    await RegisterChange(name, hotelToChange, dietToChange, bus);
 }
 
 async void ChangeNumberOfSeats(Random random, IBusControl bus)
@@ -74,6 +78,8 @@ async void ChangeNumberOfSeats(Random random, IBusControl bus)
     };
     await bus.Publish(@event);
     Console.Out.WriteLine("Published ChangeNumberOfSeats transportToChange: " + transportToChange + " numberOfSeats: " + numberOfSeats );
+    var name = "Zmiana promocji na hotel";
+    await RegisterChange(name, transportToChange, numberOfSeats, bus);
 }
 
 async void ChangePricePerSeat(Random random, IBusControl bus)
@@ -87,4 +93,17 @@ async void ChangePricePerSeat(Random random, IBusControl bus)
     };
     await bus.Publish(@event);
     Console.Out.WriteLine("Published ChangePricePerSeat transportToChange: " + transportToChange + " priceChange: " + priceChange );
+    var name = "Zmiana promocji na hotel";
+    await RegisterChange(name, transportToChange, priceChange, bus);
+}
+
+async Task RegisterChange(string name, int id, double change, IBusControl bus1)
+{
+    var @changeEvent = new RegisterTransportAgencyChangeEvent()
+    {
+        EventName = name,
+        IdChanged = id,
+        Change = change
+    };
+    await bus1.Publish(@changeEvent);
 }

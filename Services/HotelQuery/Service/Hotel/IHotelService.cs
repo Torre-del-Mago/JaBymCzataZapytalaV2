@@ -15,6 +15,6 @@ public interface IHotelService
     void RemoveWatcher(int hotelId);
     bool IsSomeoneElseWatching(int hotelId);
     bool HasSomeoneReservedHotel(int hotelId);
-    void AddDiet(int hotelId, int dietId);
+    void AddDiet(int hotelId, int dietId, bool done);
     void ChangeHotelDiscount(int hotelId, double discountChange);
 }

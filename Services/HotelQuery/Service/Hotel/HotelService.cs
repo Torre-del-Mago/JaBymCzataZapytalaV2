@@ -153,9 +153,12 @@ public class HotelService : IHotelService
         return Math.Abs(DateTime.UtcNow.Subtract(lastReservationDate).TotalMinutes) < 10;
     }
 
-    public void AddDiet(int hotelId, int dietId)
+    public void AddDiet(int hotelId, int dietId, bool done)
     {
-        throw new NotImplementedException();
+        if (done)
+        {
+            _hotelRepository.AddDietToHotel(hotelId, dietId);
+        }
     }
 
     public void ChangeHotelDiscount(int hotelId, double discountChange)

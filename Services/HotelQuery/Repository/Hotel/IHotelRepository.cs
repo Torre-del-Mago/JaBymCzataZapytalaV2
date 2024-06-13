@@ -30,4 +30,5 @@ public interface IHotelRepository
     void AddWatcher(int hotelId);
     void RemoveWatcher(int hotelId);
     int NumberOfCurrentWatchers(int hotelId);
+    void AddDietToHotel(int hotelId, int dietId);
 }

@@ -110,7 +110,7 @@ public class EventService : IEventService
         await _eventRepository.InsertCancellationEvent(offerId);
     }
 
-    public async Task AddDiet(int hotelId, int dietId)
+    public async Task<bool> AddDiet(int hotelId, int dietId)
     {
         var hotelToChange = await _hotelRepository.GetHotelByIdAsync(hotelId);
         if (!hotelToChange.HotelDiets.Select(d => d.DietId).Contains(dietId))
@@ -125,7 +125,9 @@ public class EventService : IEventService
             _hotelDietRepository.AddHotelDiet(hotelDietToAdd);
             _dietRepository.UpdateDiet(diet);
             _hotelRepository.UpdateHotel(hotelToChange);
+            return true;
         }
+        return false;
     }
 
     public double ChangeHotelDiscount(int hotelId, double discountChange)

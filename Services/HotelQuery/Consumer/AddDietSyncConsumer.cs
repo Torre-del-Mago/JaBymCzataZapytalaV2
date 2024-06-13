@@ -9,7 +9,7 @@ public class AddDietSyncConsumer(IHotelService hotelService) : IConsumer<AddDiet
     public Task Consume(ConsumeContext<AddDietSyncEvent> context)
     {
         Console.Out.WriteLine("Got event AddDietSyncEvent for hotel:" + context.Message.HotelId);
-        hotelService.AddDiet(context.Message.HotelId, context.Message.DietId);
+        hotelService.AddDiet(context.Message.HotelId, context.Message.DietId, context.Message.Done);
         return Task.CompletedTask;
     }
 }

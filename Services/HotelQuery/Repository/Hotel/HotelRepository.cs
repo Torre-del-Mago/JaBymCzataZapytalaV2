@@ -202,6 +202,14 @@ public class HotelRepository : IHotelRepository
         }
     }
 
+    public void AddDietToHotel(int hotelId, int dietId)
+    {
+        var hotel = GetHotel(hotelId);
+        var diet = GetDiet(dietId);
+        hotel.Diets.Add(diet);
+        Database.GetCollection<Database.Entity.Hotel>("hotels").FindOneAndReplace(h => h.Id == hotelId, hotel);
+    }
+
     private HotelWatchers? GetHotelWatcherIfExists(int hotelId)
     {
         var hotelWatchers = GetAllHotelWatchers();
