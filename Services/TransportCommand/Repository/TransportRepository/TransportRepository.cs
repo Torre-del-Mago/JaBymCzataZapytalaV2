@@ -28,10 +28,17 @@ public class TransportRepository : ITransportRepository
         return await _context.Transports.FindAsync(transpotId);
     }
 
+    public void UpdateNumberOfSeats(int transportId, int numberOfSeats)
+    {
+        var transport = _context.Transports.Find(transportId);
+        transport.NumberOfSeats += numberOfSeats;
+        _context.Transports.Update(transport);
+    }
+
     public void UpdatePricePerSeat(int transportId, double priceChange)
     {
         var transport = _context.Transports.Find(transportId);
-        transport.PricePerSeat = Convert.ToDecimal(priceChange);
+        transport.PricePerSeat += Convert.ToDecimal(priceChange);
         _context.Transports.Update(transport);
     }
 }
