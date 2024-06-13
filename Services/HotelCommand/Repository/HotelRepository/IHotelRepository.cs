@@ -1,4 +1,5 @@
 ﻿using HotelCommand.Database.Tables;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace HotelCommand.Repository.HotelRepository
 {
@@ -7,5 +8,7 @@ namespace HotelCommand.Repository.HotelRepository
         Task<List<Hotel>> GetAllHotelsAsync();
 
         Task<Hotel> GetHotelByIdAsync(int hotelId);
+
+        EntityEntry<Hotel> UpdateHotel(Hotel hotel);
     }
 }

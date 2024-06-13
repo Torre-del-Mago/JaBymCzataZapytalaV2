@@ -18,10 +18,11 @@ namespace Gate.Controllers
         private IRequestClient<GetTopDepartureDestinationEvent> _transportRequestClient { get; set; }
 
         public AdminController(IRequestClient<GetTopHotelRoomTypeEvent> hotelRequestClient,
-            IRequestClient<GetTopDepartureDestinationEvent> transportRequestClient)
+            IRequestClient<GetTopDepartureDestinationEvent> transportRequestClient, IRequestClient<GetLastTravelAgencyChangesEvent> travelAgencyRequestClient)
         {
             _hotelRequestClient = hotelRequestClient;
             _transportRequestClient = transportRequestClient;
+            _travelAgencyRequestClient = travelAgencyRequestClient;
         }
 
         [HttpGet("admin-info")]

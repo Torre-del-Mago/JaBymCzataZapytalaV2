@@ -1,4 +1,5 @@
 ﻿using HotelCommand.Database.Tables;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace HotelCommand.Repository.HotelDietRepository
 {
@@ -8,5 +9,6 @@ namespace HotelCommand.Repository.HotelDietRepository
 
         Task<HotelDiet> GetHotelDietByIdAsync(int hotelDietId);
 
+        EntityEntry<HotelDiet> AddHotelDiet(HotelDiet hotelDiet);
     }
 }

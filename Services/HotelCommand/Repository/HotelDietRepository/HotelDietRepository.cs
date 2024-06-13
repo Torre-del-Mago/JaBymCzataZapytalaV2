@@ -1,6 +1,7 @@
 ﻿using HotelCommand.Database;
 using HotelCommand.Database.Tables;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace HotelCommand.Repository.HotelDietRepository
 {
@@ -21,6 +22,11 @@ namespace HotelCommand.Repository.HotelDietRepository
         public async Task<HotelDiet> GetHotelDietByIdAsync(int hotelDietId)
         {
             return await _context.HotelDiets.FindAsync(hotelDietId);
+        }
+
+        public EntityEntry<HotelDiet> AddHotelDiet(HotelDiet hotelDiet)
+        {
+            return _context.HotelDiets.Add(hotelDiet);
         }
 
         // Add other methods as needed

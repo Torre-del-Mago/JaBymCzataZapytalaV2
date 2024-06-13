@@ -1,6 +1,7 @@
 ﻿using HotelCommand.Database;
 using HotelCommand.Database.Tables;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace HotelCommand.Repository.HotelRepository
 {
@@ -23,5 +24,9 @@ namespace HotelCommand.Repository.HotelRepository
             return await _context.Hotels.FindAsync(hotelId);
         }
 
+        public EntityEntry<Hotel> UpdateHotel(Hotel hotel)
+        {
+            return _context.Hotels.Add(hotel);
+        }
     }
 }

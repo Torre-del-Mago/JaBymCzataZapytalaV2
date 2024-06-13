@@ -1,4 +1,6 @@
 ﻿using HotelCommand.Database.Tables;
+using HotelCommand.Repository.DietRepository;
+using HotelCommand.Repository.HotelDietRepository;
 using HotelCommand.Repository.HotelRepository;
 using HotelCommand.Repository.HotelRoomTypeRepository;
 using HotelCommand.Repository.ReservationEventRepository;
@@ -15,16 +17,22 @@ public class EventService : IEventService
     private IReservationEventRepository _eventRepository;
     private IHotelRepository _hotelRepository;
     private IHotelRoomTypeRepository _hotelRoomTypeRepository;
-        
-    public EventService(IReservedRoomRepository reservedRoomRepository, IReservationRepository reservationRepository, IReservationEventRepository eventRepository, IHotelRepository hotelRepository, IHotelRoomTypeRepository hotelRoomTypeRepository)
+    private IDietRepository _dietRepository;
+    private IHotelDietRepository _hotelDietRepository;
+
+    public EventService(IReservedRoomRepository reservedRoomRepository, IReservationRepository reservationRepository,
+        IReservationEventRepository eventRepository, IHotelRepository hotelRepository,
+        IHotelRoomTypeRepository hotelRoomTypeRepository, IDietRepository dietRepository, IHotelDietRepository hotelDietRepository)
     {
         _reservedRoomRepository = reservedRoomRepository;
         _reservationRepository = reservationRepository;
         _eventRepository = eventRepository;
         _hotelRepository = hotelRepository;
         _hotelRoomTypeRepository = hotelRoomTypeRepository;
+        _dietRepository = dietRepository;
+        _hotelDietRepository = hotelDietRepository;
     }
-    
+
     public async Task<bool> ReserveHotel(HotelReservationDTO dto)
     {
         var hotelById = await _hotelRepository.GetHotelByIdAsync(dto.HotelId);
@@ -102,9 +110,22 @@ public class EventService : IEventService
         await _eventRepository.InsertCancellationEvent(offerId);
     }
 
-    public void AddDiet(int hotelId, int dietId)
+    public async Task AddDiet(int hotelId, int dietId)
     {
-        throw new NotImplementedException();
+        var hotelToChange = await _hotelRepository.GetHotelByIdAsync(hotelId);
+        if (!hotelToChange.HotelDiets.Select(d => d.DietId).Contains(dietId))
+        {
+            var diet = await _dietRepository.GetDietByIdAsync(dietId);
+            var hotelDietToAdd = new HotelDiet
+                { Diet = diet, DietId = diet.Id, Hotel = hotelToChange, HotelId = hotelToChange.Id, };
+
+            diet.HotelDiets.Add(hotelDietToAdd);
+            hotelToChange.HotelDiets.Add(hotelDietToAdd);
+
+            _hotelDietRepository.AddHotelDiet(hotelDietToAdd);
+            _dietRepository.UpdateDiet(diet);
+            _hotelRepository.UpdateHotel(hotelToChange);
+        }
     }
 
     public void ChangeHotelDiscount(int hotelId, double discountChange)
