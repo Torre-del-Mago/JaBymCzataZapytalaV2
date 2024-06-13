@@ -32,4 +32,6 @@ public interface IHotelRepository
     int NumberOfCurrentWatchers(int hotelId);
     void AddDietToHotel(int hotelId, int dietId);
     void RegisterTransportAgencyChange(string eventName, int idChanged, double change);
+
+    void ChangeHotelDiscount(int hotelId, double discountChange);
 }
