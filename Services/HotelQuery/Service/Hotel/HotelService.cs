@@ -24,7 +24,17 @@ public class HotelService : IHotelService
 
         var filteredHotels = hotels.Where(h =>
             h.Country == criteria.Country &&
-            IsHotelAvailable(h, criteria.BeginDate, criteria.EndDate, criteria.NumberOfPeople)).ToList();
+            IsHotelAvailable(h, criteria.BeginDate, criteria.EndDate, criteria.NumberOfPeople))
+            .Select(h => new Database.Entity.Hotel()
+            {
+                Id = h.Id,
+                City = h.City,
+                Country = h.Country,
+                Diets = h.Diets,
+                Discount = h.Discount,
+                Name = h.Name,
+                Rooms = GetAvailableRooms(h, criteria.BeginDate, criteria.EndDate)
+            }).ToList();
 
         var hotelsDto = filteredHotels.Select(h => MapToHotelDto(h, criteria.BeginDate, criteria.EndDate)).ToList();
 
@@ -41,22 +51,31 @@ public class HotelService : IHotelService
             return null;
         }
 
+        hotel.Rooms = GetAvailableRooms(hotel, criteria.BeginDate, criteria.EndDate);
         return MapToHotelDto(hotel, criteria.BeginDate, criteria.EndDate);
     }
     
     // Pobieramy wszystkie rezerwacje dla danego hotelu, które zkładają się na przedział czasowy
     private bool IsHotelAvailable(Database.Entity.Hotel hotel, DateOnly beginDate, DateOnly endDate, int numberOfPeople)
     {
+        var availableRooms = GetAvailableRooms(hotel, beginDate, endDate);
+
+        // Sumujemy liczbę miejsc dostępnych w wolnych pokojach i porównujemy ją z liczbą miesjc w kryterium
+        return availableRooms.Sum(r => _hotelRepository.GetRoomType(r.RoomTypeId).NumberOfPeople * r.Count) >= numberOfPeople;
+    }
+
+    private List<HotelRoomType> GetAvailableRooms(Database.Entity.Hotel hotel, DateOnly beginDate, DateOnly endDate)
+    {
         var reservations = _hotelRepository.GetReservations()
-            .Where(r => r.HotelId == hotel.Id &&
-                        r.From < endDate && r.To > beginDate).ToList();
+            .Where(r => r.HotelId == hotel.Id && (
+                (r.From < endDate && r.From >= beginDate) || (r.To <= endDate && r.To > beginDate) ||(r.From<= beginDate && r.To >=endDate))).ToList();
 
         var availableRooms = new List<HotelRoomType>();
 
         foreach (var room in hotel.Rooms)
         {
             var reservedRoomCount = reservations.SelectMany(r => r.Rooms)
-                .Where(rr => rr.HotelRoomTypesId == room.RoomTypeId)
+                .Where(rr => rr.HotelRoomTypesId == room.Id)
                 .Sum(rr => rr.NumberOfRooms);
 
             // Liczba dostępnych pokoi jest różnicą między całkowitą liczbą pokoi a liczbą tych zarezerwowanych
@@ -72,9 +91,7 @@ public class HotelService : IHotelService
                 });
             }
         }
-        
-        // Sumujemy liczbę miejsc dostępnych w wolnych pokojach i porównujemy ją z liczbą miesjc w kryterium
-        return availableRooms.Sum(r => _hotelRepository.GetRoomType(r.RoomTypeId).NumberOfPeople * r.Count) >= numberOfPeople;
+        return availableRooms;
     }
 
     private HotelDTO MapToHotelDto(Database.Entity.Hotel hotel, DateOnly beginDate, DateOnly endDate)
@@ -94,6 +111,7 @@ public class HotelService : IHotelService
                 var roomType = _hotelRepository.GetRoomType(r.RoomTypeId);
                 return new RoomDTO
                 {
+                    Id = r.RoomTypeId,
                     Count = r.Count,
                     TypeOfRoom = roomType.Name,
                     NumberOfPeopleForTheRoom = roomType.NumberOfPeople,

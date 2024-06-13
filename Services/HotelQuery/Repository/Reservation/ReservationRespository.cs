@@ -74,7 +74,7 @@ public class ReservationRespository : IReservationRepository
                 // Sprawdź dostępność pokoi
                 foreach (var room in Rooms)
                 {
-                    var roomType = HotelRepository.GetRoomTypes().FirstOrDefault(rt => rt.Name == room.TypeOfRoom);
+                    var roomType = HotelRepository.GetRoomTypes().FirstOrDefault(rt => rt.Id == room.Id);
                     if (roomType == null)
                     {
                         throw new Exception($"Room type {room.TypeOfRoom} not found.");
@@ -111,7 +111,7 @@ public class ReservationRespository : IReservationRepository
                 // Dodaj zarezerwowane pokoje
                 foreach (var room in Rooms)
                 {
-                    var roomType = HotelRepository.GetRoomTypes().FirstOrDefault(rt => rt.Name == room.TypeOfRoom);
+                    var roomType = HotelRepository.GetRoomTypes().FirstOrDefault(rt => rt.Id == room.Id);
                     var hotelRoomType = hotel.Rooms.First(r => r.RoomTypeId == roomType.Id);
 
                     var reservedRoom = new ReservedRoom
