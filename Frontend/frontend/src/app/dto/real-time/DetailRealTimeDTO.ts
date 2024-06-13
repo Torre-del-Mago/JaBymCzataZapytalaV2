@@ -1,4 +1,4 @@
-export type DetailRealTimeDTO = {
-    someoneOnWebsite: boolean,
-    someoneBoughtOffer: boolean,
+export type HotelStatisticsInfoResponse = {
+    isSomeoneElseWatching: boolean,
+    hasSomebodyReservedHotel: boolean,
 }

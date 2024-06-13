@@ -5,8 +5,8 @@ import {AdminTransportInfoDTO} from '../dto/real-time/AdminTransportInfoDTO'
 import {AdminRoomTypeInfoDTO} from '../dto/real-time/AdminRoomTypeInfoDTO'
 import {AdminHotelInfoDTO} from '../dto/real-time/AdminHotelInfoDTO'
 import {AdminInfo} from '../dto/real-time/AdminInfo'
-import {adminDataResponse, GetAdminDataResponse} from '../dto/real-time/GetAdminDataResponse'
-import {DetailRealTimeDTO} from '../dto/real-time/DetailRealTimeDTO'
+import {GetAdminDataResponse} from '../dto/real-time/GetAdminDataResponse'
+import {HotelStatisticsInfoResponse} from '../dto/real-time/DetailRealTimeDTO'
 
 @Injectable({
   providedIn: 'root'
@@ -56,7 +56,7 @@ export class RealTimeService {
     return this.client.post<void>("http://localhost:55278/api/hotelStatistics/removeWatchingClient?hotelId="+hotelId, {});
   }
 
-  getDetailRealTimeData(client: HttpClient, hotelId: number): Observable<DetailRealTimeDTO> {
-    return client.get<DetailRealTimeDTO>("http://localhost:55278/api/hotelStatistics/getInfo?hotelId="+hotelId);
+  getDetailRealTimeData(client: HttpClient, hotelId: number): Observable<HotelStatisticsInfoResponse> {
+    return client.get<HotelStatisticsInfoResponse>("http://localhost:55278/api/hotelStatistics/getInfo?hotelId="+hotelId);
   }
 }

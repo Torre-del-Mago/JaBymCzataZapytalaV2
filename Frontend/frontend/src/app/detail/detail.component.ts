@@ -9,7 +9,7 @@ import { ActivatedRoute } from '@angular/router';
 import { FlightDTO } from '../dto/model/FlightDTO';
 import { Subscription, of, Observable, pipe, map, catchError, tap, firstValueFrom, flatMap, timer, shareReplay } from 'rxjs';
 import { Router } from '@angular/router';
-import {DetailRealTimeDTO} from '../dto/real-time/DetailRealTimeDTO'
+import {HotelStatisticsInfoResponse} from '../dto/real-time/DetailRealTimeDTO'
 import {realTimeObservable} from '../functions'
 import { HttpClient } from '@angular/common/http';
 
@@ -45,7 +45,7 @@ export class DetailComponent implements OnInit {
   private subscriptionIn?: Subscription
   private subscriptionOut?: Subscription
   public detailInfo?: Subscription
-  public detailInfoText?: DetailRealTimeDTO
+  public detailInfoText?: HotelStatisticsInfoResponse
   
 
   constructor(

@@ -19,3 +19,8 @@
     </div> 
 
 </div>
+<div id="events">
+    <div *ngFor="let event of (this.statistics | async)?.lastTravelAgencyChangesResponse?.recentChanges">
+        {{event.eventName}}. {{event.idChanged}} {{event.change}}
+    </div> 
+</div>

@@ -37,10 +37,10 @@
 </div>
 </div>
 <div *ngIf="detailInfoText != null ">
-    <p *ngIf="detailInfoText.someoneBoughtOffer">
+    <p *ngIf="detailInfoText.isSomeoneElseWatching">
         Ktoś inny obecnie przegląda ofertę
     </p>
-    <p *ngIf="detailInfoText.someoneOnWebsite">
+    <p *ngIf="detailInfoText.hasSomebodyReservedHotel">
         Ktoś właśnie kupił ofertę
     </p>
 </div>
