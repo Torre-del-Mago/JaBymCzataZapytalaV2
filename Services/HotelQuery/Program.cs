@@ -30,6 +30,8 @@ builder.Services.AddMassTransit(cfg =>
     cfg.AddConsumer<AddWatcherConsumer>();
     cfg.AddConsumer<RemoveWatcherConsumer>();
     cfg.AddConsumer<GetHotelStatisticsConsumer>();
+    cfg.AddConsumer<AddDietSyncConsumer>();
+    cfg.AddConsumer<ChangeHotelDiscountSyncConsumer>();
     
     cfg.AddDelayedMessageScheduler();
     cfg.UsingRabbitMq((context, rabbitCfg) =>
@@ -86,7 +88,7 @@ void initDB(IServiceProvider services)
 
     var roomTypes = new[]
     {
-        "Pokój typu business", "Pokój dla niepalócych", "Pokój typu loft", "Pokój typu studio", "Pokój typu suite", "Pokój typu deluxe",
+        "Pokój typu business", "Pokój dla niepalących", "Pokój typu loft", "Pokój typu studio", "Pokój typu suite", "Pokój typu deluxe",
         "Pokój typu superior", "Pokój z tarasem", "Pokój z balkonem", "Pokój typu penthouse"
     };
 

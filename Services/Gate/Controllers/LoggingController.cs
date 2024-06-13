@@ -23,6 +23,7 @@ namespace Gate.Controllers
         {
             try
             {
+                Console.Out.WriteLine("Got Request checkLogin ");
                 var clientResponse = await _requestClient.GetResponse<CheckLoginEventReply>(
                     new CheckLoginEvent() { Login = login });
                 if (clientResponse.Message.LoggedIn == CheckLoginEventReply.State.LOGGED)

@@ -34,6 +34,8 @@ builder.Services.AddMassTransit(cfg =>
 {
     cfg.AddConsumer<CancelReservationTransportConsumer>();
     cfg.AddConsumer<ReserveTransportConsumer>();
+    cfg.AddConsumer<ChangeNumberOfSeatsConsumer>();
+    cfg.AddConsumer<ChangePricePerSeatConsumer>();
     cfg.AddDelayedMessageScheduler();
     cfg.UsingRabbitMq((context, rabbitCfg) =>
     {

@@ -31,6 +31,8 @@ builder.Services.AddMassTransit(cfg =>
     cfg.AddConsumer<GetTopDepartureDestinationConsumer>();
     cfg.AddConsumer<ReserveTransportSyncConsumer>();
     cfg.AddConsumer<TransportListQueryConsumer>();
+    cfg.AddConsumer<ChangeNumberOfSeatsSyncConsumer>();
+    cfg.AddConsumer<ChangePricePerSeatSyncConsumer>();
 
     cfg.AddDelayedMessageScheduler();
     cfg.UsingRabbitMq((context, rabbitCfg) =>

@@ -45,6 +45,8 @@ builder.Services.AddMassTransit(cfg =>
 {
     cfg.AddConsumer<CancelReservationHotelConsumer>();
     cfg.AddConsumer<ReserveHotelConsumer>();
+    cfg.AddConsumer<AddDietConsumer>();
+    cfg.AddConsumer<ChangeHotelDiscountConsumer>();
     cfg.AddDelayedMessageScheduler();
     cfg.UsingRabbitMq((context, rabbitCfg) =>
     {
@@ -109,7 +111,7 @@ void initDB()
         }
         if (!context.RoomTypes.Any())
         {
-            string[] namesTypes = {"Pokój typu business", "Pokój dla niepalócych", "Pokój typu loft", "Pokój typu studio", "Pokój typu suite", "Pokój typu deluxe",
+            string[] namesTypes = {"Pokój typu business", "Pokój dla niepalących", "Pokój typu loft", "Pokój typu studio", "Pokój typu suite", "Pokój typu deluxe",
             "Pokój typu superior", "Pokój z tarasem", "Pokój z balkonem", "Pokój typu penthouse"};
             for (int i = 1; i < 6; i++)
             {

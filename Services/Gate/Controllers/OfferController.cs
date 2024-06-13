@@ -21,6 +21,7 @@ namespace Gate.Controllers
         {
             try
             {
+                Console.Out.WriteLine("Got Request Reserve ");
                 var cts = new CancellationTokenSource();
                 cts.CancelAfter(TimeSpan.FromSeconds(30));
                 var cancellationToken = cts.Token;

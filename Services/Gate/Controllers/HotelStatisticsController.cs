@@ -24,6 +24,7 @@ namespace Gate.Controllers
         {
             try
             {
+                Console.Out.WriteLine("Got Request getAddNewWatchingClient ");
                 await _publishEndpoint.Publish(new AddWatcherEvent { HotelId = hotelId });
                 return Ok();
             }
@@ -39,6 +40,7 @@ namespace Gate.Controllers
         {
             try
             {
+                Console.Out.WriteLine("Got Request getRemoveWatchingClient ");
                 await _publishEndpoint.Publish(new RemoveWatcherEvent { HotelId = hotelId });
                 return Ok();
             }
@@ -54,6 +56,7 @@ namespace Gate.Controllers
         {
             try
             {
+                Console.Out.WriteLine("Got Request getHotelStatisticsInfo ");
                 var hotelStatisticsResponse =
                     await _requestClient.GetResponse<GetHotelStatisticsEventReply>(new GetHotelStatisticsEvent()
                         { HotelId = hotelId });

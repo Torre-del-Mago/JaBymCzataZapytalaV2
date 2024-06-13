@@ -101,4 +101,14 @@ public class EventService : IEventService
     {
         await _eventRepository.InsertCancellationEvent(offerId);
     }
+
+    public void AddDiet(int hotelId, int dietId)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void ChangeHotelDiscount(int hotelId, double discountChange)
+    {
+        throw new NotImplementedException();
+    }
 }

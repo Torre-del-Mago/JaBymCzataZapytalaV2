@@ -20,6 +20,7 @@ namespace Gate.Controllers
         [HttpPost("check")]
         public async Task<IActionResult> CheckPayment([FromQuery] int OfferId, [FromQuery] double Amount)
         {
+            Console.Out.WriteLine("Got Request CheckPayment with offerId: " + OfferId);
             try
             {
                 var clientResponse = await _requestClient.GetResponse<PayEventReply>(

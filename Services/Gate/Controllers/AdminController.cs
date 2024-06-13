@@ -27,6 +27,7 @@ namespace Gate.Controllers
         {
             try
             {
+                Console.Out.WriteLine("Got Request getAdminInfo ");
                 var hotelRequest =
                     _hotelRequestClient.GetResponse<GetTopHotelRoomTypeEventReply>(new GetTopHotelRoomTypeEvent());
                 var transportRequest =

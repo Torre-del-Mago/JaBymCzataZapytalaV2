@@ -218,6 +218,7 @@ namespace Gate.Controllers
         {
             try
             {
+                Console.Out.WriteLine("Got Request getTripInfo ");
                 if (beginDate.CompareTo(endDate) >= 0)
                 {
                     return BadRequest();
@@ -261,6 +262,7 @@ namespace Gate.Controllers
         {
             try
             {
+                Console.Out.WriteLine("Got Request getTripListInfo ");
                 if (beginDate.CompareTo(endDate) >= 0)
                 {
                     return BadRequest();

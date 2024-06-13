@@ -233,7 +233,8 @@ namespace TransportQuery.Service.Transport
 
         public TopDepartureDTO GetTopDepartures(int numberOfElements)
         {
-            var topDepartureList = _transportRepository.GetTopDepartures(10);
+            var topDepartureList = _transportRepository.GetTopDepartures(10).OrderByDescending(e => e.NumberOfElements)
+                .Take(numberOfElements).ToList();
             return new TopDepartureDTO()
             {
                 TopDepartures = topDepartureList
@@ -242,11 +243,22 @@ namespace TransportQuery.Service.Transport
 
         public TopDestinationDTO GetTopDestinations(int numberOfElements)
         {
-            var topDestinations = _transportRepository.GetTopDestinations(10);
+            var topDestinations = _transportRepository.GetTopDestinations(10).OrderByDescending(e => e.NumberOfElements)
+                .Take(numberOfElements).ToList();
             return new TopDestinationDTO()
             {
                 TopDestinations = topDestinations
             };
+        }
+
+        public void ChangeNumberOfSeats(int transportId, int numberOfSeats)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ChangePricePerSeat(int transportId, double priceChange)
+        {
+            throw new NotImplementedException();
         }
     }
 }

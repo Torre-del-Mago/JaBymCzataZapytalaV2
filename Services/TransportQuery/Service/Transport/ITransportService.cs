@@ -11,5 +11,7 @@ namespace TransportQuery.Service.Transport
         Task CancelTransport(int offerId);
         TopDepartureDTO GetTopDepartures(int numberOfElements);
         TopDestinationDTO GetTopDestinations(int numberOfElements);
+        void ChangeNumberOfSeats(int transportId, int numberOfSeats);
+        void ChangePricePerSeat(int transportId, double priceChange);
     }
 }

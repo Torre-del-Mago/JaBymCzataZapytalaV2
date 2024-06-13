@@ -147,7 +147,7 @@ public class HotelRepository : IHotelRepository
             .ToDictionary(room => room.Id, room => roomTypeMap[room.RoomTypeId]);
         return reservetionsCollection.SelectMany(r => r.Rooms).ToList().Select(room => hotelRoomTypeRoomTypeMap[room.HotelRoomTypesId])
             .GroupBy(roomTypeId => roomTypeId).Select(group => new EntryDTO {Name = group.Key, NumberOfElements = group.Count() })
-            .OrderByDescending(entry => entry.NumberOfElements).ToList();
+            .OrderByDescending(entry => entry.NumberOfElements).Take(numberOfElements).ToList();
     }
     
     public void AddWatcher(int hotelId)

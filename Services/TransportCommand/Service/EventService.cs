@@ -98,5 +98,15 @@ namespace TransportCommand.Service
 
             await _eventRepository.InsertCancellationEventForTickets(tickets);
         }
+
+        public void ChangeNumberOfSeats(int transportId, int numberOfSeats)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ChangePricePerSeat(int transportId, double priceChange)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

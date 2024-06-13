@@ -152,4 +152,14 @@ public class HotelService : IHotelService
         var lastReservationDate = reservations.Select(r => r.ReservedAt).OrderDescending().FirstOrDefault(DateTime.UtcNow.AddDays(100.0d));
         return Math.Abs(DateTime.UtcNow.Subtract(lastReservationDate).TotalMinutes) < 10;
     }
+
+    public void AddDiet(int hotelId, int dietId)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void ChangeHotelDiscount(int hotelId, double discountChange)
+    {
+        throw new NotImplementedException();
+    }
 }
