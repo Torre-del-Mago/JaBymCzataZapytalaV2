@@ -8,5 +8,5 @@ public interface IEventService
     Task CancelHotel(int offerId);
 
     Task AddDiet(int hotelId, int dietId);
-    void ChangeHotelDiscount(int hotelId, double discountChange);
+    double ChangeHotelDiscount(int hotelId, double discountChange);
 }

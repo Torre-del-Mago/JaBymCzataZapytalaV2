@@ -24,6 +24,17 @@ namespace HotelCommand.Repository.HotelRepository
             return await _context.Hotels.FindAsync(hotelId);
         }
 
+        public void UpdateDiscount(int hotelId, float discount)
+        {
+            var hotel = _context.Hotels.Find(hotelId);
+            if(hotel == null)
+            {
+                return;
+            }
+            hotel.Discount += discount;
+            _context.Hotels.Update(hotel);
+        }
+
         public EntityEntry<Hotel> UpdateHotel(Hotel hotel)
         {
             return _context.Hotels.Add(hotel);
