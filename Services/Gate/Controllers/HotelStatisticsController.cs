@@ -20,7 +20,7 @@ namespace Gate.Controllers
         }
         
         [HttpPost("addNewWatchingClient")]
-        public async Task<IActionResult> getAddNewWatchingClient([FromBody] int hotelId)
+        public async Task<IActionResult> getAddNewWatchingClient([FromQuery] int hotelId)
         {
             try
             {
@@ -35,7 +35,7 @@ namespace Gate.Controllers
         }
 
         [HttpPost("removeWatchingClient")]
-        public async Task<IActionResult> getRemoveWatchingClient([FromBody] int hotelId)
+        public async Task<IActionResult> getRemoveWatchingClient([FromQuery] int hotelId)
         {
             try
             {

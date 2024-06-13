@@ -76,12 +76,12 @@ export class DetailComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.subscriptionIn = this.realTimeService.postUserInDetail().subscribe();
-    this.startListening();
     if(this.service.getCurrentTrip() === undefined || this.service.getUser() === '') {
       this.router.navigateByUrl('');
     }
     this.getTrip();
+    this.subscriptionIn = this.realTimeService.postUserInDetail(this.trip!.hotelId).subscribe();
+    this.startListening();
     this.detailInfo = timer(0, 5000).pipe(
         flatMap((_) => {
             return this.realTimeService.getDetailRealTimeData(this.client, this.trip!.hotelId)
@@ -115,7 +115,7 @@ export class DetailComponent implements OnInit {
   }
 
   ngOnDestroy() {
-    this.subscriptionOut = this.realTimeService.postUserOutOfDetail().subscribe();
+    this.subscriptionOut = this.realTimeService.postUserOutOfDetail(this.trip!.hotelId).subscribe();
     this.stopListening();
   }
 

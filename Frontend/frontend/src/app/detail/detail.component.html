@@ -44,6 +44,10 @@
     </div>
 </div>
 </div>
+<div *ngIf="detailInfo | async">
+    <p *ngIf="(detailInfo | async)?.someoneOnWebsite">Someone is watching tour related to yours</p>
+    <p *ngIf="(detailInfo | async)?.someoneBoughtOffer">Someone bought offer related to your viewed tour</p>
+</div>
 <div [hidden]="configurationAvailable">
     Konfiguracji nie znaleziono
 </div>

@@ -21,7 +21,7 @@ export class RealTimeService {
   }
 
   getStatistics(client: HttpClient): Observable<GetAdminDataResponse> {
-    return client.get<GetAdminDataResponse>('http://localhost:55278/api/admin/test-admin-info');
+    return client.get<GetAdminDataResponse>('http://localhost:55278/api/admin/admin-info');
   }
 
   getTransports(): Observable<AdminTransportInfoDTO[]> {
@@ -48,12 +48,12 @@ export class RealTimeService {
     ])
   }
 
-  postUserInDetail(): Observable<void> {
-    return this.client.post<void>("costam/api/plusUser", {});
+  postUserInDetail(hotelId: number): Observable<void> {
+    return this.client.post<void>("http://localhost:55278/api/hotelStatistics/addNewWatchingClient?hotelId="+hotelId,{});
   }
 
-  postUserOutOfDetail(): Observable<void> {
-    return this.client.post<void>("costam/api/minusUser", {});
+  postUserOutOfDetail(hotelId: number): Observable<void> {
+    return this.client.post<void>("http://localhost:55278/api/hotelStatistics/removeWatchingClient?hotelId="+hotelId, {});
   }
 
   getDetailRealTimeData(client: HttpClient, hotelId: number): Observable<DetailRealTimeDTO> {
