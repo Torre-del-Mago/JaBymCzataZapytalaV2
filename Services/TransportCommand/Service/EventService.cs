@@ -120,9 +120,21 @@ namespace TransportCommand.Service
             return actualNumberOfSeats;
         }
 
-        public void ChangePricePerSeat(int transportId, double priceChange)
+        public double ChangePricePerSeat(int transportId, double priceChange)
         {
-            _transportRepository.UpdatePricePerSeat(transportId, priceChange);
+            var transport = _transportRepository.GetTransportById(transportId);
+            if (transport == null)
+            {
+                throw new InvalidOperationException();
+            }
+            double newPricePerSeat = priceChange;
+            if (transport.PricePerSeat + Convert.ToDecimal(priceChange) < 0)
+            {
+                newPricePerSeat = Convert.ToDouble(-transport.PricePerSeat);
+            }
+
+            _transportRepository.UpdatePricePerSeat(transportId, newPricePerSeat);
+            return newPricePerSeat;
         }
     }
 }
