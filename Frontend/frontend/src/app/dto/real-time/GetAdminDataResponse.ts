@@ -34,7 +34,7 @@ export type GetAdminDataResponse = {
     topRoomTypesDto: TopRoomTypesDto;
     topDepartureDto: TopDepartureDto;
     topDestinationDto: TopDestinationDto;
-    lastTravelAgencyChangesResponse: LastTravelAgencyChangesDTO;
+    lastTravelAgencyChangesDto: LastTravelAgencyChangesDTO;
 };
 
 
