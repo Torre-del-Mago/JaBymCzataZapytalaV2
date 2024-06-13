@@ -1,5 +1,6 @@
 ﻿using HotelQuery.Database.Entity;
 using Models.Admin.DTO;
+using Models.TravelAgency;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 
@@ -224,6 +225,21 @@ public class HotelRepository : IHotelRepository
         transportAgencyCollection.InsertOne(transportAgencyChange);
     }
 
+    public List<TravelAgencyEntryDTO> getLastTravelAgencyChanges(int numberOfChanges)
+    {
+        var transportAgencyCollection =
+            Database.GetCollection<TransportAgencyChange>("transport_agency_change").AsQueryable();
+        var lastChanges = transportAgencyCollection.OrderByDescending(t => t.Id)
+            .Take(numberOfChanges).Select(t =>
+            new TravelAgencyEntryDTO()
+            {
+                EventName = t.EventName,
+                IdChanged = t.IdChanged,
+                Change = t.Change
+            }).ToList();
+        return lastChanges;
+    }
+
     private HotelWatchers? GetHotelWatcherIfExists(int hotelId)
     {
         var hotelWatchers = GetAllHotelWatchers();
@@ -234,5 +250,15 @@ public class HotelRepository : IHotelRepository
     {
         var hotelWatchersCollection = Database.GetCollection<HotelWatchers>("hotel_watchers").AsQueryable();
         return hotelWatchersCollection.ToList();
+    }
+
+    public void ChangeHotelDiscount(int hotelId, double discountChange)
+    {
+        var hotelCollection = Database.GetCollection<Database.Entity.Hotel>("hotels").AsQueryable();
+        Database.Entity.Hotel hotel = hotelCollection.Where(h => h.Id == hotelId).First();
+        
+        hotel.Discount += Convert.ToSingle(discountChange);
+        Database.GetCollection<Database.Entity.Hotel>("transports")
+                .FindOneAndReplace(h => h.Id == hotelId, hotel);
     }
 }

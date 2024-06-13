@@ -1,5 +1,6 @@
 ﻿using Models.Admin.DTO;
 using Models.Hotel.DTO;
+using Models.TravelAgency.DTO;
 
 namespace HotelQuery.Service.Hotel;
 
@@ -18,4 +19,5 @@ public interface IHotelService
     void AddDiet(int hotelId, int dietId, bool done);
     void ChangeHotelDiscount(int hotelId, double discountChange);
     void RegisterTransportAgencyChange(string eventName, int idChanged, double change);
+    LastTravelAgencyChangesDTO getLastTravelAgencyChanges(int numberOfElements);
 }

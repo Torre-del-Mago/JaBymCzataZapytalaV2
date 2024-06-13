@@ -3,6 +3,7 @@ using HotelQuery.Repository.Hotel;
 using HotelQuery.Repository.Reservation;
 using Models.Admin.DTO;
 using Models.Hotel.DTO;
+using Models.TravelAgency.DTO;
 
 namespace HotelQuery.Service.Hotel;
 
@@ -163,11 +164,20 @@ public class HotelService : IHotelService
 
     public void ChangeHotelDiscount(int hotelId, double discountChange)
     {
-        throw new NotImplementedException();
+        _hotelRepository.ChangeHotelDiscount(hotelId, discountChange);
     }
 
     public void RegisterTransportAgencyChange(string eventName, int idChanged, double change)
     {
         _hotelRepository.RegisterTransportAgencyChange(eventName, idChanged, change);
+    }
+
+    public LastTravelAgencyChangesDTO getLastTravelAgencyChanges(int numberOfElements)
+    {
+        var lastTravelAgencyChanges = _hotelRepository.getLastTravelAgencyChanges(numberOfElements);
+        return new LastTravelAgencyChangesDTO()
+        {
+            RecentChanges = lastTravelAgencyChanges
+        };
     }
 }
