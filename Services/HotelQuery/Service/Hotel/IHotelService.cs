@@ -17,4 +17,5 @@ public interface IHotelService
     bool HasSomeoneReservedHotel(int hotelId);
     void AddDiet(int hotelId, int dietId, bool done);
     void ChangeHotelDiscount(int hotelId, double discountChange);
+    void RegisterTransportAgencyChange(string eventName, int idChanged, double change);
 }

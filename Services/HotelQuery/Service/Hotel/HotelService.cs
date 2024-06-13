@@ -165,4 +165,9 @@ public class HotelService : IHotelService
     {
         throw new NotImplementedException();
     }
+
+    public void RegisterTransportAgencyChange(string eventName, int idChanged, double change)
+    {
+        _hotelRepository.RegisterTransportAgencyChange(eventName, idChanged, change);
+    }
 }
