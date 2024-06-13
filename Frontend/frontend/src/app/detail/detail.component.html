@@ -25,9 +25,15 @@
     Ilość dorosłych: {{numberOfAdults}} 
     <button (click)="addAdult()" [disabled]="canIncreasePeople">+</button>
     <button (click)="minusAdult()" [disabled]="canDecreaseAdults">-</button><br>
-    Ilość dzieci: {{numberOfChildren}} 
-    <button (click)="addChild()" [disabled]="canIncreasePeople">+</button>
-    <button (click)="minusChild()" [disabled]="canDecreaseChildren">-</button>
+    Ilość nastolatków: {{numberOfTeenagers}} 
+    <button id="add-child-button" (click)="addChild('teenager')" [disabled]="canIncreasePeople">+</button>
+    <button (click)="minusChild('teenager')" [disabled]="canDecreaseTeenagers">-</button>
+    Ilość noworodków: {{numberOfNewborns}} 
+    <button id="add-child-button" (click)="addChild('newborn')" [disabled]="canIncreasePeople">+</button>
+    <button (click)="minusChild('newborn')" [disabled]="canDecreaseNewborns">-</button>
+    Ilość niemowląt: {{numberOfToddlers}} 
+    <button id="add-child-button" (click)="addChild('toddler')" [disabled]="canIncreasePeople">+</button>
+    <button (click)="minusChild('toddler')" [disabled]="canDecreaseToddlers">-</button>
 </div>
 <div>
     <button (click)="reserve()">Rezerwuj</button>

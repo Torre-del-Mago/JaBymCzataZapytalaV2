@@ -46,6 +46,12 @@ export class DetailComponent implements OnInit {
   private subscriptionOut?: Subscription
   public detailInfo?: Subscription
   public detailInfoText?: HotelStatisticsInfoResponse
+  numberOfToddlers: number = 0;
+  numberOfTeenagers: number = 0;
+  numberOfNewborns: number = 0;
+  canDecreaseToddlers?: boolean = true;
+  canDecreaseTeenagers?: boolean = true;
+  canDecreaseNewborns?: boolean = true;
   
 
   constructor(
@@ -148,23 +154,49 @@ export class DetailComponent implements OnInit {
     await this.startChange()
   }
 
-  async addChild(): Promise<void> {
+  async addChild(which_child: string): Promise<void> {
     this.createBackup();
     this.numberOfChildren++;
+    if(which_child === "teenager") {
+      this.numberOfTeenagers++;
+      this.canDecreaseTeenagers = false;
+    }
+    else if(which_child === "toddler") {
+      this.numberOfToddlers++;
+      this.canDecreaseToddlers = false;
+    }
+    else if(which_child === "newborn") {
+      this.numberOfNewborns++;
+      this.canDecreaseNewborns = false;
+    }
     this.numberOfPeople++;
     if (this.numberOfPeople == 6) {
       this.canIncreasePeople = true;
     }
-    this.canDecreaseChildren = false;
     await this.startChange()
   }
 
-  async minusChild(): Promise<void> {
+  async minusChild(which_child: string): Promise<void> {
     this.createBackup()
     this.numberOfChildren--;
     this.numberOfPeople--;
-    if (this.numberOfChildren == 0) {
-      this.canDecreaseChildren = true;
+    if(which_child === "teenager") {
+      this.numberOfTeenagers--;
+      if (this.numberOfTeenagers == 0) {
+        this.canDecreaseTeenagers = true;
+      }
+    }
+    else if(which_child === "toddler") {
+      this.numberOfToddlers--;
+      if (this.numberOfNewborns == 0) {
+        this.canDecreaseNewborns = true;
+      }
+    }
+    else if(which_child === "newborn") {
+      this.numberOfNewborns--;
+      if (this.numberOfChildren == 0) {
+        this.canDecreaseNewborns = true;
+      }
     }
     this.canIncreasePeople = false;
     await this.startChange()

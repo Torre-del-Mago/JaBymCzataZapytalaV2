@@ -26,8 +26,13 @@ export class SearchComponent {
   notAllValuesPresent = false;
   numberOfAdults: number = 1;
   numberOfChildren: number = 0;
+  numberOfToddlers: number = 0;
+  numberOfTeenagers: number = 0;
+  numberOfNewborns: number = 0;
   numberOfPeople: number = 0;
-  canDecreaseChildren?: boolean = true;
+  canDecreaseToddlers?: boolean = true;
+  canDecreaseTeenagers?: boolean = true;
+  canDecreaseNewborns?: boolean = true;
   canDecreaseAdults?: boolean = false;
   canIncreasePeople?: boolean = false;
   noMatchesFound: boolean = false;
@@ -76,7 +81,9 @@ export class SearchComponent {
     }
     else {
       this.service.setCurrentTrip(trip);
-      this.service.setNumbers(this.numberOfChildren, this.numberOfAdults)
+      this.service.setNumbers(this.numberOfChildren, this.numberOfAdults, this.numberOfToddlers, this.numberOfTeenagers, 
+        this.numberOfNewborns
+      )
       this.service.setDates(this.startDate, this.endDate)
       await this.router.navigateByUrl('detail');
     }
@@ -110,22 +117,50 @@ export class SearchComponent {
     this.canIncreasePeople = false;
   }
 
-  addChild(): void {
+  addChild(which_child: string): void {
     this.numberOfChildren++;
+    if(which_child === "teenager") {
+      this.numberOfTeenagers++;
+      this.canDecreaseTeenagers = false;
+    }
+    else if(which_child === "toddler") {
+      this.numberOfToddlers++;
+      this.canDecreaseToddlers = false;
+    }
+    else if(which_child === "newborn") {
+      this.numberOfNewborns++;
+      this.canDecreaseNewborns = false;
+    }
     this.numberOfPeople++;
     if (this.numberOfPeople == 6) {
       this.canIncreasePeople = true;
     }
-    this.canDecreaseChildren = false;
   }
 
 
-  minusChild(): void {
+  minusChild(which_child: string): void {
     this.numberOfChildren--;
     this.numberOfPeople--;
-    if (this.numberOfChildren == 0) {
-      this.canDecreaseChildren = true;
+    if(which_child === "teenager") {
+      this.numberOfTeenagers--;
+      if (this.numberOfTeenagers == 0) {
+        this.canDecreaseTeenagers = true;
+      }
+    }
+    else if(which_child === "toddler") {
+      this.numberOfToddlers--;
+      if (this.numberOfNewborns == 0) {
+        this.canDecreaseNewborns = true;
+      }
+    }
+    else if(which_child === "newborn") {
+      this.numberOfNewborns--;
+      if (this.numberOfChildren == 0) {
+        this.canDecreaseNewborns = true;
+      }
     }
     this.canIncreasePeople = false;
   }
+
+
 }
