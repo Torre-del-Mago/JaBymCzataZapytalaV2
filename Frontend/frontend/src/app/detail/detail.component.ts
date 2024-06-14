@@ -260,7 +260,7 @@ export class DetailComponent implements OnInit {
     await this.refreshTrip().then((value: GenerateTripResponse) => {
       console.log(value)
       let tripsForChangedCriteria = this.service.changeTrips([value.tripDTO], this.beginDate, this.endDate, this.numberOfAdults, this.numberOfChildren);
-      if(tripsForChangedCriteria == null) {
+      if(tripsForChangedCriteria[0] == undefined) {
         this.configurationAvailable = false;
         return;
       }
