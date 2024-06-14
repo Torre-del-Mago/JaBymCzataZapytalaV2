@@ -108,12 +108,10 @@ export class DetailComponent implements OnInit {
     if (this.numberOfPeople == 6) {
       this.canIncreasePeople = false;
     }
-    if (this.numberOfAdults == 0) {
-      this.canDecreaseChildren = false;
-    }
-    if (this.numberOfChildren == 0) {
-      this.canDecreaseAdults = false;
-    }
+    this.canDecreaseAdults = this.numberOfAdults == 0;
+    this.canDecreaseNewborns = this.numberOfNewborns == 0;
+    this.canDecreaseToddlers = this.numberOfToddlers == 0;
+    this.canDecreaseTeenagers = this.numberOfTeenagers == 0;
   }
 
   private startListening(): void {
@@ -262,6 +260,10 @@ export class DetailComponent implements OnInit {
     await this.refreshTrip().then((value: GenerateTripResponse) => {
       console.log(value)
       let tripsForChangedCriteria = this.service.changeTrips([value.tripDTO], this.beginDate, this.endDate, this.numberOfAdults, this.numberOfChildren);
+      if(tripsForChangedCriteria == null) {
+        this.configurationAvailable = false;
+        return;
+      }
       this.trip = tripsForChangedCriteria[0];
       this.service.setCurrentTrip(this.trip!);
       this.setTrips();
